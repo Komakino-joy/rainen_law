@@ -1,0 +1,77 @@
+#manage-ins-form {
+  .input-placeholder {
+    height: 40px;
+  }
+
+  .title-company-select {
+    width: 100px;
+  }
+
+  .fileNumber {
+    width: 100px;
+  }
+
+  .top-section,
+  .mid-section {
+    gap: 10px;
+  }
+
+  .mid-section {
+    margin-top: 5px;
+  }
+
+  .column-1 {
+    flex: 1;
+  }
+
+  .column-2,
+  .column-3 {
+    flex: .25;
+  }
+
+  .city-state-zip-section,
+  .lot-condo-unit-section,
+  .status-type-assigned-section,
+  .comp-ref-file-num-section,
+  .client-id-file-section,
+  .opolicy-section,
+  .lpolicy-section {
+    gap: 10px;
+    width: 100%;
+    align-items: center;
+  
+    .city {
+      flex: 1;
+    }
+
+    .zip {
+      flex: .45;
+    }
+
+    .clientName,
+    .oPolicyNumber,
+    .lPolicyNumber {
+      flex: .4;
+    }
+    .clientFileNumber,
+    .oPolicyAmount,
+    .lPolicyAmount {
+      flex: .25;
+    }
+  }
+
+  .status-type-assigned-section,
+  .notes-section {
+    margin-top: 5px;
+  }
+
+  .notes-section {
+    textarea {
+      resize: none;
+      height: 50px;
+      padding: 5px;
+      width: 100%;
+    }
+  }
+}
+

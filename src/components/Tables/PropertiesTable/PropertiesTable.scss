@@ -1,0 +1,24 @@
+#properties-table {
+  width: 100%;
+
+  th {
+    border-bottom: 2px solid rgb(97, 97, 97);
+    text-align: center;
+    font-weight: 600;
+    font-size: 14px;
+    font-family: sans-serif;
+    padding: 0 10px;
+  }
+
+  tr {
+    border: 3px solid red !important;
+  }
+
+  td {
+    border: 1px solid rgb(185, 185, 185);
+    border-radius: 3px;
+    text-align: center;
+    white-space: nowrap
+  }
+
+}

@@ -1,0 +1,36 @@
+.base-styles {
+  padding: 8px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: white;
+  color: #0077d9;
+  border: 1px solid #0077d9;
+  font-family: inherit;
+  letter-spacing: .5px;
+  cursor: pointer;
+  font-weight: 500;
+
+  &:hover {
+    color: white;
+    background-color: #0077d9;
+  }
+
+  &:active {
+    transform: scale(.99);
+  }
+
+  &.disabled {
+    background-color: rgb(224, 224, 224);
+    border: none;
+    cursor: not-allowed;
+    color: rgb(105, 105, 105);
+
+    &:hover {
+      background-color: rgb(224, 224, 224);
+    }
+
+    &:active {
+      transform: unset;
+    }
+  }
+}
