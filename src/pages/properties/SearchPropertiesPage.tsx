@@ -6,7 +6,9 @@ import ClientCard from '@/components/ClientCard/ClientCard';
 import PropertyForm from '@/components/Forms/PropertyForm/PropertyForm';
 import InfoCard from '@/components/InfoCard/InfoCard';
 import SearchPropertiesForm from '@/components/Forms/SearchPropertiesForm/SearchPropertiesForm'
-import './SearchPropertiesPage.scss'
+import styles from './SearchPropertiesPage.module.scss'
+import Bullshit from '@/components/Bullshit/Bullshit';
+
 
 const SearchPropertiesPage = () => {
   const [showModal, setShowModal] = useState(false);
@@ -84,7 +86,8 @@ const SearchPropertiesPage = () => {
   }
 
   return (
-    <div id='properties-search-page'>
+    <div className={styles['properties-search-page']}>
+      <Bullshit />
       <SearchPropertiesForm 
         onSubmit={onSubmit}
         clientOptions={clientOptions}
@@ -94,8 +97,8 @@ const SearchPropertiesPage = () => {
       />
       
         { clientProperties && Object.keys(clientProperties).length > 0 ?
-          <div className='search-results-container'>
-            <h1>Properties by Client <span className='italicized-record-count'>(Clients: {Object.keys(clientProperties).length})</span></h1>
+          <div className={styles['search-results-container']}>
+            <h1 className={styles.h1}>Properties by Client <span className='italicized-record-count'>(Clients: {Object.keys(clientProperties).length})</span></h1>
 
               {Object.keys(clientProperties).map((key:string) =>  (
                   <ClientCard 
@@ -120,7 +123,6 @@ const SearchPropertiesPage = () => {
           onClose={handleModalClose}
           show={showModal}
           title={''}
-          modalRoot={'modal-root-properties'}
       >
         { selectedPropId 
           && typeOptions.length > 0 
@@ -135,7 +137,7 @@ const SearchPropertiesPage = () => {
           />
         }
       </Modal>
-      <div id="modal-root-properties"></div>
+      
     </div>
   )
 }

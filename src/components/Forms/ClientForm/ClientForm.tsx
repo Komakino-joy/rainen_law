@@ -1,8 +1,7 @@
 import { useForm } from "react-hook-form";
 import { abbreviatedStates } from "@/utils/UnitedStates";
 import FormInput from "../Common/FormInput/FormInput";
-import './ClientForm.scss'
-import '../Common/Forms.common.scss'
+import styles from './ClientForm.module.scss'
 
 export default function ClientForm() {
   const { 
@@ -17,15 +16,16 @@ export default function ClientForm() {
   console.log(watch("example")); // watch input value by passing the name of it
 
   return (
-      <div id='manage-client-form' className='form-wrapper'>
+      <div className={`${styles['manage-client-form']} form-wrapper`}>
       <header>
         <span>---- Client/Firm Name ----</span>
         <span> Client Number 999999</span>
       </header>
       <form className="flex-y" onSubmit={handleSubmit(onSubmit)}>
-        <section className="flex-x client-status-section">
+        <section className={`flex-x ${styles['client-status-section']}`}>
           <FormInput 
-            customClass="client"
+            name="client"
+            customClass={styles.client}
             labelKey="client-firm-name"
             labelText="Client/Firm Name"
             type="text"
@@ -34,7 +34,8 @@ export default function ClientForm() {
             errors={errors}
           />
           <FormInput 
-            customClass="status"
+            name="status"
+            customClass={styles.status}
             labelKey="status"
             labelText="Status"
             type="select" 
@@ -46,6 +47,7 @@ export default function ClientForm() {
         </section>
 
         <FormInput 
+          name="search-name"
           labelKey="search-name"
           labelText="Search Name"
           type="text"
@@ -55,6 +57,7 @@ export default function ClientForm() {
         />
 
         <FormInput 
+          name="address-line-1"
           labelKey="address-line-1"
           labelText="Address Line 1"
           type="text" 
@@ -63,7 +66,8 @@ export default function ClientForm() {
           errors={errors}
         />
 
-        <FormInput 
+        <FormInput
+          name="address-line-2" 
           labelKey="address-line-2"
           labelText="Address Line 2"
           type="text" 
@@ -72,11 +76,12 @@ export default function ClientForm() {
           errors={errors}
         />
 
-        <section className="flex-x city-state-zip-section">
+        <section className={`flex-x ${styles['city-state-zip-section']}`}>
           <FormInput 
+            name="city"
             labelKey="city"
             labelText="City"
-            customClass='city'
+            customClass={styles.city}
             type="text" 
             isRequired={true}
             register={register} 
@@ -84,9 +89,10 @@ export default function ClientForm() {
           />
 
           <FormInput 
+            name="state"
             labelKey="state"
             labelText="State"
-            customClass='state'
+            customClass={styles.state}
             type="select" 
             options={abbreviatedStates}
             isRequired={true}
@@ -95,9 +101,10 @@ export default function ClientForm() {
           />
 
           <FormInput 
+            name="zip"
             labelKey="zip"
             labelText="Zip Code"
-            customClass='zip'
+            customClass={styles.zip}
             type="text" 
             isRequired={true}
             register={register} 
@@ -105,11 +112,12 @@ export default function ClientForm() {
           />
         </section>
 
-        <section className='flex-x phone-fax-email-section'>
+        <section className={`flex-x ${styles['phone-fax-email-section']}`}>
           <FormInput 
+            name="phone"
             labelKey="phone"
             labelText="Phone Number"
-            customClass='phone'
+            customClass={styles.phone}
             type="tel" 
             isRequired={true}
             register={register} 
@@ -117,9 +125,10 @@ export default function ClientForm() {
           />
 
           <FormInput 
+            name="fax"
             labelKey="fax"
             labelText="Fax Number"
-            customClass='fax'
+            customClass={styles.fax}
             type="tel" 
             isRequired={false}
             register={register} 
@@ -127,9 +136,10 @@ export default function ClientForm() {
           />
 
           <FormInput 
+            name="email"
             labelKey="email"
             labelText="Email Address"
-            customClass='email'
+            customClass={styles.email}
             type="email" 
             isRequired={false}
             register={register} 
@@ -137,11 +147,12 @@ export default function ClientForm() {
           />
         </section>
 
-        <section className='flex-x contact-statement-section'>
+        <section className={`flex-x ${styles['contact-statement-section']}`}>
           <FormInput 
+            name="contact"
             labelKey="contact"
             labelText="Contact"
-            customClass='contact'
+            customClass={styles.contact}
             type="text" 
             isRequired={false}
             register={register} 
@@ -149,9 +160,10 @@ export default function ClientForm() {
           />
 
           <FormInput 
+            name="statementAddressee"
             labelKey="statementAddressee"
             labelText="Statement Addressee"
-            customClass='statement'
+            customClass={styles.statement}
             type="text" 
             isRequired={false}
             register={register} 
@@ -160,8 +172,9 @@ export default function ClientForm() {
         </section>
 
 
-        <section className='notes-section'>
+        <section className={styles['notes-section']}>
           <FormInput 
+            name="notes"
             labelKey="notes"
             labelText="Notes"
             type="textarea" 
@@ -171,8 +184,8 @@ export default function ClientForm() {
           />
         </section>
 
-        <section className="submit-button-section">
-          <input className="submit-button" type="submit" />
+        <section className={styles["submit-button-section"]}>
+          <input className={styles["submit-button"]} type="submit" />
         </section>
       </form>
     </div>

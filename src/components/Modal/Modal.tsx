@@ -9,15 +9,13 @@ interface ModalProps {
   onClose: Function;
   children: any;
   title: string;
-  modalRoot: string;
 }
 
 const Modal:React.FC<ModalProps> = ({ 
   show, 
   onClose, 
   children, 
-  title,
-  modalRoot 
+  title
 }) => {
 
   const [isBrowser, setIsBrowser] = useState(false);
@@ -49,7 +47,7 @@ const Modal:React.FC<ModalProps> = ({
     return ReactDOM.createPortal(
       modalContent,
       // @ts-ignore
-      document.getElementById(modalRoot)
+      document.getElementById('modal-root')
     );
   } else {
     return null;

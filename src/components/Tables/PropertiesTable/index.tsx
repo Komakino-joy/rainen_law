@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useTable, useFilters } from 'react-table';
 
-import './PropertiesTable.scss';
+import styles from './PropertiesTable.module.scss';
 
 interface PropertiesTableProps {
   tableData: any;
@@ -95,12 +95,14 @@ const PropertiesTable:React.FC<PropertiesTableProps> = ({tableData}) => {
   )
 
   return (
-    <table {...getTableProps()} id='properties-table'>
+    <table {...getTableProps()} className={styles['properties-table']}>
       <thead>
-        {headerGroups.map(headerGroup => (
-        <tr {...headerGroup.getHeaderGroupProps()}>
-          {headerGroup.headers.map(column => (
-            <th {...column.getHeaderProps()} >
+        {headerGroups.map((headerGroup,idx) => (
+        //@ts-ignore
+        <tr key={idx} {...headerGroup.getHeaderGroupProps()}>
+          {headerGroup.headers.map((column, idx) => (
+            //@ts-ignore
+            <th key={idx} {...column.getHeaderProps()} >
               {column.render('Header')}
             </th>
           ))}
@@ -108,12 +110,15 @@ const PropertiesTable:React.FC<PropertiesTableProps> = ({tableData}) => {
         ))}
       </thead>
       <tbody {...getTableBodyProps()}>
-        {rows.map(row => {
+        {rows.map((row,idx) => {
           prepareRow(row)
           return (
-            <tr {...row.getRowProps()}>
-              {row.cells.map(cell => (
+            // @ts-ignore 
+            <tr key={idx} {...row.getRowProps()}>
+              {row.cells.map((cell, idx) => (
                 <td
+                  // @ts-ignore
+                  key={idx}
                   {...cell.getCellProps()}
                   style={{
                     padding: '8px',

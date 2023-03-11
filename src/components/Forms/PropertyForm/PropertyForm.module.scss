@@ -1,23 +1,7 @@
-#manage-ins-form {
-  .input-placeholder {
-    height: 40px;
-  }
-
-  .title-company-select {
-    width: 100px;
-  }
-
-  .fileNumber {
-    width: 100px;
-  }
-
+.manage-property-form {
   .top-section,
   .mid-section {
     gap: 10px;
-  }
-
-  .mid-section {
-    margin-top: 5px;
   }
 
   .column-1 {
@@ -34,38 +18,33 @@
   .status-type-assigned-section,
   .comp-ref-file-num-section,
   .client-id-file-section,
-  .opolicy-section,
-  .lpolicy-section {
+  .requestor-req-date-close-date-section {
     gap: 10px;
     width: 100%;
     align-items: center;
   
-    .city {
+    .city,
+    .clientName  {
       flex: 1;
     }
 
     .zip {
-      flex: .45;
-    }
-
-    .clientName,
-    .oPolicyNumber,
-    .lPolicyNumber {
       flex: .4;
     }
-    .clientFileNumber,
-    .oPolicyAmount,
-    .lPolicyAmount {
-      flex: .25;
+
+    .compRef,
+    .fileNumber,
+    .clientFileNumber {
+      flex: .5;
     }
   }
 
   .status-type-assigned-section,
-  .notes-section {
+  .instructions-section {
     margin-top: 5px;
   }
 
-  .notes-section {
+  .instructions-section {
     textarea {
       resize: none;
       height: 50px;
@@ -74,4 +53,3 @@
     }
   }
 }
-

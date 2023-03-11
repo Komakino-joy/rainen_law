@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 import { Property } from '@/types/common';
 import { ChevronUp, ChevronDown } from '../Icons/Icons';
-import './ClientCard.scss'
-import '../../styles/globals.scss'
+import styles from './ClientCard.module.scss'
 
 interface ClientCardProps {
   handleCardClick: (e: React.SyntheticEvent, propId: string) => void;
@@ -23,7 +22,7 @@ const ClientCard:React.FC<ClientCardProps> = ({
   return (
     <>
       { cProps && cProps.length > 0 &&
-        <div id='client-card-wrapper' className='flex-y'>
+        <div className={`flex-y ${styles['client-card-wrapper']}`}>
           <header className='flex-x'>
             <h4>{clientId} | {clientName} </h4>
             
@@ -33,7 +32,7 @@ const ClientCard:React.FC<ClientCardProps> = ({
             </div>
           </header>
 
-          <div className={`${isExpanded ? 'expanded' : ''} dropdown-content`}>
+          <div className={`${isExpanded ? styles.expanded : ''} ${styles['dropdown-content']}`}>
               { cProps.map((prop:Property) => {          
                   const address = [
                     prop.PSTRET,
@@ -47,7 +46,7 @@ const ClientCard:React.FC<ClientCardProps> = ({
                       <div
                         key={prop.PROPID}
                         onClick={(e) => handleCardClick(e, prop.PROPID)} 
-                        className={`flex-x client-card-info`}
+                        className={`flex-x ${styles['client-card-info']}`}
                       >
                         <section className='flex-y f-100'>
                           <span><b>Address:&nbsp;</b>{address.join(', ')}</span>

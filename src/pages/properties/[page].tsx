@@ -3,7 +3,7 @@ import React from 'react'
 import conn from '../../lib/db'
 import Pagination from '@/components/Pagination/Pagination'
 import PropertiesTable from '@/components/Tables/PropertiesTable'
-import '../../styles/globals.scss'
+// import '../../styles/globals.scss'
 
 export async function getServerSideProps(context:any) {
     const { page } = context.query
@@ -58,7 +58,7 @@ const Properties:React.FC<PropertiesProps> = ({
   pageSize, 
   currentPage
 }) =>  (
-  <div className='page-layout'>
+  <div>
     <h1 className='report-header'>Properties</h1>
     <PropertiesTable tableData={properties} />
     <Pagination 

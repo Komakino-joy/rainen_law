@@ -1,6 +1,6 @@
 import React from 'react';
 
-import '../Forms.common.scss';
+// import styles from './FormInput.module.scss';
 
 interface FormInput {
   customClass?: string;

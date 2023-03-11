@@ -4,7 +4,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import FormInput from "../Common/FormInput/FormInput";
-import './PropertyForm.scss'
+import styles from './PropertyForm.module.scss'
 
 interface PropertyFormProps {
   propertyId: string | null;
@@ -78,7 +78,7 @@ const PropertyForm:React.FC<PropertyFormProps> = ({
   const onSubmit = (data:any) => console.log(data);
 
   return (
-    <div id='manage-property-form' className='form-wrapper'>
+    <div className={`form-wrapper ${styles['manage-property-form']}`}>
         <header>
           <span>{propertyHeader.address}</span>
           <span>PROPID: {propertyHeader.id}</span>
@@ -86,14 +86,14 @@ const PropertyForm:React.FC<PropertyFormProps> = ({
       { isLoading ? <h4>Loading...</h4>
         :
         <form onSubmit={handleSubmit(onSubmit)}>
-          <section className="flex-x top-section">
-            <div className="flex-y column-1">
-              <div className="flex-x city-state-zip-section">
+          <section className={`flex-x ${styles['top-section']}`}>
+            <div className={`flex-y ${styles['column-1']}`}>
+              <div className={`flex-x ${styles['city-state-zip-section']}`}>
                 <FormInput 
                   name="city"
                   labelKey="city"
                   labelText="City"
-                  customClass='city'
+                  customClass={styles.city}
                   type="text" 
                   isRequired={true}
                   register={register} 
@@ -104,7 +104,7 @@ const PropertyForm:React.FC<PropertyFormProps> = ({
                   name="state"
                   labelKey="state"
                   labelText="State"
-                  customClass='state'
+                  customClass={styles.state}
                   type="select" 
                   options={abbreviatedStates}
                   isRequired={true}
@@ -116,7 +116,7 @@ const PropertyForm:React.FC<PropertyFormProps> = ({
                   name="zip"
                   labelKey="zip"
                   labelText="Zip Code"
-                  customClass='zip'
+                  customClass={styles.zip}
                   type="text" 
                   isRequired={true}
                   register={register} 
@@ -128,19 +128,19 @@ const PropertyForm:React.FC<PropertyFormProps> = ({
                 name="street"
                 labelKey="street"
                 labelText="Street"
-                customClass='street'
+                customClass={styles.street}
                 type="text" 
                 isRequired={true}
                 register={register} 
                 errors={errors}
               />
 
-              <div className="flex-x lot-condo-unit-section">
+              <div className={`flex-x ${styles['lot-condo-unit-section']}`}>
                 <FormInput 
                   name="lot"
                   labelKey="lot"
                   labelText="Lot"
-                  customClass='lot'
+                  customClass={styles.lot}
                   type="text" 
                   isRequired={false}
                   register={register} 
@@ -151,7 +151,7 @@ const PropertyForm:React.FC<PropertyFormProps> = ({
                   name="condo"
                   labelKey="condo"
                   labelText="Condo"
-                  customClass='condo'
+                  customClass={styles.condo}
                   type="text" 
                   isRequired={false}
                   register={register} 
@@ -162,7 +162,7 @@ const PropertyForm:React.FC<PropertyFormProps> = ({
                   name="unit"
                   labelKey="unit"
                   labelText="Unit"
-                  customClass='unit'
+                  customClass={styles.unit}
                   type="text" 
                   isRequired={false}
                   register={register} 
@@ -172,7 +172,7 @@ const PropertyForm:React.FC<PropertyFormProps> = ({
 
             </div>
 
-            <div className="flex-y column-2">
+            <div className={`flex-y ${styles['column-2']}`}>
               <FormInput 
                 name="book1"
                 labelKey="book1"
@@ -187,7 +187,7 @@ const PropertyForm:React.FC<PropertyFormProps> = ({
                 name="book2"
                 labelKey="book2"
                 labelText="Book 2"
-                customClass='book2'
+                customClass={styles.book2}
                 type="text" 
                 isRequired={false}
                 register={register} 
@@ -199,7 +199,7 @@ const PropertyForm:React.FC<PropertyFormProps> = ({
                 name="docNumber"
                 labelKey="docNumber"
                 labelText="Doc #"
-                customClass='docNumber'
+                customClass={styles.docNumber}
                 type="text" 
                 isRequired={false}
                 register={register} 
@@ -207,7 +207,7 @@ const PropertyForm:React.FC<PropertyFormProps> = ({
               />
             </div>
 
-            <div className="flex-y column-3">
+            <div className={`flex-y ${styles['column-3']}`}>
               <FormInput 
                 name="page1"
                 labelKey="page1"
@@ -240,8 +240,8 @@ const PropertyForm:React.FC<PropertyFormProps> = ({
             </div>
           </section>
 
-          <section className="flex-y mid-section">
-            <div className="flex-x status-type-assigned-section">
+          <section className={`flex-y ${styles['mid-section']}`}>
+            <div className={`flex-x ${styles['status-type-assigned-section']}`}>
               { statusOptions && statusOptions.length > 0 && 
                 <FormInput 
                   name="status"
@@ -282,12 +282,12 @@ const PropertyForm:React.FC<PropertyFormProps> = ({
               }
             </div>
 
-            <div className="flex-x comp-ref-file-num-section">
+            <div className={`flex-x ${styles['comp-ref-file-num-section']}`}>
               <FormInput 
                 name="clientName"
                 labelKey="clientName"
                 labelText="Interpolate ID"
-                customClass="clientName"
+                customClass={styles.clientName}
                 type="text" 
                 isRequired={true}
                 register={register} 
@@ -298,7 +298,7 @@ const PropertyForm:React.FC<PropertyFormProps> = ({
                 name="compRef"
                 labelKey="compRef"
                 labelText="Comp Ref"
-                customClass="compRef"
+                customClass={styles.compRef}
                 type="text" 
                 isRequired={true}
                 register={register} 
@@ -309,7 +309,7 @@ const PropertyForm:React.FC<PropertyFormProps> = ({
                 name="fileNumber"
                 labelKey="fileNumber"
                 labelText="File #"
-                customClass="fileNumber"
+                customClass={styles.fileNumber}
                 type="text" 
                 isRequired={true}
                 register={register} 
@@ -320,7 +320,7 @@ const PropertyForm:React.FC<PropertyFormProps> = ({
                 name="clientFileNumber"
                 labelKey="clientFileNumber"
                 labelText="Client's File #"
-                customClass="clientFileNumber"
+                customClass={styles.clientFileNumber}
                 type="text" 
                 isRequired={true}
                 register={register} 
@@ -328,7 +328,7 @@ const PropertyForm:React.FC<PropertyFormProps> = ({
               />
             </div>
 
-            <div className="flex-x requestor-req-date-close-date-section">
+            <div className={`flex-x ${styles['requestor-req-date-close-date-section']}`}>
               <FormInput 
                 name="requester"
                 labelKey="requester"
@@ -361,7 +361,7 @@ const PropertyForm:React.FC<PropertyFormProps> = ({
             </div>
           </section>
 
-          <section className='instructions-section'>
+          <section className={styles['instructions-section']}>
             <FormInput 
               name="instructions"
               labelKey="instructions"
@@ -373,8 +373,8 @@ const PropertyForm:React.FC<PropertyFormProps> = ({
             />
           </section>
 
-          <section className="submit-button-section">
-            <input className="submit-button" type="submit" />
+          <section className={styles["submit-button-section"]}>
+            <input className={styles["submit-button"]} type="submit" />
           </section>
         </form>
       }
