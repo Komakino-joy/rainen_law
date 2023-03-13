@@ -1,8 +1,20 @@
 import React, { useState } from 'react'
+import Link from 'next/link'
 import { ChevronDown } from '../Icons/Icons'
 import styles from './NavBarFacet.module.scss'
 
-const NavBarFacet = () => {
+interface NavBarFacetProps {
+  name: string;
+  links: {
+    href: string;
+    ctaText: string;
+  }[];
+}
+
+const NavBarFacet:React.FC<NavBarFacetProps> = ({
+  name,
+  links
+}) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false)
 
   return (
@@ -12,7 +24,7 @@ const NavBarFacet = () => {
         onMouseEnter={() => setIsExpanded(true)}
         onMouseLeave={() => setIsExpanded(false)}
       >
-        <span>Hello</span>
+        <span>{name}</span>
         <ChevronDown />
       </span>
       <div 
@@ -21,12 +33,16 @@ const NavBarFacet = () => {
         onMouseLeave={() => setIsExpanded(false)}
       >
         <div className={styles['nav-bar-facet-dropdown']}>
-          <span>Links</span>
-          <span>Links</span>
-          <span>Links</span>
-          <span>Links</span>
-          <span>Links</span>
-          <span>Links</span>
+          { links.map(link => (
+              <Link 
+                key={link.href}
+                href={link.href} 
+                onClick={() => setIsExpanded(false)}
+              >
+                {link.ctaText}
+              </Link>
+            ))
+          }
         </div>
       </div>
     </div>

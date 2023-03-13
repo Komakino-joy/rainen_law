@@ -4,6 +4,7 @@ import {
 } from "react-hook-form";
 import { useRouter } from "next/router";
 import FormInput from "../Common/FormInput/FormInput";
+import { usePropertiesContext } from "@/context/Properties";
 // import ComboBoxExample from "@/components/ComboBox/ComboBox";
 import styles from './SearchPropertiesForm.module.scss'
 import Button from "@/components/Button/Button";
@@ -11,18 +12,15 @@ import Button from "@/components/Button/Button";
 interface SearchPropertiesFormProps {
   onSubmit: any;
   clientOptions: {CNAME: string}[];
-  cityOptions: {PCITY:string}[];
-  typeOptions: {PTYPE:string}[];
-  statusOptions: {PSTAT:string}[];
 }
 
 const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
   onSubmit,
-  clientOptions,
-  cityOptions,
-  typeOptions,
-  statusOptions,
+  clientOptions
 }) => {
+
+  const {cityOptions, typeOptions, statusOptions} = usePropertiesContext()
+
   const { 
     register, 
     handleSubmit, 

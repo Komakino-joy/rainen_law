@@ -1,4 +1,5 @@
 .manage-property-form {
+  padding: 10px 0px;
   .top-section,
   .mid-section {
     gap: 10px;
@@ -51,5 +52,11 @@
       padding: 5px;
       width: 100%;
     }
+  }
+
+  .submit-button-section {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
   }
 }

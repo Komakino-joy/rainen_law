@@ -59,7 +59,7 @@ const Properties:React.FC<PropertiesProps> = ({
   currentPage
 }) =>  (
   <div>
-    <h1 className='report-header'>Properties</h1>
+    <h1>All Properties <span className='italicized-record-count' >({currentPage} / {Math.floor(totalRecords/pageSize)})</span></h1>
     <PropertiesTable tableData={properties} />
     <Pagination 
       href={'properties'} 

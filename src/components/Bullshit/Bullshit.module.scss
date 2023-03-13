@@ -1,0 +1,12 @@
+.nav-bar-wrapper {
+  display: flex;
+  align-items: flex-end;
+  gap: 20px;
+  padding: 10px 20px;
+
+  .title {
+    font-size: 25px ; 
+    font-weight: 500;
+    text-transform: capitalize;
+  }
+}

@@ -1,3 +1,5 @@
+'use client';
+
 import { Property } from '@/types/common';
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
@@ -7,16 +9,10 @@ import PropertyForm from '@/components/Forms/PropertyForm/PropertyForm';
 import InfoCard from '@/components/InfoCard/InfoCard';
 import SearchPropertiesForm from '@/components/Forms/SearchPropertiesForm/SearchPropertiesForm'
 import styles from './SearchPropertiesPage.module.scss'
-import Bullshit from '@/components/Bullshit/Bullshit';
-
 
 const SearchPropertiesPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [clientOptions, setClientOptions] = useState([])
-  const [cityOptions, setCityOptions] = useState([])
-  const [typeOptions, setTypeOptions] = useState([])
-  const [statusOptions, setStatusOptions] = useState([])
-  const [assignOptions, setAssignOptions] = useState([])
   const [clientProperties, setClientProperties] = useState(null)
   const [selectedPropId, setSelectedPropId] = useState<string|null>(null)
   const [noResults, setNoResults] = useState<boolean>(false)
@@ -26,27 +22,6 @@ const SearchPropertiesPage = () => {
       const response = await axios.get('api/properties/get-all-clients-with-properties')
       setClientOptions(response.data)
     })();
-
-    (async() => {
-      const response = await axios.get('api/properties/get-distinct-city-options')
-      setCityOptions(response.data)
-    })();
-
-    (async() => {
-      const response = await axios.get('api/properties/get-distinct-type-options')
-      setTypeOptions(response.data)
-    })();
-
-    (async() => {
-      const response = await axios.get('api/properties/get-distinct-status-options')
-      setStatusOptions(response.data)
-    })();
-
-    (async() => {
-      const response = await axios.get('api/properties/get-distinct-assign-options')
-      setAssignOptions(response.data)
-    })();
-
   },[])
 
   const handleCardClick =(e: React.SyntheticEvent, propId: string) => {
@@ -87,13 +62,9 @@ const SearchPropertiesPage = () => {
 
   return (
     <div className={styles['properties-search-page']}>
-      <Bullshit />
       <SearchPropertiesForm 
         onSubmit={onSubmit}
         clientOptions={clientOptions}
-        cityOptions={cityOptions}
-        typeOptions={typeOptions}
-        statusOptions={statusOptions}
       />
       
         { clientProperties && Object.keys(clientProperties).length > 0 ?
@@ -124,16 +95,9 @@ const SearchPropertiesPage = () => {
           show={showModal}
           title={''}
       >
-        { selectedPropId 
-          && typeOptions.length > 0 
-          && statusOptions.length > 0
-          && assignOptions.length > 0
-          &&
+        { selectedPropId && 
           <PropertyForm 
             propertyId={selectedPropId} 
-            typeOptions={typeOptions}
-            statusOptions={statusOptions}
-            assignOptions={assignOptions}
           />
         }
       </Modal>

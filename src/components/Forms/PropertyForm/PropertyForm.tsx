@@ -1,81 +1,96 @@
 
-import { timestampToDate, abbreviatedStates } from "@/utils";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { timestampToDate, abbreviatedStates } from "@/utils";
+import { usePropertiesContext } from "@/context/Properties";
 import FormInput from "../Common/FormInput/FormInput";
 import styles from './PropertyForm.module.scss'
+import Button from "@/components/Button/Button";
 
 interface PropertyFormProps {
   propertyId: string | null;
-  typeOptions: {PTYPE:string}[];
-  statusOptions: {PSTAT:string}[];
-  assignOptions: {PASIGN:string}[];
+  handleAfterSubmit?: (propId: string) => void;
 }
 
 const PropertyForm:React.FC<PropertyFormProps> = ({
   propertyId,
-  statusOptions,
-  typeOptions,
-  assignOptions
+  handleAfterSubmit = () => {},
 }) => {
+
+  const {assignOptions, typeOptions, statusOptions} = usePropertiesContext()
 
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [propertyHeader, setPropertyHeader] = useState<{id:string, address:string}>({id: 'New', address: 'New'})
+  const [clientOptions, setClientOptions] = useState([])
+
+  useEffect(() => {
+    (async() => {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/properties/get-all-clients-with-properties`)
+      setClientOptions(response.data)
+    })();
+  },[])
 
   const { 
     register, 
     handleSubmit, 
-    formState: { errors },
-  } = useForm({
+    formState: { errors, isDirty },
+    reset,
+    } = useForm({
     defaultValues: async () => {
-      setIsLoading(true)
-      const response = await axios.post('/api/properties/post-selected-property', {propertyId})
-      
-      const {
-        PROPID='', PCITY='', PSTRET='', PSTATE='', PZIP='', 
-        PBOOK1='', PBOOK2='', PDOCNUM='', PPAGE1='', PPAGE2='',
-        PCERT1='', PLOT='', PCONDO='', PUNIT='', PSTAT='', PTYPE='', 
-        PASIGN='', CNAME='', PCOMPREF='', PFILE='', CFILE='', 
-        PREQ='', PRDATE='', PCDATE='', PINSTR=''
-      } = response.data[0]
-
-      setPropertyHeader({
-        id: PROPID,
-        address: `${PCITY} / ${PSTRET}`,
-      })
-
-      setIsLoading(false)
-      return {
-        city: PCITY ,
-        state: PSTATE ,
-        zip: PZIP ,
-        book1: PBOOK1 ,
-        book2: PBOOK2 ,
-        docNumber: PDOCNUM ,
-        page1: PPAGE1 ,
-        page2: PPAGE2 ,
-        cert1: PCERT1 ,
-        street: PSTRET ,
-        lot: PLOT ,
-        condo: PCONDO ,
-        unit: PUNIT ,
-        status: PSTAT ,
-        type: PTYPE ,
-        assigned: PASIGN ,
-        client:  CNAME,
-        compRef: PCOMPREF ,
-        fileNumber: PFILE ,
-        clientFileNumber: CFILE ,
-        requester: PREQ ,
-        requestDate: timestampToDate(PRDATE) ,
-        closedDate: timestampToDate(PCDATE) ,
-        instructions: PINSTR 
-      };
+      if (propertyId) {
+        setIsLoading(true)
+        const response = await axios.post('/api/properties/post-selected-property', {propertyId})
+        
+        const {
+          PROPID='', PCITY='', PSTRET='', PSTATE='', PZIP='', 
+          PBOOK1='', PBOOK2='', PDOCNUM='', PPAGE1='', PPAGE2='',
+          PCERT1='', PLOT='', PCONDO='', PUNIT='', PSTAT='', PTYPE='', 
+          PASIGN='', CNAME='', PCOMPREF='', PFILE='', CFILE='', 
+          PREQ='', PRDATE='', PCDATE='', PINSTR=''
+        } = response.data[0]
+  
+        setPropertyHeader({
+          id: PROPID,
+          address: `${PCITY} / ${PSTRET}`,
+        })
+  
+        setIsLoading(false)
+        return {
+          city: PCITY ,
+          state: PSTATE ,
+          zip: PZIP ,
+          book1: PBOOK1 ,
+          book2: PBOOK2 ,
+          docNumber: PDOCNUM ,
+          page1: PPAGE1 ,
+          page2: PPAGE2 ,
+          cert1: PCERT1 ,
+          street: PSTRET ,
+          lot: PLOT ,
+          condo: PCONDO ,
+          unit: PUNIT ,
+          status: PSTAT ,
+          type: PTYPE ,
+          assigned: PASIGN ,
+          client:  CNAME,
+          compRef: PCOMPREF ,
+          fileNumber: PFILE ,
+          clientFileNumber: CFILE ,
+          requester: PREQ ,
+          requestDate: PRDATE ? timestampToDate(PRDATE) : '',
+          closedDate: PCDATE ?timestampToDate(PCDATE) : '',
+          instructions: PINSTR 
+        };
+      }
     }
   });
 
-  const onSubmit = (data:any) => console.log(data);
+  const onSubmit = async(data:any) => {
+    const response = await axios.post(`/api/properties/post-new-property`, data)
+    reset()
+    handleAfterSubmit(response.data.newPropId)
+  };
 
   return (
     <div className={`form-wrapper ${styles['manage-property-form']}`}>
@@ -283,16 +298,19 @@ const PropertyForm:React.FC<PropertyFormProps> = ({
             </div>
 
             <div className={`flex-x ${styles['comp-ref-file-num-section']}`}>
-              <FormInput 
-                name="clientName"
-                labelKey="clientName"
-                labelText="Interpolate ID"
-                customClass={styles.clientName}
-                type="text" 
-                isRequired={true}
-                register={register} 
-                errors={errors}
-              />
+              { clientOptions && clientOptions.length > 0 &&
+                <FormInput 
+                  name="clientName"
+                  labelKey="clientName"
+                  labelText="Client Name"
+                  customClass={styles.clientName}
+                  type="select" 
+                  options={['', ...clientOptions.map((client: {CNAME:string}) => client.CNAME)]}
+                  isRequired={true}
+                  register={register} 
+                  errors={errors}
+                />
+              }
 
               <FormInput 
                 name="compRef"
@@ -374,7 +392,9 @@ const PropertyForm:React.FC<PropertyFormProps> = ({
           </section>
 
           <section className={styles["submit-button-section"]}>
-            <input className={styles["submit-button"]} type="submit" />
+            <Button type="submit" isDisabled={!isDirty}>
+              {propertyHeader.id === 'New' ? 'Submit' : 'Update'}  
+            </Button>
           </section>
         </form>
       }

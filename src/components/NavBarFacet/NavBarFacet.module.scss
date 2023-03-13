@@ -1,15 +1,19 @@
 .nav-bar-facet {
   position: relative;
   width: fit-content;
+  text-transform: capitalize;
   
   .nav-bar-facet-header {
     font-size: 20px;
     display: flex;
     align-items: center;
     gap: 5px;
+    letter-spacing: .5px;
 
     i {
       font-size: 10px;
+      margin-top: 5px;
+      margin-left: 5px;
     }
   }
   
@@ -28,18 +32,29 @@
     position: absolute;
     z-index: 100;
     background-color: white;
-    border-radius: 0 0 8px 8px;
+    border-radius: 8px;
     padding: 10px;
     border: 1px solid rgb(185, 185, 185);
-    border-top: none;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.363);
 
     .nav-bar-facet-dropdown {
       position: relative;
       display: flex;
       flex-direction: column;
-      font-size: 18px;
+      gap: 8px;
       line-height: 30px;
+      width: fit-content;
+      
+      a {
+        font-size: 15px;
+        white-space: nowrap;
+        font-weight: 500;
+
+
+        &:hover {
+          color: #0077d9;
+        }
+      }
     }
   }
   

@@ -4,7 +4,7 @@ import styles from './Button.module.scss'
 interface ButtonProps {
   children: React.ReactElement | string;
   isDisabled: boolean;
-  onClick: (e: React.SyntheticEvent) => void;
+  onClick?: (e: React.SyntheticEvent) => void;
   type: "button" | "submit" | "reset" | undefined;
   customClass?: string;
   inlineStyles?: {},
