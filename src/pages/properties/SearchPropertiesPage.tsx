@@ -97,7 +97,8 @@ const SearchPropertiesPage = () => {
       >
         { selectedPropId && 
           <PropertyForm 
-            propertyId={selectedPropId} 
+            propertyId={selectedPropId}
+            queryType='update' 
           />
         }
       </Modal>

@@ -111,12 +111,18 @@ export default async function handler(
         
         res.status(200).json({
           newPropId: newRecord.rows[0].PROPID,
-          message: 'New record inserted.'
+          message: 'New record inserted',
+          status: 'success'
         })
         
       } catch ( error ) {
         await conn.query('ROLLBACK')
         console.log( error );
+        res.status(400).json({
+          newPropId: null,
+          message: 'Failed to insert record',
+          status: 'failure'
+        })
       } 
     }
 }

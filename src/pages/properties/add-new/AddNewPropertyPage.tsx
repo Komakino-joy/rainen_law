@@ -25,6 +25,7 @@ const AddNewPropertyPage = () => {
       <div className='light-border'>
         <PropertyForm 
           propertyId={null} 
+          queryType='insert'
           handleAfterSubmit={handleAfterSubmit}
         />
       </div>
@@ -36,6 +37,7 @@ const AddNewPropertyPage = () => {
         { selectedPropId && 
           <PropertyForm 
             propertyId={selectedPropId} 
+            queryType='update'
           />
         }
       </Modal>

@@ -10,11 +10,13 @@ import Button from "@/components/Button/Button";
 
 interface PropertyFormProps {
   propertyId: string | null;
+  queryType: 'update' | 'insert';
   handleAfterSubmit?: (propId: string) => void;
 }
 
 const PropertyForm:React.FC<PropertyFormProps> = ({
   propertyId,
+  queryType, 
   handleAfterSubmit = () => {},
 }) => {
 
@@ -23,6 +25,11 @@ const PropertyForm:React.FC<PropertyFormProps> = ({
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [propertyHeader, setPropertyHeader] = useState<{id:string, address:string}>({id: 'New', address: 'New'})
   const [clientOptions, setClientOptions] = useState([])
+
+  const submitText = {
+    update: 'Update',
+    insert: 'Create'
+  }
 
   useEffect(() => {
     (async() => {
@@ -39,7 +46,9 @@ const PropertyForm:React.FC<PropertyFormProps> = ({
     } = useForm({
     defaultValues: async () => {
       if (propertyId) {
+
         setIsLoading(true)
+        
         const response = await axios.post('/api/properties/post-selected-property', {propertyId})
         
         const {
@@ -56,6 +65,7 @@ const PropertyForm:React.FC<PropertyFormProps> = ({
         })
   
         setIsLoading(false)
+
         return {
           city: PCITY ,
           state: PSTATE ,
@@ -73,7 +83,7 @@ const PropertyForm:React.FC<PropertyFormProps> = ({
           status: PSTAT ,
           type: PTYPE ,
           assigned: PASIGN ,
-          client:  CNAME,
+          clientName:  CNAME,
           compRef: PCOMPREF ,
           fileNumber: PFILE ,
           clientFileNumber: CFILE ,
@@ -87,9 +97,20 @@ const PropertyForm:React.FC<PropertyFormProps> = ({
   });
 
   const onSubmit = async(data:any) => {
-    const response = await axios.post(`/api/properties/post-new-property`, data)
-    reset()
-    handleAfterSubmit(response.data.newPropId)
+    if(!isDirty) return 
+    
+    if(queryType === 'insert') {
+      const response = await axios.post(`/api/properties/post-add-property`, data)
+      reset()
+      handleAfterSubmit(response.data.newPropId)
+      alert(`${response.data.status}: ${response.data.message}`)
+    }
+
+    if(queryType === 'update') {
+      const response = await axios.post(`/api/properties/post-update-property`, {id: propertyHeader.id, ...data})
+      alert(`${response.data.status}: ${response.data.message}`)
+      reset(response.data.updatedRecord)
+    }
   };
 
   return (
@@ -393,7 +414,7 @@ const PropertyForm:React.FC<PropertyFormProps> = ({
 
           <section className={styles["submit-button-section"]}>
             <Button type="submit" isDisabled={!isDirty}>
-              {propertyHeader.id === 'New' ? 'Submit' : 'Update'}  
+              {submitText[queryType]} 
             </Button>
           </section>
         </form>
