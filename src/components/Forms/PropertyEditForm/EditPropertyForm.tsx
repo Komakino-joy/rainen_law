@@ -1,13 +1,16 @@
-
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import axios from "axios";
+import toast from "react-hot-toast";
+import 'react-tabs/style/react-tabs.css';
+
+import Button from "@/components/Button/Button";
+import FormInput from "../Common/FormInput/FormInput";
+
 import { timestampToDate, abbreviatedStates } from "@/utils";
 import { usePropertiesContext } from "@/context/Properties";
-import FormInput from "../Common/FormInput/FormInput";
 import styles from './EditPropertyForm.module.scss'
-import Button from "@/components/Button/Button";
-import toast from "react-hot-toast";
+import PropertyEditFormTabs from "@/components/Tabs/PropertyEditFormTabs";
 
 interface EditPropertyFormProps {
   propertyId: string | null;
@@ -27,6 +30,7 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
   const [propertyHeader, setPropertyHeader] = useState<{id:string, address:string}>({id: 'New', address: 'New'})
   const [clientOptions, setClientOptions] = useState([])
   const [lastUpdated, setLastedUpdated] = useState<{date:string, time:string} | null>(null)
+  const [compRef, setCompRef] = useState(0)
 
   const submitText = {
     update: 'Update',
@@ -38,6 +42,13 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
       const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/clients/get-all-clients`)
       setClientOptions(response.data)
     })();
+
+
+    if(queryType === 'insert') (async() => {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/properties/get-new-comp-ref`)
+        setCompRef(response.data.newCompRef)
+      })();
+    
   },[])
 
   const { 
@@ -350,6 +361,8 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
                 isRequired={true}
                 register={register} 
                 errors={errors}
+                disabled
+                defaultValue={compRef}
               />
 
               <FormInput  
@@ -436,6 +449,10 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
           </>
         }
       </footer>
+
+      <PropertyEditFormTabs 
+      
+      />
     </div>
   );
 }

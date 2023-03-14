@@ -16,6 +16,7 @@ interface FormInput {
   max?: string;
   defaultValue?: any;
   name:string;
+  disabled?:boolean;
 }
 
 const Required:React.FC = () => (
@@ -35,7 +36,8 @@ const FormInput:React.FC<FormInput> = ({
   min='',
   step='',
   max='',
-  defaultValue=''
+  defaultValue='',
+  disabled=false,
 }) => {
 
   return(
@@ -68,6 +70,7 @@ const FormInput:React.FC<FormInput> = ({
             step={step}
             max={max}
             defaultValue={defaultValue}
+            disabled={disabled}
             {...register(labelKey, { required: isRequired })} 
           />
       }
