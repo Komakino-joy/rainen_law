@@ -24,6 +24,7 @@ const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
   const { 
     register, 
     handleSubmit, 
+    reset,
     formState: { errors, isDirty, isValid, isSubmitting }
   } = useForm();
 
@@ -169,6 +170,13 @@ const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
         />
 
         <section className={`flex-x ${styles['submit-button-section']}`}>
+          <Button 
+            isDisabled={false} 
+            type='button'
+            onClick={handleViewAllClick} 
+          >
+            View All
+          </Button>
           <Button  
             isDisabled={!isDirty} 
             onClick={() => {}} 
@@ -177,11 +185,12 @@ const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
             Submit Search
           </Button>
           <Button 
-            isDisabled={false} 
+            isDisabled={!isDirty} 
             type='button'
-            onClick={handleViewAllClick} 
+            onClick={() => reset()} 
+            redVariant
           >
-            View All
+            Clear Form
           </Button>
         </section>
       </form>

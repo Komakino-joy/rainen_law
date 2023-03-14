@@ -16,3 +16,13 @@
     transform: rotate(-45deg);
   }
 }
+
+.icon-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  svg {
+    cursor: pointer;
+  }
+}

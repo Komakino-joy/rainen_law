@@ -69,9 +69,10 @@ export default async function handler(
             "PZIP" = $23,
             "PDOCNUM" = $24,
             "PRDATE" = $25,
-            "PCDATE" = $26
+            "PCDATE" = $26,
+            "LAST_UPDATED" = $27 
           
-          WHERE pm."PROPID" = $27
+          WHERE pm."PROPID" = $28
 
             RETURNING *
           ;
@@ -102,7 +103,8 @@ export default async function handler(
             docNumber,
             requestDate === '' ? null : requestDate,
             closedDate === '' ? null : closedDate,
-            id
+            new Date(),
+            id,
           ]
         )
 
@@ -122,7 +124,7 @@ export default async function handler(
         console.log( error );
         res.status(400).json({
           message: 'Failed to update record',
-          status: 'failure'
+          status: 'error'
         })
       } 
     }

@@ -22,9 +22,12 @@
     "pg": "^8.9.0",
     "pg-promise": "^11.3.0",
     "react": "18.2.0",
+    "react-confirm-alert": "^3.0.6",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.43.1",
+    "react-hot-toast": "^2.4.0",
     "react-table": "^7.8.0",
+    "react-tabs": "^6.0.0",
     "sass": "^1.58.0",
     "styled-components": "^5.3.8",
     "typescript": "4.9.5"

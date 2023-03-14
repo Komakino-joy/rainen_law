@@ -1,9 +1,14 @@
 "use client";
-import React from 'react'
-import conn from '../../lib/db'
+import { Property } from '@/types/common';
+
+import React, { useEffect, useState } from 'react'
+import { useRouter } from 'next/router';
+
+import Modal from '@/components/Modal/Modal';
 import Pagination from '@/components/Pagination/Pagination'
-import PropertiesTable from '@/components/Tables/PropertiesTable'
-// import '../../styles/globals.scss'
+import PropertiesTable from '@/components/Tables/PropertiesTable/PropertiesTables'
+import EditPropertyForm from '@/components/Forms/PropertyEditForm/EditPropertyForm';
+import conn from '../../lib/db'
 
 export async function getServerSideProps(context:any) {
     const { page } = context.query
@@ -16,6 +21,7 @@ export async function getServerSideProps(context:any) {
     const allProperties = `
       SELECT 
         cm."CNAME",
+        pm."PTDATE",
         pm."PCITY",
         pm."PSTRET",
         pm."PLOT",
@@ -26,11 +32,12 @@ export async function getServerSideProps(context:any) {
         pm."PTYPE",
         pm."PSTAT",
         pm."PCOMPREF",
-        pm."PINSTR"
+        pm."PINSTR",
+        pm."PROPID"
       FROM public."propmstr" pm
       LEFT JOIN public."clntmstr" cm 
       ON cm."CNMBR" = pm."PNMBR"
-      ORDER BY pm."PNMBR"
+      ORDER by pm."PTDATE" DESC
       OFFSET $1 LIMIT ${pageSize}
     `
     const propertiesResults = JSON.parse(JSON.stringify((await conn.query(allProperties, [pageOffset])).rows));
@@ -57,17 +64,79 @@ const Properties:React.FC<PropertiesProps> = ({
   totalRecords, 
   pageSize, 
   currentPage
-}) =>  (
-  <div>
-    <h1>All Properties <span className='italicized-record-count' >({currentPage} / {Math.floor(totalRecords/pageSize)})</span></h1>
-    <PropertiesTable tableData={properties} />
-    <Pagination 
-      href={'properties'} 
-      totalRecords={totalRecords} 
-      pageSize={pageSize} 
-      currentPage={currentPage} 
-    />
-  </div>
-)
+}) =>  {
+  const router = useRouter()
+
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [tableData, setTableData] = useState<Property[] | null>(null)
+  const [selectedPropId, setSelectedPropId] = useState<string|null>(null)
+  const [shouldReload, setShouldReload] = useState(false)
+  
+  const handleModalOpen =(e: React.SyntheticEvent, propId: string) => {
+    e.preventDefault()
+    setSelectedPropId(propId)
+    setShowModal(true)
+  }
+
+  const handleModalClose = () => {
+    setSelectedPropId(null)
+    setShowModal(false)
+
+    if(shouldReload) {
+      router.reload()
+    }
+  }
+
+  const handleAfterSubmit = (propId: string) => {
+    setShouldReload(true)
+  }
+
+  useEffect(() => {
+    setTableData(properties)
+  },[])
+
+  
+  return (
+    <>
+      { tableData && 
+        <>
+          <h1>
+            All Properties 
+            <span className='italicized-record-count'>
+              page ({currentPage}/{Math.floor(totalRecords/pageSize)})
+            </span>
+          </h1>
+
+          <PropertiesTable 
+            tableData={tableData} 
+            handleModalOpen={handleModalOpen}
+            setTableData={setTableData}
+          />
+
+          <Pagination 
+            href={'properties'} 
+            totalRecords={totalRecords} 
+            pageSize={pageSize} 
+            currentPage={currentPage} 
+          />
+        </>
+      }
+
+      <Modal
+        onClose={handleModalClose}
+        show={showModal}
+        title={''}
+      >
+        { selectedPropId && 
+          <EditPropertyForm 
+            propertyId={selectedPropId}
+            queryType='update'
+            handleAfterSubmit={handleAfterSubmit}
+          />
+        }
+      </Modal>
+    </>  
+  )
+}
 
 export default Properties

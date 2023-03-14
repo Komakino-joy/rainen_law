@@ -1,4 +1,5 @@
 import Bullshit from "./Bullshit/Bullshit";
+import { Toaster } from 'react-hot-toast';
 import { PropertiesContextProvider } from "@/context/Properties";
 
 export default function Layout({ children }) {
@@ -8,6 +9,7 @@ export default function Layout({ children }) {
       <PropertiesContextProvider>
         <main>{children}</main>
       </PropertiesContextProvider>
+      <Toaster />
     </div>
   )
 }

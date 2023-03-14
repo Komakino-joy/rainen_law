@@ -1,4 +1,4 @@
-import ClientForm from '@/components/Forms/ClientForm/ClientForm'
+import ClientForm from '@/components/Forms/ClientEditForm/ClientForm'
 import React from 'react'
 
 const ManageClients = () => {

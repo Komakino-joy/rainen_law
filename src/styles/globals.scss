@@ -35,7 +35,12 @@ a {
 }
 
 .app-content {
-  padding: 20px 50px;
+  padding: 60px 50px;
+}
+
+.center-margin {
+  margin: 0 auto;
+  width: fit-content;
 }
 
 .report-header {
@@ -52,8 +57,15 @@ a {
   font-family: Verdana, Geneva, Tahoma, sans-serif ;
 }
 
+.italicized-text {
+  font-style: italic;
+  font-weight: normal;
+  font-size: 11px !important;  
+  font-family: Verdana, Geneva, Tahoma, sans-serif ;
+}
+
 h1 {
-  padding: 20px 0 20px 20px;
+  padding: 20px 0 20px 10px;
   font-size: 28px;
   color: rgb(58 58 58);
   text-transform: capitalize;
@@ -117,6 +129,12 @@ h1 {
     }
   }
 
+}
+
+.form-footer {
+  margin-bottom: -10px;
+  font-size: 12px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 // GLOBAL CLASSES TO HELP WITH LAYOUTS

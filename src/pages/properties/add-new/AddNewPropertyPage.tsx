@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react'
-import PropertyForm from '@/components/Forms/PropertyForm/PropertyForm'
+import PropertyForm from '@/components/Forms/PropertyEditForm/EditPropertyForm'
 import Modal from '@/components/Modal/Modal';
 
 const AddNewPropertyPage = () => {
@@ -20,7 +20,7 @@ const AddNewPropertyPage = () => {
   }
 
   return (
-    <>
+    <div className='center-margin'>
       <h1>Add new property</h1>
       <div className='light-border'>
         <PropertyForm 
@@ -41,7 +41,7 @@ const AddNewPropertyPage = () => {
           />
         }
       </Modal>
-    </>
+    </div>
   )
 }
 

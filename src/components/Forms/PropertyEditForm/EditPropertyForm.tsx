@@ -5,16 +5,17 @@ import { useForm } from "react-hook-form";
 import { timestampToDate, abbreviatedStates } from "@/utils";
 import { usePropertiesContext } from "@/context/Properties";
 import FormInput from "../Common/FormInput/FormInput";
-import styles from './PropertyForm.module.scss'
+import styles from './EditPropertyForm.module.scss'
 import Button from "@/components/Button/Button";
+import toast from "react-hot-toast";
 
-interface PropertyFormProps {
+interface EditPropertyFormProps {
   propertyId: string | null;
   queryType: 'update' | 'insert';
   handleAfterSubmit?: (propId: string) => void;
 }
 
-const PropertyForm:React.FC<PropertyFormProps> = ({
+const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
   propertyId,
   queryType, 
   handleAfterSubmit = () => {},
@@ -25,6 +26,7 @@ const PropertyForm:React.FC<PropertyFormProps> = ({
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [propertyHeader, setPropertyHeader] = useState<{id:string, address:string}>({id: 'New', address: 'New'})
   const [clientOptions, setClientOptions] = useState([])
+  const [lastUpdated, setLastedUpdated] = useState<{date:string, time:string} | null>(null)
 
   const submitText = {
     update: 'Update',
@@ -33,7 +35,7 @@ const PropertyForm:React.FC<PropertyFormProps> = ({
 
   useEffect(() => {
     (async() => {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/properties/get-all-clients-with-properties`)
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/clients/get-all-clients`)
       setClientOptions(response.data)
     })();
   },[])
@@ -43,58 +45,61 @@ const PropertyForm:React.FC<PropertyFormProps> = ({
     handleSubmit, 
     formState: { errors, isDirty },
     reset,
-    } = useForm({
-    defaultValues: async () => {
-      if (propertyId) {
+  } = useForm({
+      defaultValues: async () => {
+        if (propertyId) {
 
-        setIsLoading(true)
-        
-        const response = await axios.post('/api/properties/post-selected-property', {propertyId})
-        
-        const {
-          PROPID='', PCITY='', PSTRET='', PSTATE='', PZIP='', 
-          PBOOK1='', PBOOK2='', PDOCNUM='', PPAGE1='', PPAGE2='',
-          PCERT1='', PLOT='', PCONDO='', PUNIT='', PSTAT='', PTYPE='', 
-          PASIGN='', CNAME='', PCOMPREF='', PFILE='', CFILE='', 
-          PREQ='', PRDATE='', PCDATE='', PINSTR=''
-        } = response.data[0]
-  
-        setPropertyHeader({
-          id: PROPID,
-          address: `${PCITY} / ${PSTRET}`,
-        })
-  
-        setIsLoading(false)
+          setIsLoading(true)
+          
+          const response = await axios.post('/api/properties/post-selected-property', {propertyId})
+          
+          const {
+            PROPID='', PCITY='', PSTRET='', PSTATE='', PZIP='', 
+            PBOOK1='', PBOOK2='', PDOCNUM='', PPAGE1='', PPAGE2='',
+            PCERT1='', PLOT='', PCONDO='', PUNIT='', PSTAT='', PTYPE='', 
+            PASIGN='', CNAME='', PCOMPREF='', PFILE='', CFILE='', 
+            PREQ='', PRDATE='', PCDATE='', PINSTR='', LAST_UPDATED
+          } = response.data[0]
+    
+          if (LAST_UPDATED) setLastedUpdated(timestampToDate(LAST_UPDATED, 'mmDDyyyy'))
 
-        return {
-          city: PCITY ,
-          state: PSTATE ,
-          zip: PZIP ,
-          book1: PBOOK1 ,
-          book2: PBOOK2 ,
-          docNumber: PDOCNUM ,
-          page1: PPAGE1 ,
-          page2: PPAGE2 ,
-          cert1: PCERT1 ,
-          street: PSTRET ,
-          lot: PLOT ,
-          condo: PCONDO ,
-          unit: PUNIT ,
-          status: PSTAT ,
-          type: PTYPE ,
-          assigned: PASIGN ,
-          clientName:  CNAME,
-          compRef: PCOMPREF ,
-          fileNumber: PFILE ,
-          clientFileNumber: CFILE ,
-          requester: PREQ ,
-          requestDate: PRDATE ? timestampToDate(PRDATE) : '',
-          closedDate: PCDATE ?timestampToDate(PCDATE) : '',
-          instructions: PINSTR 
-        };
+          setPropertyHeader({
+            id: PROPID,
+            address: `${PCITY} / ${PSTRET}`,
+          })
+    
+          setIsLoading(false)
+
+          return {
+            city: PCITY ,
+            state: PSTATE ,
+            zip: PZIP ,
+            book1: PBOOK1 ,
+            book2: PBOOK2 ,
+            docNumber: PDOCNUM ,
+            page1: PPAGE1 ,
+            page2: PPAGE2 ,
+            cert1: PCERT1 ,
+            street: PSTRET ,
+            lot: PLOT ,
+            condo: PCONDO ,
+            unit: PUNIT ,
+            status: PSTAT ,
+            type: PTYPE ,
+            assigned: PASIGN ,
+            clientName:  CNAME,
+            compRef: PCOMPREF ,
+            fileNumber: PFILE ,
+            clientFileNumber: CFILE ,
+            requester: PREQ ,
+            requestDate: PRDATE ? timestampToDate(PRDATE, "yyyyMMdd").date : '',
+            closedDate: PCDATE ?timestampToDate(PCDATE, "yyyyMMdd").date : '',
+            instructions: PINSTR 
+          };
+        }
       }
     }
-  });
+  );
 
   const onSubmit = async(data:any) => {
     if(!isDirty) return 
@@ -103,13 +108,16 @@ const PropertyForm:React.FC<PropertyFormProps> = ({
       const response = await axios.post(`/api/properties/post-add-property`, data)
       reset()
       handleAfterSubmit(response.data.newPropId)
-      alert(`${response.data.status}: ${response.data.message}`)
+      // @ts-ignore
+      toast[response.data.status](response.data.message)
     }
 
     if(queryType === 'update') {
       const response = await axios.post(`/api/properties/post-update-property`, {id: propertyHeader.id, ...data})
-      alert(`${response.data.status}: ${response.data.message}`)
+      handleAfterSubmit(propertyHeader.id)
       reset(response.data.updatedRecord)
+      // @ts-ignore
+      toast[response.data.status](response.data.message)
     }
   };
 
@@ -417,11 +425,20 @@ const PropertyForm:React.FC<PropertyFormProps> = ({
               {submitText[queryType]} 
             </Button>
           </section>
+
         </form>
       }
+      <footer className="form-footer">
+        { lastUpdated && 
+          <>
+            <span>Last Updated: {lastUpdated.date}</span>
+            <span className="italicized-text">{lastUpdated.time}</span>
+          </>
+        }
+      </footer>
     </div>
   );
 }
 
 
-export default PropertyForm;
+export default EditPropertyForm;

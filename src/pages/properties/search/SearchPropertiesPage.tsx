@@ -5,9 +5,9 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import Modal from '@/components/Modal/Modal';
 import ClientCard from '@/components/ClientCard/ClientCard';
-import PropertyForm from '@/components/Forms/PropertyForm/PropertyForm';
+import PropertyForm from '@/components/Forms/PropertyEditForm/EditPropertyForm';
 import InfoCard from '@/components/InfoCard/InfoCard';
-import SearchPropertiesForm from '@/components/Forms/SearchPropertiesForm/SearchPropertiesForm'
+import SearchPropertiesForm from '@/components/Forms/PropertySearchForm/SearchPropertiesForm'
 import styles from './SearchPropertiesPage.module.scss'
 
 const SearchPropertiesPage = () => {
@@ -19,7 +19,7 @@ const SearchPropertiesPage = () => {
 
   useEffect(() => {
     (async() => {
-      const response = await axios.get('api/properties/get-all-clients-with-properties')
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/properties/get-all-clients-with-properties`)
       setClientOptions(response.data)
     })();
   },[])
@@ -39,10 +39,11 @@ const SearchPropertiesPage = () => {
     if(Object.keys(data).every(key => data[key] === '')) {
       alert('No search parameters were provided.')
     } else {
-      const response = await axios.post('/api/properties/post-search-property', data)
-
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/properties/post-search-property`, data)
       if(response.data.rows.length === 0) {
-        return setNoResults(true)
+        setNoResults(true)
+        setClientProperties(null)
+        return 
       }
       
       setNoResults(false)
@@ -61,7 +62,7 @@ const SearchPropertiesPage = () => {
   }
 
   return (
-    <div className={styles['properties-search-page']}>
+    <div className={`${styles['properties-search-page']} center-margin`}>
       <SearchPropertiesForm 
         onSubmit={onSubmit}
         clientOptions={clientOptions}

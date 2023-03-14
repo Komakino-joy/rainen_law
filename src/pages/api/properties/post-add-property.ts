@@ -68,11 +68,12 @@ export default async function handler(
             "PZIP",
             "PDOCNUM",
             "PRDATE",
-            "PCDATE"
+            "PCDATE",
+            "LAST_UPDATED"
           )
           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11,
             $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, 
-            $22, $23, $24, $25, $26)
+            $22, $23, $24, $25, $26, $27)
 
             RETURNING *
           ;
@@ -102,7 +103,8 @@ export default async function handler(
             zip,
             docNumber,
             requestDate === '' ? null : requestDate,
-            closedDate === '' ? null : closedDate
+            closedDate === '' ? null : closedDate,
+            new Date(),
           ]
         )
 

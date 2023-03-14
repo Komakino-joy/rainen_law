@@ -7,7 +7,8 @@ interface ButtonProps {
   onClick?: (e: React.SyntheticEvent) => void;
   type: "button" | "submit" | "reset" | undefined;
   customClass?: string;
-  inlineStyles?: {},
+  inlineStyles?: {};
+  redVariant?: boolean;
 }
 
 const Button:React.FC<ButtonProps> = ({
@@ -17,11 +18,13 @@ const Button:React.FC<ButtonProps> = ({
   type,
   customClass,
   inlineStyles,
+  redVariant
 }) => (
   <button 
     className={`
       ${customClass}
       ${styles['base-styles']} 
+      ${redVariant ? styles['red-variant'] : ''}
       ${isDisabled ? styles.disabled : ''} 
     `}
     onClick={isDisabled ? () => {} : onClick}

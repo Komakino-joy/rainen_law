@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Property } from '@/types/common';
 import { ChevronUp, ChevronDown } from '../Icons/Icons';
 import styles from './ClientCard.module.scss'
+import { formatAddress } from '@/utils';
 
 interface ClientCardProps {
   handleCardClick: (e: React.SyntheticEvent, propId: string) => void;
@@ -34,14 +35,9 @@ const ClientCard:React.FC<ClientCardProps> = ({
 
           <div className={`${isExpanded ? styles.expanded : ''} ${styles['dropdown-content']}`}>
               { cProps.map((prop:Property) => {          
-                  const address = [
-                    prop.PSTRET,
-                  ]
 
-                  if(prop.PCONDO) address.push(`${prop.PCONDO}`) 
-                  if(prop.PUNIT) address.push(`Unit ${prop.PUNIT}`) 
-                  if(prop.PLOT) address.push(`Lot ${prop.PLOT}`) 
-                  
+                  const address = formatAddress({propertyDetails: prop})
+
                   return (
                       <div
                         key={prop.PROPID}
@@ -49,7 +45,7 @@ const ClientCard:React.FC<ClientCardProps> = ({
                         className={`flex-x ${styles['client-card-info']}`}
                       >
                         <section className='flex-y f-100'>
-                          <span><b>Address:&nbsp;</b>{address.join(', ')}</span>
+                          <span><b>Address:&nbsp;</b>{address}</span>
                           <span><b>City:&nbsp;</b>{prop.PCITY}</span>
                           <span><b>Instructions:&nbsp;</b>{prop.PINSTR}</span>
                         </section>
