@@ -1,7 +1,8 @@
-export default function timestampToDate(timestamp: string, format: 'yyyyMMdd' | 'mmDDyyyy')
+export default function timestampToDate(timestamp: string | number, format: 'yyyyMMdd' | 'mmDDyyyy')
 {
  const date = new Date(timestamp)
- const yyyy = date.getFullYear(); 
+ const yyyy = date.getFullYear();
+  
  let mm:string|number  = date.getMonth()+1;
  let dd:string|number = date.getDate(); 
  let hh:string|number = date.getHours(); 

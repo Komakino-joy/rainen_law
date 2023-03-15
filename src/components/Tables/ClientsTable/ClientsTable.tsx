@@ -8,15 +8,14 @@ import toast from 'react-hot-toast'
 import axios from 'axios';
 
 import { PencilIcon, TrashIcon } from '@/components/Icons/Icons';
-import { timestampToDate } from '@/utils';
 
-interface PropertiesTableProps {
+interface ClientsTableProps {
   tableData: any;
   handleModalOpen: (e: React.SyntheticEvent, propId: string) => void;
   setTableData: (tableData: Property[]) => void;
 }
 
-const PropertiesTable:React.FC<PropertiesTableProps> = ({
+const ClientsTable:React.FC<ClientsTableProps> = ({
   tableData,
   handleModalOpen,
   setTableData
@@ -63,24 +62,44 @@ const PropertiesTable:React.FC<PropertiesTableProps> = ({
   const columns = useMemo(
     () => [
       {
-        Header: 'Date',
-        accessor: (d:any) => timestampToDate(d.PTDATE, 'mmDDyyyy').date,
+        Header: 'Cleint Name',
+        accessor: (d:any) => d.CNAME,
+      },
+      {
+        Header: 'Address',
+        accessor: (d:any) => `${d.CADD1} ${d.CADD2 ? d.CADD2 : ''}`,
       },
       {
         Header: 'City',
-        accessor: (d:any) => `${d.PCITY}`,
+        accessor: (d:any) => d.CCITY,
       },
       {
-        Header: 'Street',
-        accessor: (d:any) => `${d.PSTRET}`,
+        Header: 'State',
+        accessor: (d:any) => d.CSTATE,
       },
       {
-        Header: 'Lot',
-        accessor: (d:any) => `${d.PLOT}`,
+        Header: 'Zip',
+        accessor: (d:any) => d.CZIP,
       },
       {
-        Header: 'Condo',
-        accessor: (d:any) => d.PCONDO !== 'null' ? d.PCONDO : '',
+        Header: 'Phone',
+        accessor: (d:any) => d.CPHONE,
+      },
+      {
+        Header: 'Fax',
+        accessor: (d:any) => d.CFAX,
+      },
+      {
+        Header: 'Is Client?',
+        accessor: (d:any) => d.ISCLIENT ? 'Yes' : "No",
+      },
+      {
+        Header: 'Properties',
+        accessor: (d:any) => d.PROPCOUNT,
+      },
+      {
+        Header: 'Titles',
+        accessor: (d:any) => d.TITLESCOUNT,
       },
       {
         Header: 'View / Edit',
@@ -178,4 +197,4 @@ const PropertiesTable:React.FC<PropertiesTableProps> = ({
   )
 }
 
-export default PropertiesTable
+export default ClientsTable

@@ -14,8 +14,24 @@
     background: white;
     width: fit-content;
     height: fit-content;
+    max-height: 80vh;
+    overflow: auto;
     border-radius: 15px;
     padding: 5px 20px 15px 20px;
+
+    &::-webkit-scrollbar {
+      width: .5em;
+    }
+     
+    &::-webkit-scrollbar-track {
+      box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    }
+     
+    &::-webkit-scrollbar-thumb {
+      background-color: darkgrey;
+      outline: 1px solid slategrey;
+      border-radius: 100px;
+    }
 
     .modal-header {
       display: flex;

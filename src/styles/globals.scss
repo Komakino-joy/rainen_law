@@ -71,10 +71,20 @@ h1 {
   text-transform: capitalize;
 }
 
+h2 {
+  font-size: 20px;
+  color: rgb(58 58 58);
+  text-transform: capitalize;
+}
+
 .light-border {
   border: 1px solid #a5a5a57c;
   width: fit-content;
   border-radius: 10px;
+}
+
+.card-shadow {
+  box-shadow: 2px 2px 5px rgba(58, 58, 58, 0.137);
 }
 
 // GLOBAL FORM STYLES
@@ -82,6 +92,30 @@ h1 {
 .form-wrapper {
   border-radius: 8px;
   max-width: 600px;
+
+  &.is-date-selection {
+    width: fit-content;
+    padding: 10px 40px;
+
+    form {
+      gap: 15px;
+      padding: 10px 0;
+
+      .date-inputs {
+        align-items: flex-end;
+
+        input {
+          width: 120px !important;
+          height: 35px;
+          text-align: right;
+        }
+      }
+
+      .submit-button {
+        height: 30px;
+      }
+    }
+  }
 
   header {
     display: flex;
@@ -137,8 +171,59 @@ h1 {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-// GLOBAL CLASSES TO HELP WITH LAYOUTS
+// GLOBAL TABLE STYLES
+table{
+  width: 100%;
+  border-collapse: collapse;
+  
+  th {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    text-align: center;
+    font-weight: 500;
+    font-size: 11px;
+    font-family: sans-serif;
+    padding: 10px 5px;
+    background-color: rgb(41, 41, 41);
+    color: white;
+    border: 1px solid white;
+    letter-spacing: .5px;
+  }
 
+  
+  td {
+    line-height: 28px;
+    text-align: center;
+    white-space: nowrap;
+    padding: 8px;
+    font-size: 12px;
+    border-bottom: 1px solid lightgrey;
+  }
+
+  &.is-sub-report-table {
+    th {
+      background-color: rgba(24, 74, 240, 0.822);
+      border: 1px solid rgba(0, 63, 236, 0.692);
+    }
+
+    td {
+      padding: 0px 3px;
+      border: 1px solid lightgrey;
+    }
+  }
+
+  &.is-report-table {
+    th{
+      padding: 5px 10px;
+    }
+
+    td {
+      padding: 0 10px;
+    }
+  }
+
+}
+
+// GLOBAL CLASSES TO HELP WITH LAYOUTS
 .flex-x {
   display: flex;
 }
@@ -192,4 +277,16 @@ h1 {
 
 .w-50 {
   width: 50%;
+}
+
+.t-center {
+  text-align: center;
+}
+
+.t-right {
+  text-align: right;
+}
+
+.t-left {
+  text-align: left; 
 }

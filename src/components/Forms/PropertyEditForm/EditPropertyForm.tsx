@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import axios from "axios";
 import toast from "react-hot-toast";
 import 'react-tabs/style/react-tabs.css';
@@ -10,7 +11,8 @@ import FormInput from "../Common/FormInput/FormInput";
 import { timestampToDate, abbreviatedStates } from "@/utils";
 import { usePropertiesContext } from "@/context/Properties";
 import styles from './EditPropertyForm.module.scss'
-import PropertyEditFormTabs from "@/components/Tabs/PropertyEditFormTabs";
+import SubTableSellerBuyer from "@/components/Tables/SubTableSellerBuyer/SubTableSellerBuyer";
+import SubTableINS from "@/components/Tables/SubTableINS/SubTableINS";
 
 interface EditPropertyFormProps {
   propertyId: string | null;
@@ -27,10 +29,26 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
   const {assignOptions, typeOptions, statusOptions} = usePropertiesContext()
 
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [propertyHeader, setPropertyHeader] = useState<{id:string, address:string}>({id: 'New', address: 'New'})
   const [clientOptions, setClientOptions] = useState([])
-  const [lastUpdated, setLastedUpdated] = useState<{date:string, time:string} | null>(null)
-  const [compRef, setCompRef] = useState(0)
+  const [compRef, setCompRef] = useState(null)
+  const [titlesCount, setTitlesCount] = useState(null)
+
+  const [propertyInfoSnippet, setPropertyInfoSnippet] = useState<{
+    id:string;
+    address:string;
+    pnmbr: string | null;
+    compRef: string | null;
+    lastUpdated: {
+      date:string, 
+      time:string
+    } | null;
+  }>({
+    id: 'New', 
+    address: 'New',
+    pnmbr: null,
+    compRef: null,
+    lastUpdated: null
+  })
 
   const submitText = {
     update: 'Update',
@@ -69,15 +87,17 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
             PBOOK1='', PBOOK2='', PDOCNUM='', PPAGE1='', PPAGE2='',
             PCERT1='', PLOT='', PCONDO='', PUNIT='', PSTAT='', PTYPE='', 
             PASIGN='', CNAME='', PCOMPREF='', PFILE='', CFILE='', 
-            PREQ='', PRDATE='', PCDATE='', PINSTR='', LAST_UPDATED
+            PREQ='', PRDATE='', PCDATE='', PINSTR='', LAST_UPDATED, PNMBR=''
           } = response.data[0]
-    
-          if (LAST_UPDATED) setLastedUpdated(timestampToDate(LAST_UPDATED, 'mmDDyyyy'))
 
-          setPropertyHeader({
+          setPropertyInfoSnippet((prevState) => ({
+            ...prevState,
             id: PROPID,
+            pnmbr: PNMBR,
             address: `${PCITY} / ${PSTRET}`,
-          })
+            compRef: PCOMPREF,
+            lastUpdated: LAST_UPDATED ? timestampToDate(LAST_UPDATED, 'mmDDyyyy') : null
+          }))
     
           setIsLoading(false)
 
@@ -124,8 +144,8 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
     }
 
     if(queryType === 'update') {
-      const response = await axios.post(`/api/properties/post-update-property`, {id: propertyHeader.id, ...data})
-      handleAfterSubmit(propertyHeader.id)
+      const response = await axios.post(`/api/properties/post-update-property`, {id: propertyInfoSnippet.id, ...data})
+      handleAfterSubmit(propertyInfoSnippet.id)
       reset(response.data.updatedRecord)
       // @ts-ignore
       toast[response.data.status](response.data.message)
@@ -135,8 +155,8 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
   return (
     <div className={`form-wrapper ${styles['manage-property-form']}`}>
         <header>
-          <span>{propertyHeader.address}</span>
-          <span>PROPID: {propertyHeader.id}</span>
+          <span>{propertyInfoSnippet.address}</span>
+          <span>PROPID: {propertyInfoSnippet.id}</span>
         </header>
       { isLoading ? <h4>Loading...</h4>
         :
@@ -442,17 +462,34 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
         </form>
       }
       <footer className="form-footer">
-        { lastUpdated && 
+        { propertyInfoSnippet.lastUpdated && 
           <>
-            <span>Last Updated: {lastUpdated.date}</span>
-            <span className="italicized-text">{lastUpdated.time}</span>
+            <span>Last Updated: { propertyInfoSnippet.lastUpdated.date }</span>
+            <span className="italicized-text">{ propertyInfoSnippet.lastUpdated.time }</span>
           </>
         }
       </footer>
+      { queryType === 'update' && propertyInfoSnippet.compRef && propertyInfoSnippet.pnmbr ?
+        <Tabs>
+          <TabList>
+            <Tab>Seller / Buyer</Tab>
+            <Tab>Titles{titlesCount ? <span className="italicized-record-count">({titlesCount})</span>  : ''}</Tab>
+          </TabList>
 
-      <PropertyEditFormTabs 
-      
-      />
+          <TabPanel>
+            <SubTableSellerBuyer 
+              compRef={propertyInfoSnippet.compRef} 
+            />
+          </TabPanel>
+          <TabPanel>
+            <SubTableINS 
+              pnmbr={propertyInfoSnippet.pnmbr} 
+              setTitlesCount={setTitlesCount}
+            />
+          </TabPanel>
+        </Tabs>
+        : null
+      }
     </div>
   );
 }

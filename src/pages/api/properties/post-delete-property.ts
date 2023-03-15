@@ -10,9 +10,7 @@ export default async function handler(
       const {
         propId
       } = req.body
-
-      console.log('HELLLOOOOOOOOOO: ',req.body)
-
+      
       try {
         await conn.query('BEGIN')
         const deletePropertyQuery = pgPromise.as.format(`

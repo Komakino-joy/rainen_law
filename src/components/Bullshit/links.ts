@@ -40,6 +40,12 @@ const links = {
       href: '/ins-titles/1',
       ctaText: 'View All Insurance titles'
     }
+  ],
+  reports: [
+    {
+      href: '/reports/property-report',
+      ctaText: 'Property Report'
+    }
   ]
 }
 
