@@ -4,3 +4,8 @@ export const PTYPE_MAP = {
   FC: 'Foreclosures',
   H: 'On Hold'
 }
+
+export const FORM_BUTTON_TEXT = {
+  update: 'Update',
+  insert: 'Create'
+}

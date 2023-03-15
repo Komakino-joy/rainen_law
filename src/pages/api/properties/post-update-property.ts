@@ -36,8 +36,9 @@ export default async function handler(
       } = req.body
 
       try {
-
         await conn.query('BEGIN')
+
+        // We need to get the Client Number from our DB since there is no reference to it in the properties table
         const clientIDQuery = 'SELECT cm."CNMBR" FROM public.clntmstr cm WHERE cm."CNAME" = ($1)'
         const clientIdResponse = await conn.query(clientIDQuery, [clientName])
 
@@ -110,8 +111,6 @@ export default async function handler(
 
         const updatedRecord = await conn.query(addNewPropertyQuery)
         await conn.query('COMMIT')
-        
-        console.log(updatedRecord.rows[0])
 
         res.status(200).json({
           updatedRecord: updatedRecord.rows[0],

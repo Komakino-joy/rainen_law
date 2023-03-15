@@ -62,7 +62,7 @@ const ClientsTable:React.FC<ClientsTableProps> = ({
   const columns = useMemo(
     () => [
       {
-        Header: 'Cleint Name',
+        Header: 'Client Name',
         accessor: (d:any) => d.CNAME,
       },
       {
@@ -103,7 +103,7 @@ const ClientsTable:React.FC<ClientsTableProps> = ({
       },
       {
         Header: 'View / Edit',
-        accessor: (d:any) => d.PROPID,
+        accessor: (d:any) => d.id,
         Cell: ({value}:{value:any}) => (
           <span
             title={`Edit Property: ${value}`} 
@@ -115,7 +115,7 @@ const ClientsTable:React.FC<ClientsTableProps> = ({
       },
       {
         Header: 'Delete',
-        accessor: (d:any) => d.PROPID,
+        accessor: (d:any) => d.id,
         Cell: ({value}:{value:any}) => (
           <span 
             title={`Delete Property: ${value}`} 

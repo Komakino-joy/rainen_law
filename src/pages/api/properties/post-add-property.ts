@@ -37,6 +37,8 @@ export default async function handler(
       try {
 
         await conn.query('BEGIN')
+
+        // We need to get the Client Number from our DB since there is no reference to it in the properties table
         const clientIDQuery = 'SELECT cm."CNMBR" FROM public.clntmstr cm WHERE cm."CNAME" = ($1)'
         const clientIdResponse = await conn.query(clientIDQuery, [clientName])
 

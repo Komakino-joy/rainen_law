@@ -3,7 +3,7 @@
   flex-direction: column;
   gap: 10px;
   align-items: center;
-  border: 1px solid rgb(207, 207, 207);
+  border: 1px solid rgba(207, 207, 207, 0.493);
   max-width: 800px;
   border-radius: 8px;
   padding: 150px 0;
@@ -12,4 +12,5 @@
   font-weight: 700;
   color: grey;
   text-align: center;
+  margin: 20px auto 0 auto;
 }

@@ -7,8 +7,9 @@ import { useRouter } from 'next/router';
 import Modal from '@/components/Modal/Modal';
 import Pagination from '@/components/Pagination/Pagination'
 import ClientsTable from '@/components/Tables/ClientsTable/ClientsTable';
-import EditPropertyForm from '@/components/Forms/PropertyEditForm/EditPropertyForm';
+import EditClientForm from '@/components/Forms/ClientEditForm/EditClientForm';
 import conn from '../../lib/db'
+import InfoCard from '@/components/InfoCard/InfoCard';
 
 export async function getServerSideProps(context:any) {
     const { page } = context.query
@@ -18,9 +19,9 @@ export async function getServerSideProps(context:any) {
     const totalRecordsQuery = `select COUNT(*) from public."propmstr"`
     const totalRecordsResult = (await conn.query(totalRecordsQuery)).rows[0].count;
 
-    const allProperties = `
-      SELECT * FROM (
+    const allClients = `
         SELECT 
+            cm.id,
             cm."CNMBR",
             cm."CNAME",
             cm."CADD1",
@@ -48,29 +49,13 @@ export async function getServerSideProps(context:any) {
             FROM public.ins i
             GROUP BY i."INMBR"
         ) i ON i."INMBR" = cm."CNMBR"
-        UNION
-        SELECT 
-            nm."CNMBR",
-            nm."CNAME",
-            nm."CADD1",
-            nm."CADD2",
-            nm."CCITY",
-            nm."CSTATE",
-            nm."CZIP",
-            nm."CPHONE",
-            nm."CFAX",
-            false as "ISCLIENT",
-            0 as "PROPCOUNT" ,
-            0 as "TITLESCOUNT"
-        FROM public."nonmstr" nm
-      ) t1
-      ORDER BY t1."CNAME"
+      ORDER BY cm."CNAME"
       OFFSET $1 LIMIT ${pageSize};
     `
-    const propertiesResults = JSON.parse(JSON.stringify((await conn.query(allProperties, [pageOffset])).rows));
+    const clientsResults = JSON.parse(JSON.stringify((await conn.query(allClients, [pageOffset])).rows));
     return { 
       props: {
-        properties: propertiesResults,
+        clients: clientsResults,
         totalRecords: Number(totalRecordsResult),
         pageSize, 
         currentPage: Number(page)
@@ -78,15 +63,15 @@ export async function getServerSideProps(context:any) {
     }
 }
 
-interface PropertiesProps {
-  properties: [];
+interface ClientsProps {
+  clients: [];
   totalRecords: number;
   pageSize: number;
   currentPage: number;
 }
 
-const Properties:React.FC<PropertiesProps> = ({
-  properties, 
+const Clients:React.FC<ClientsProps> = ({
+  clients, 
   totalRecords, 
   pageSize, 
   currentPage
@@ -95,17 +80,17 @@ const Properties:React.FC<PropertiesProps> = ({
 
   const [showModal, setShowModal] = useState<boolean>(false);
   const [tableData, setTableData] = useState<Property[] | null>(null)
-  const [selectedPropId, setSelectedPropId] = useState<string|null>(null)
+  const [selectedClientId, setSelectedClientId] = useState<string|null>(null)
   const [shouldReload, setShouldReload] = useState(false)
   
-  const handleModalOpen =(e: React.SyntheticEvent, propId: string) => {
+  const handleModalOpen =(e: React.SyntheticEvent, clientId: string) => {
     e.preventDefault()
-    setSelectedPropId(propId)
+    setSelectedClientId(clientId)
     setShowModal(true)
   }
 
   const handleModalClose = () => {
-    setSelectedPropId(null)
+    setSelectedClientId(null)
     setShowModal(false)
 
     if(shouldReload) {
@@ -113,19 +98,19 @@ const Properties:React.FC<PropertiesProps> = ({
     }
   }
 
-  const handleAfterSubmit = (propId: string) => {
+  const handleAfterSubmit = (clientId: string) => {
     setShouldReload(true)
   }
 
   useEffect(() => {
-    setTableData(properties)
+    setTableData(clients)
   },[])
 
   
   return (
     <>
-      { tableData && 
-        <>
+      { tableData ? 
+        <div className='center-margin'>
           <h1>
             All Clients 
             <span className='italicized-record-count'>
@@ -145,7 +130,8 @@ const Properties:React.FC<PropertiesProps> = ({
             pageSize={pageSize} 
             currentPage={currentPage} 
           />
-        </>
+        </div>
+        : <InfoCard customStyles={{marginTop: '100px', border: 'none'}}  line1='No Data to Show'/>
       }
 
       <Modal
@@ -153,9 +139,9 @@ const Properties:React.FC<PropertiesProps> = ({
         show={showModal}
         title={''}
       >
-        { selectedPropId && 
-          <EditPropertyForm 
-            propertyId={selectedPropId}
+        { selectedClientId && 
+          <EditClientForm 
+            clientId={selectedClientId}
             queryType='update'
             handleAfterSubmit={handleAfterSubmit}
           />
@@ -165,4 +151,4 @@ const Properties:React.FC<PropertiesProps> = ({
   )
 }
 
-export default Properties
+export default Clients

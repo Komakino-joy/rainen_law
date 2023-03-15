@@ -1,3 +1,4 @@
+import { Client } from '@/types/common'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import conn from '../../../lib/db'
 
@@ -8,9 +9,7 @@ export default async function handler(
     if (req.method === "GET") { 
       try {
         const getAllClientsQuery = `
-            SELECT DISTINCT
-              cm."CNAME"
-            FROM
+            SELECT * FROM
               public.clntmstr cm
             WHERE 
               cm."CNAME" IS NOT NULL
@@ -18,7 +17,7 @@ export default async function handler(
               "CNAME" ASC;
           `
         const result = await conn.query(getAllClientsQuery)
-        
+  
         res.status(200).json(result.rows)
       
       } catch ( error ) {

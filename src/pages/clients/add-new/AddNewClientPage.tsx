@@ -1,30 +1,30 @@
 'use client';
 
 import React, { useState } from 'react'
-import EditPropertyForm from '@/components/Forms/PropertyEditForm/EditPropertyForm'
+import EditClientForm from '@/components/Forms/ClientEditForm/EditClientForm'
 import Modal from '@/components/Modal/Modal';
 
-const AddNewPropertyPage = () => {
+const AddNewClientPage = () => {
 
-  const [selectedPropId, setSelectedPropId] = useState<string|null>(null)
+  const [selectedClientId, setSelectedClientId] = useState<string|null>(null)
   const [showModal, setShowModal] = useState(false);
 
-  const handleAfterSubmit = (propId: string) => {
-    setSelectedPropId(propId)
+  const handleAfterSubmit = (clientId: string) => {
+    setSelectedClientId(clientId)
     setShowModal(true)
   }
 
   const handleModalClose = () => {
-    setSelectedPropId(null)
+    setSelectedClientId(null)
     setShowModal(false)
   }
 
   return (
     <div className='center-margin'>
-      <h1>Add new property</h1>
+      <h1>Add new client</h1>
       <div className='light-border'>
-        <EditPropertyForm 
-          propertyId={null} 
+        <EditClientForm 
+          clientId={null} 
           queryType='insert'
           handleAfterSubmit={handleAfterSubmit}
         />
@@ -34,9 +34,9 @@ const AddNewPropertyPage = () => {
           show={showModal}
           title={''}
       >
-        { selectedPropId && 
-          <EditPropertyForm 
-            propertyId={selectedPropId} 
+        { selectedClientId && 
+          <EditClientForm 
+            clientId={selectedClientId} 
             queryType='update'
           />
         }
@@ -45,4 +45,4 @@ const AddNewPropertyPage = () => {
   )
 }
 
-export default AddNewPropertyPage
+export default AddNewClientPage

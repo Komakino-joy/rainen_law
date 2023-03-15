@@ -1,27 +1,19 @@
 'use client';
 
 import { Property } from '@/types/common';
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import axios from 'axios';
 import Modal from '@/components/Modal/Modal';
 import ClientCard from '@/components/ClientCard/ClientCard';
 import PropertyForm from '@/components/Forms/PropertyEditForm/EditPropertyForm';
 import InfoCard from '@/components/InfoCard/InfoCard';
-import SearchPropertiesForm from '@/components/Forms/PropertySearchForm/SearchPropertiesForm'
+import ClientSearchForm from '@/components/Forms/ClientSearchForm/ClientSearchForm';
 
-const SearchPropertiesPage = () => {
+const SearchClientsPage = () => {
   const [showModal, setShowModal] = useState(false);
-  const [clientOptions, setClientOptions] = useState([])
   const [clientProperties, setClientProperties] = useState(null)
   const [selectedPropId, setSelectedPropId] = useState<string|null>(null)
   const [noResults, setNoResults] = useState<boolean>(false)
-
-  useEffect(() => {
-    (async() => {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/properties/get-all-clients-with-properties`)
-      setClientOptions(response.data)
-    })();
-  },[])
 
   const handleCardClick =(e: React.SyntheticEvent, propId: string) => {
     e.preventDefault()
@@ -62,10 +54,7 @@ const SearchPropertiesPage = () => {
 
   return (
     <div className='search-page center-margin'>
-      <SearchPropertiesForm 
-        onSubmit={onSubmit}
-        clientOptions={clientOptions}
-      />
+      <ClientSearchForm onSubmit={onSubmit} />
       
         { clientProperties && Object.keys(clientProperties).length > 0 ?
           <div className='search-results-container'>
@@ -107,4 +96,4 @@ const SearchPropertiesPage = () => {
   )
 }
 
-export default SearchPropertiesPage
+export default SearchClientsPage

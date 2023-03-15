@@ -9,6 +9,8 @@ import Pagination from '@/components/Pagination/Pagination'
 import PropertiesTable from '@/components/Tables/PropertiesTable/PropertiesTables'
 import EditPropertyForm from '@/components/Forms/PropertyEditForm/EditPropertyForm';
 import conn from '../../lib/db'
+import InfoCard from '@/components/InfoCard/InfoCard';
+import EditPropertyModal from '@/components/Modals/EditPropertyModal';
 
 export async function getServerSideProps(context:any) {
     const { page } = context.query
@@ -98,8 +100,8 @@ const Properties:React.FC<PropertiesProps> = ({
   
   return (
     <>
-      { tableData && 
-        <>
+      { tableData ? 
+        <div className='center-margin'>
           <h1>
             All Properties 
             <span className='italicized-record-count'>
@@ -119,22 +121,17 @@ const Properties:React.FC<PropertiesProps> = ({
             pageSize={pageSize} 
             currentPage={currentPage} 
           />
-        </>
+        </div>
+        : <InfoCard customStyles={{marginTop: '100px', border: 'none'}} line1='No Data to Show'/>
       }
 
-      <Modal
-        onClose={handleModalClose}
-        show={showModal}
-        title={''}
-      >
-        { selectedPropId && 
-          <EditPropertyForm 
-            propertyId={selectedPropId}
-            queryType='update'
-            handleAfterSubmit={handleAfterSubmit}
-          />
-        }
-      </Modal>
+        <EditPropertyModal 
+          handleModalClose={handleModalClose} 
+          showModal={showModal} 
+          title={''}
+          selectedPropId={selectedPropId} 
+          handleAfterSubmit={handleAfterSubmit} 
+        />
     </>  
   )
 }

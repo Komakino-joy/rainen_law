@@ -6,7 +6,6 @@ import { useRouter } from "next/router";
 import FormInput from "../Common/FormInput/FormInput";
 import { usePropertiesContext } from "@/context/Properties";
 // import ComboBoxExample from "@/components/ComboBox/ComboBox";
-import styles from './SearchPropertiesForm.module.scss'
 import Button from "@/components/Button/Button";
 
 interface SearchPropertiesFormProps {
@@ -36,9 +35,9 @@ const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
   }
 
   return (
-    <div className={`form-wrapper ${styles['search-property-form']}`}>
+    <div className='form-wrapper search-form'>
         <header>
-          <span>Search For Record</span>
+          <span>Search For Properties</span>
         </header>
       <form 
         className="flex-y" 
@@ -169,7 +168,7 @@ const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
           errors={errors}
         />
 
-        <section className={`flex-x ${styles['submit-button-section']}`}>
+        <section className='flex-x submit-button-section'>
           <Button 
             isDisabled={false} 
             type='button'

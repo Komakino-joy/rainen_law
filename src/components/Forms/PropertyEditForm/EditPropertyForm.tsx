@@ -8,7 +8,9 @@ import 'react-tabs/style/react-tabs.css';
 import Button from "@/components/Button/Button";
 import FormInput from "../Common/FormInput/FormInput";
 
+import { FORM_BUTTON_TEXT } from "@/constants";
 import { timestampToDate, abbreviatedStates } from "@/utils";
+import { useClientsContext } from "@/context/Clients";
 import { usePropertiesContext } from "@/context/Properties";
 import styles from './EditPropertyForm.module.scss'
 import SubTableSellerBuyer from "@/components/Tables/SubTableSellerBuyer/SubTableSellerBuyer";
@@ -26,10 +28,10 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
   handleAfterSubmit = () => {},
 }) => {
 
+  const {clientsData} = useClientsContext()
   const {assignOptions, typeOptions, statusOptions} = usePropertiesContext()
-
+  
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [clientOptions, setClientOptions] = useState([])
   const [compRef, setCompRef] = useState(null)
   const [titlesCount, setTitlesCount] = useState(null)
 
@@ -45,23 +47,12 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
   }>({
     id: 'New', 
     address: 'New',
-    pnmbr: null,
+    pnmbr: 'New',
     compRef: null,
     lastUpdated: null
   })
 
-  const submitText = {
-    update: 'Update',
-    insert: 'Create'
-  }
-
   useEffect(() => {
-    (async() => {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/clients/get-all-clients`)
-      setClientOptions(response.data)
-    })();
-
-
     if(queryType === 'insert') (async() => {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/properties/get-new-comp-ref`)
         setCompRef(response.data.newCompRef)
@@ -144,7 +135,7 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
     }
 
     if(queryType === 'update') {
-      const response = await axios.post(`/api/properties/post-update-property`, {id: propertyInfoSnippet.id, ...data})
+      const response = await axios.post(`/api/properties/post-update-property`, {id: propertyInfoSnippet.id, ...data}) // Passing id to update correct record
       handleAfterSubmit(propertyInfoSnippet.id)
       reset(response.data.updatedRecord)
       // @ts-ignore
@@ -153,10 +144,13 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
   };
 
   return (
-    <div className={`form-wrapper ${styles['manage-property-form']}`}>
+    <div className='form-wrapper edit-form'>
         <header>
           <span>{propertyInfoSnippet.address}</span>
-          <span>PROPID: {propertyInfoSnippet.id}</span>
+          { propertyInfoSnippet.compRef ?
+            <span>Property Ref#: {propertyInfoSnippet.compRef}</span>
+            : null
+          }
         </header>
       { isLoading ? <h4>Loading...</h4>
         :
@@ -358,14 +352,14 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
             </div>
 
             <div className={`flex-x ${styles['comp-ref-file-num-section']}`}>
-              { clientOptions && clientOptions.length > 0 &&
+              { clientsData.CNAME && clientsData.CNAME.length > 0 &&
                 <FormInput 
                   name="clientName"
                   labelKey="clientName"
                   labelText="Client Name"
                   customClass={styles.clientName}
                   type="select" 
-                  options={['', ...clientOptions.map((client: {CNAME:string}) => client.CNAME)]}
+                  options={['', ...clientsData.CNAME.map((clientName) => clientName)]}
                   isRequired={true}
                   register={register} 
                   errors={errors}
@@ -455,7 +449,7 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
 
           <section className={styles["submit-button-section"]}>
             <Button type="submit" isDisabled={!isDirty}>
-              {submitText[queryType]} 
+              {FORM_BUTTON_TEXT[queryType]} 
             </Button>
           </section>
 

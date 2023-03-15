@@ -1,0 +1,109 @@
+.form-wrapper {
+  border-radius: 8px;
+  max-width: 600px;
+
+  &.is-date-selection {
+    width: fit-content;
+    padding: 15px 60px;
+
+    form {
+      padding: 0;
+
+      .date-inputs {
+        display: flex;
+        gap: 10px;
+        align-items: flex-end;
+
+        input {
+          width: 120px !important;
+          height: 35px;
+          text-align: right;
+        }
+      }
+
+      .submit-button {
+        height: 30px;
+      }
+    }
+  }
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    line-height: 30px;
+    padding: 0 20px 0 20px;
+    font-weight: 500;
+  }
+
+  form {
+    padding: 10px 20px;
+
+    .form-input-group {
+      position: relative;
+      padding-top: 15px;
+      
+      label {
+        position: absolute;
+        font-size: 11px;
+        font-weight: 500;
+        top: 0;
+        white-space: nowrap;
+      }
+
+      .required {
+        color: red;
+        font-weight: 500;
+      }
+    
+      input,
+      select,
+      textarea {
+        width: 100%;
+        border-radius: 3px;
+        padding: 5px;
+        box-sizing: border-box;
+        border: 1px solid rgb(187, 186, 186);
+        &:focus {
+          border-color: rgba(0, 110, 255, 0.8);
+          box-shadow: 0 1px 1px rgba(229, 103, 23, 0.075) inset, 0 0 8px rgba(0, 110, 255, 0.8);
+          outline: 0 none;
+        }
+      }
+    
+    }
+  }
+
+}
+
+.form-footer {
+  margin-bottom: 20px;
+  font-size: 12px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.search-form {
+  max-width: 800px;
+  position: relative;
+  border: 1px solid rgb(207, 207, 207);
+  border-radius: 8px;
+  margin: 0 auto;
+  padding: 10px 5px;
+
+  header {
+    background-color: transparent;
+    color: black;
+    font-weight: 500;
+    font-size: 20px;
+    padding: 10px 20px 0 20px;
+  }
+
+  .submit-button-section {
+    justify-content: flex-end;
+    gap: 10px;
+    margin: 10px 0 0 0;
+  }
+}
+
+.edit-form {
+  padding: 15px 0px;
+}

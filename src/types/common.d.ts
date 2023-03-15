@@ -43,3 +43,24 @@ export interface ReportProperty {
   PASIGN: string;
   PASIGN2: string;
 }
+
+export interface Client {
+  CNMBR: number;
+  CNAME: string;
+  CADD1: string;
+  CADD2: string;
+  CCITY: string;
+  CSTATE: string;
+  CZIP: string;
+  CPHONE: string;
+  CFAX: string;
+  CCNTCT: string;
+  CSTAT: string;
+  CSTATTO: string;
+  CSEARCH: string;
+  EXPORT: boolean;
+  CEMAIL: string;
+  CNOTES: string;
+  id: number;
+  LAST_UPDATED: string;
+}
