@@ -30,16 +30,16 @@ export interface Property {
 }
 
 export interface ReportProperty {
-  PTDATE: string | null;
-  PLOT: string | null;
+  PTDATE: string;
+  PLOT: string;
   PSTRET: string;
   PCITY: string;
   county_code: string;
   county_name: string;
   PCOMPREF: number;
   PNMBR: number;
-  CNAME: string | null;
-  PTYPE: string | null;
-  PASIGN: string | null;
-  PASIGN2: string | null;
+  CNAME: string;
+  PTYPE: 'FT' | 'RD' | 'FC' | 'H';
+  PASIGN: string;
+  PASIGN2: string;
 }

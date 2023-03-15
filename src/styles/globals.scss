@@ -95,13 +95,14 @@ h2 {
 
   &.is-date-selection {
     width: fit-content;
-    padding: 10px 40px;
+    padding: 15px 60px;
 
     form {
-      gap: 15px;
-      padding: 10px 0;
+      padding: 0;
 
       .date-inputs {
+        display: flex;
+        gap: 10px;
         align-items: flex-end;
 
         input {
