@@ -1,2 +1,2 @@
-import PropertyReport from "./PropertyReport";
-export default PropertyReport
+import PropertyReportPage from "./PropertyReportPage";
+export default PropertyReportPage

@@ -28,11 +28,11 @@ const ReportProperties:React.FC<ReportPropertiesProps> = ({
       },
       {
         Header: 'Address',
-        accessor: (d:any) => `${d.PLOT} ${d.PSTRET} ${d.PCITY}`,
+        accessor: (d:any) => `${d.PLOT || ''} ${d.PSTRET || ''} ${d.PCITY || ''}`,
       },
       {
         Header: 'Ref No.',
-        accessor: (d:any) => d.PCOMPREF,
+        accessor: (d:any) => d.PCOMPREF || '',
       },
       {
         Header: 'Given to examiner',
@@ -40,7 +40,7 @@ const ReportProperties:React.FC<ReportPropertiesProps> = ({
       },
       {
         Header: 'Client',
-        accessor: (d:any) => `(${d.PNMBR}) ${d.CNAME}`,
+        accessor: (d:any) => `(${d.PNMBR}) ${d.CNAME || ''}`,
       },
       {
         Header: 'Type',

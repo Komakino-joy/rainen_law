@@ -28,3 +28,18 @@ export interface Property {
   PCERT1: string;
   QBEXPORT: string;
 }
+
+export interface ReportProperty {
+  PTDATE: string | null;
+  PLOT: string | null;
+  PSTRET: string;
+  PCITY: string;
+  county_code: string;
+  county_name: string;
+  PCOMPREF: number;
+  PNMBR: number;
+  CNAME: string | null;
+  PTYPE: string | null;
+  PASIGN: string | null;
+  PASIGN2: string | null;
+}

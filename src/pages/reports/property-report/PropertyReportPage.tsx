@@ -5,12 +5,14 @@ import Button from '@/components/Button/Button';
 import styles from './PropertyReport.module.scss'
 import axios from 'axios';
 import { timestampToDate } from '@/utils';
-import { Property } from '@/types/common';
+import { Property, ReportProperty } from '@/types/common';
 import ReportProperties from '@/components/Tables/ReportProperties/ReportProperties';
+import InfoCard from '@/components/InfoCard/InfoCard';
 
 export default function PropertyReport() {
   
   const [propertiesData, setPropertiesData] = useState<Property[] | null>(null)
+  const [countyCountMap, setCountyCountMap] = useState({})
   const [reportRunDate, setReportRunDate] = useState({
     start: '',
     end:''
@@ -36,13 +38,20 @@ export default function PropertyReport() {
 
     const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/reports/post-property-report`, data)
     setPropertiesData(response.data)
+    setCountyCountMap(response.data.reduce((acc: any, propObj: ReportProperty) => {
+      if(!acc[propObj.county_name]) {
+        acc[propObj.county_name] = 1
+      } else {
+        acc[propObj.county_name] = acc[propObj.county_name] + 1
+      }
+      return acc
+    }, {}))
     reset()
   };
 
   return (
-    <>
+    <div className='center-margin flex-y gap-md'>
       <div className='form-wrapper is-date-selection card-shadow light-border center-margin'>
-        <h2>Select a date Range</h2>
         <form className="flex-y" onSubmit={handleSubmit(onSubmit)}>
           <section className='flex-x gap-sm date-inputs'>
             <FormInput 
@@ -78,10 +87,35 @@ export default function PropertyReport() {
               <p>Property Report</p>
               <span>{timestampToDate(reportRunDate.start, 'mmDDyyyy').date} - {timestampToDate(reportRunDate.end, 'mmDDyyyy').date}</span>
             </header>
+            <div className={styles['registry-of-deeds-breakdown']}>
+              <p>Breakdown by Registry of Deeds</p>
+              <div className={styles['breakdown-by-county']}>
+                <div>
+                  { Object.keys(countyCountMap).splice(0, Object.keys(countyCountMap).length/2).map(key => (
+                      <div key={key} className={styles['county-detail']}>
+                        <span>{key}:</span>
+                        <span>{countyCountMap[key as keyof typeof countyCountMap]}</span>
+                        <span>{((countyCountMap[key as keyof typeof countyCountMap] / propertiesData.length) * 100).toFixed(2)}%</span>
+                      </div>
+                    ))
+                  }
+                </div>
+                <div>
+                  { Object.keys(countyCountMap).splice(Object.keys(countyCountMap).length/2).map(key => (
+                      <div key={key} className={styles['county-detail']}>
+                        <span>{key}:</span>
+                        <span>{countyCountMap[key as keyof typeof countyCountMap]}</span>
+                        <span>{((countyCountMap[key as keyof typeof countyCountMap] / propertiesData.length) * 100).toFixed(2)}%</span>
+                      </div>
+                    ))
+                  }
+                </div>
+              </div>
+            </div>
             <ReportProperties tableData={propertiesData} />
           </div>
-        : null
+        : <InfoCard line1='Select a date range' line2='to generate report' />
       }
-    </>
+    </div>
   );
 }

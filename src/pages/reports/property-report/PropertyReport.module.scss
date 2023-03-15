@@ -13,5 +13,30 @@
     font-size: 14px;
   }
 
+  .registry-of-deeds-breakdown {
+    padding: 0 80px;
+    p {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    
+    .breakdown-by-county{
+      display: flex;
+
+      div {
+        flex: 1;
+        .county-detail {
+          display: flex;
+          // flex: 1;
+          border-bottom: 1px solid rgba(0, 0, 0, 0.089);
+          span {
+            flex: .5;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            line-height: 25px;
+          }
+        }
+      }
+    }
+  }
 
 }
