@@ -69,12 +69,6 @@ table{
     border-collapse: separate;
     border-spacing: 0 5px;
   }
-
-  tr {
-    border-radius: 8px;
-    margin: 5px 0px;
-    border: 2px solid red !important;
-  }
   
   th {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -85,7 +79,14 @@ table{
     color: white;
     border: none;
     letter-spacing: .5px;
-    border-radius: 5px;
+
+    &:first-child {
+      border-radius: 5px 0 0 5px;
+    }
+    
+    &:last-child {
+      border-radius: 0 5px 5px 0;
+    }
   }
 
   td {

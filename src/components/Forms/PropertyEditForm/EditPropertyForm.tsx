@@ -58,7 +58,6 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
         const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/properties/get-new-comp-ref`)
         setCompRef(response.data.newCompRef)
       })();
-    
   },[])
 
   const { 

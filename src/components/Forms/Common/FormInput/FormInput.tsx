@@ -11,6 +11,7 @@ interface FormInput {
   register: any;
   errors: any;
   options?: string[];
+  valuesDifferFromOptions?: string[] | null;
   min?: string;
   step?: string;
   max?: string;
@@ -38,6 +39,7 @@ const FormInput:React.FC<FormInput> = ({
   max='',
   defaultValue='',
   disabled=false,
+  valuesDifferFromOptions=null
 }) => {
 
   return(
@@ -48,19 +50,37 @@ const FormInput:React.FC<FormInput> = ({
       {
         type === 'select'? 
           (
-            <select
-              name={name} 
-              defaultValue={defaultValue} {...register(labelKey, { required: isRequired })}
-            >
-              {options?.map( option => (
-                <option 
-                  key={option} 
-                  value={option}
-                > 
-                  {option} 
-                </option> 
-              ))}
-            </select>
+            
+            valuesDifferFromOptions ?
+              <select
+                name={name} 
+                defaultValue={defaultValue} {...register(labelKey, { required: isRequired })}
+              >
+                {options?.map( (option, idx) => (
+                  <option 
+                    key={option} 
+                    value={valuesDifferFromOptions[idx]}
+                  > 
+                    {option} 
+                  </option> 
+                ))}
+                
+              </select>
+            :
+              <select
+                name={name} 
+                defaultValue={defaultValue} {...register(labelKey, { required: isRequired })}
+              >
+                {options?.map( option => (
+                  <option 
+                    key={option} 
+                    value={option}
+                  > 
+                    {option} 
+                  </option> 
+                ))}
+                
+              </select>
           )
         : type === 'textarea' ? <textarea name={name} defaultValue={defaultValue} {...register(labelKey)}/>
         : <input 

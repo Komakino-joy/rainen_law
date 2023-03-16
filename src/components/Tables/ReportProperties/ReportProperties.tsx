@@ -27,8 +27,8 @@ const ReportProperties:React.FC<ReportPropertiesProps> = ({
         accessor: (d:any) => timestampToDate(d.PTDATE, 'mmDDyyyy').date,
       },
       {
-        Header: 'Address',
-        accessor: (d:any) => `${d.PLOT || ''} ${d.PSTRET || ''} ${d.PCITY || ''}`,
+        Header: 'Address ( lot, st., city )',
+        accessor: (d:any) => `${d.PLOT + ', ' || ''} ${d.PSTRET + ', '|| ''} ${d.PCITY || ''}`,
       },
       {
         Header: 'Ref No.',

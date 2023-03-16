@@ -1,14 +1,101 @@
-import { abbreviatedStates } from "@/utils/UnitedStates";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import axios from "axios";
+import { useCompaniesContext } from "@/context/Companies";
+import { timestampToDate } from "@/utils";
+import { abbreviatedStates } from "@/utils/UnitedStates";
 import FormInput from "../Common/FormInput/FormInput";
-import styles from './INSForm.module.scss'
+import styles from './EditINSForm.module.scss'
 
-export default function INSForm() {
+interface EditINSFormFormProps {
+  insTitleId: string | null;
+  queryType: 'update' | 'insert';
+  handleAfterSubmit?: (propId: string) => void;
+}
+
+const EditINSFormForm:React.FC<EditINSFormFormProps> = ({
+  insTitleId,
+  queryType,
+  handleAfterSubmit
+}) => {
+
+  const {companiesList} = useCompaniesContext()
+
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [compRef, setCompRef] = useState(null)
+  const [titlesCount, setTitlesCount] = useState(null)
+  const [insTitleInfoSnippet, setInsTitleInfoSnippet] = useState<{
+    id:string;
+    inmbr: string | null;
+    lastUpdated: {
+      date:string, 
+      time:string
+    } | null;
+  }>({
+    id: 'New', 
+    inmbr: 'New',
+    lastUpdated: null
+  })
+
   const { 
     register, 
     handleSubmit, 
     formState: { errors } 
-  } = useForm();
+  } = useForm({
+    defaultValues: async () => {
+      if (insTitleId) {
+
+        setIsLoading(true)
+        
+        const response = await axios.post('/api/titles/post-selected-title', {insTitleId})
+        
+        const {
+          id='', LAST_UPDATED='', INMBR='', IFILE='', ICITY='', ISTATE='', IZIP='',
+          ISTRET='', ILOT='', ICONDO='', IUNIT='', IPREMDUE='', IPREMPAID='', AGENTFEE='',
+          ICDATE='', IPDATE='', IBILL='', IPOLDATE='', TITLECO='', ISTAT='', IREMIT='',
+          P='', CNAME='', CFILE='', OPOLICYNUM='', OPOLICYAMT='', LPOLICYNUM='', LPOLICYAMT='', INOTES=''
+        } = response.data[0]
+
+        setInsTitleInfoSnippet((prevState) => ({
+          ...prevState,
+          id: id,
+          inmbr: INMBR,
+          lastUpdated: LAST_UPDATED ? timestampToDate(LAST_UPDATED, 'mmDDyyyy') : null
+        }))
+  
+        setIsLoading(false)
+
+        return {
+          fileNumber: IFILE,
+          city: ICITY,
+          state: ISTATE,
+          zip: IZIP,
+          street: ISTRET,
+          lot: ILOT,
+          condo: ICONDO,
+          unit: IUNIT,
+          premiumDue: IPREMDUE,
+          premiumPaid: IPREMPAID,
+          agentFee: AGENTFEE,
+          dateBilled: ICDATE,
+          datePaid: IPDATE,
+          billNumber: IBILL,
+          policyDate: IPOLDATE,
+          titleCompany: TITLECO,
+          status: ISTAT,
+          assigned: IREMIT,
+          printed: P,
+          clientName: CNAME,
+          clientFileNumber: CFILE,
+          oPolicyNumber: OPOLICYNUM,
+          oPolicyAmount: OPOLICYAMT,
+          lPolicyNumber: LPOLICYNUM,
+          lPolicyAmount: LPOLICYAMT,
+          notes: INOTES
+        };
+      }
+    }
+  });
 
   const onSubmit = (data:any) => console.log(data);
 
@@ -32,7 +119,7 @@ export default function INSForm() {
               register={register} 
               errors={errors}
             />
-            <div className="flex-x city-state-zip-section">
+            <div className="flex-x gap-sm city-state-zip-section">
               <FormInput 
                 name="city"
                 labelKey="city"
@@ -210,7 +297,8 @@ export default function INSForm() {
               labelText="Title Company"
               customClass={styles["title-company-select"]}
               type="select" 
-              options={['get', 'from', 'DB']}
+              options={['', ...companiesList.map( company =>  company.tticoname)]}
+              valuesDifferFromOptions={['', ...companiesList.map( company =>  company.tnmbr)]}
               isRequired={false}
               register={register} 
               errors={errors}
@@ -221,7 +309,7 @@ export default function INSForm() {
               labelKey="status"
               labelText="Status"
               type="select" 
-              options={['get', 'from', 'DB']}
+              options={['', 'C', 'O']}
               isRequired={false}
               register={register} 
               errors={errors}
@@ -232,7 +320,7 @@ export default function INSForm() {
               labelKey="assigned"
               labelText="Assigned"
               type="select" 
-              options={['get', 'from', 'DB']}
+              options={['', 'Y', 'N']}
               isRequired={false}
               register={register} 
               errors={errors}
@@ -243,7 +331,7 @@ export default function INSForm() {
               labelKey="printed"
               labelText="Printed"
               type="select" 
-              options={['get', 'from', 'DB']}
+              options={['', 'Y', 'N']}
               isRequired={false}
               register={register} 
               errors={errors}
@@ -348,3 +436,5 @@ export default function INSForm() {
     </div>
   );
 }
+
+export default EditINSFormForm

@@ -4,11 +4,12 @@
   text-transform: capitalize;
   
   .nav-bar-facet-header {
-    font-size: 20px;
+    font-size: 18px;
     display: flex;
     align-items: center;
     gap: 5px;
     letter-spacing: .5px;
+    cursor: pointer;
     
     i {
       font-size: 10px;
