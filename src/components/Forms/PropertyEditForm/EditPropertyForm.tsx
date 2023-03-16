@@ -15,6 +15,7 @@ import { usePropertiesContext } from "@/context/Properties";
 import styles from './EditPropertyForm.module.scss'
 import SubTableSellerBuyer from "@/components/Tables/SubTableSellerBuyer/SubTableSellerBuyer";
 import SubTableINS from "@/components/Tables/SubTableINS/SubTableINS";
+import Spinner from "@/components/Spinner/Spinner";
 
 interface EditPropertyFormProps {
   propertyId: string | null;
@@ -78,9 +79,10 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
             PBOOK1='', PBOOK2='', PDOCNUM='', PPAGE1='', PPAGE2='',
             PCERT1='', PLOT='', PCONDO='', PUNIT='', PSTAT='', PTYPE='', 
             PASIGN='', CNAME='', PCOMPREF='', PFILE='', CFILE='', 
-            PREQ='', PRDATE='', PCDATE='', PINSTR='', LAST_UPDATED, PNMBR=''
+            PREQ='', PRDATE='', PCDATE='', PINSTR='', LAST_UPDATED='', PNMBR=''
           } = response.data[0]
 
+          console.log(response.data[0])
           setPropertyInfoSnippet((prevState) => ({
             ...prevState,
             id: PROPID,
@@ -152,7 +154,7 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
             : null
           }
         </header>
-      { isLoading ? <h4>Loading...</h4>
+      { isLoading ? <Spinner />
         :
         <form onSubmit={handleSubmit(onSubmit)}>
           <section className={`flex-x ${styles['top-section']}`}>
@@ -447,22 +449,22 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
             />
           </section>
 
-          <section className={styles["submit-button-section"]}>
+          <section className="submit-button-section">
             <Button type="submit" isDisabled={!isDirty}>
               {FORM_BUTTON_TEXT[queryType]} 
             </Button>
           </section>
 
+          <footer className="form-footer">
+            { propertyInfoSnippet.lastUpdated && 
+              <>
+                <span>Last Updated: { propertyInfoSnippet.lastUpdated.date }</span>
+                <span className="italicized-text">{ propertyInfoSnippet.lastUpdated.time }</span>
+              </>
+            }
+          </footer>
         </form>
       }
-      <footer className="form-footer">
-        { propertyInfoSnippet.lastUpdated && 
-          <>
-            <span>Last Updated: { propertyInfoSnippet.lastUpdated.date }</span>
-            <span className="italicized-text">{ propertyInfoSnippet.lastUpdated.time }</span>
-          </>
-        }
-      </footer>
       { queryType === 'update' && propertyInfoSnippet.compRef && propertyInfoSnippet.pnmbr ?
         <Tabs>
           <TabList>
@@ -477,7 +479,7 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
           </TabPanel>
           <TabPanel>
             <SubTableINS 
-              pnmbr={propertyInfoSnippet.pnmbr} 
+              inmbr={propertyInfoSnippet.pnmbr} 
               setTitlesCount={setTitlesCount}
             />
           </TabPanel>

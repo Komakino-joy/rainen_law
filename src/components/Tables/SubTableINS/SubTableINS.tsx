@@ -4,12 +4,12 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTable, useFilters } from 'react-table';
 
 interface SubTableINSProps {
-  pnmbr: string;
+  inmbr: string;
   setTitlesCount: any;
 }
 
 const SubTableINS:React.FC<SubTableINSProps> = ({
-  pnmbr, 
+  inmbr, 
   setTitlesCount
 }) => {
 
@@ -17,7 +17,7 @@ const SubTableINS:React.FC<SubTableINSProps> = ({
 
   useEffect(() => {
     (async() => {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/titles/post-ins-titles-info`, {PNMBR: pnmbr} )
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/titles/post-ins-titles-info`, {inmbr} )
       setTableData(response.data.titles)
       setTitlesCount(response.data.count)
     })();

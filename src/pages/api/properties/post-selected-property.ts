@@ -13,7 +13,7 @@ export default async function handler(
       try {
         const propertiesQuery = pgPromise.as.format(`
           SELECT 
-            *, 
+            pm.*, 
             cm."CNAME",  
             cm."CNMBR"
           FROM public.propmstr pm

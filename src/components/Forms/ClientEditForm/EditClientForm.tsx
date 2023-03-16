@@ -1,15 +1,18 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from 'react-hot-toast'
+import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 import axios from "axios";
+
 import { FORM_BUTTON_TEXT } from "@/constants";
 import { timestampToDate } from "@/utils";
 import { abbreviatedStates } from "@/utils/UnitedStates";
 import Button from "@/components/Button/Button";
 import FormInput from "../Common/FormInput/FormInput";
-import styles from './EditClientForm.module.scss'
-import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
+import SubTableINS from "@/components/Tables/SubTableINS/SubTableINS";
 import SubTableProperties from "@/components/Tables/SubTableProperties/SubTableProperties";
+import styles from './EditClientForm.module.scss'
+import Spinner from "@/components/Spinner/Spinner";
 
 interface EditClientFormProps {
   clientId: string | null;
@@ -24,6 +27,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
 }) => {
 
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [titlesCount, setTitlesCount] = useState(null)
   const [clientInfoSnippet, setClientInfoSnippet] = useState<{
     id:string;
     cnmbr: string | null;
@@ -109,7 +113,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
   };
 
   return (
-      <div className='form-wrapper edit-form'>
+    <div className='form-wrapper edit-form'>
       <header>
         <span>{clientInfoSnippet.clientName}</span>
         { clientInfoSnippet.cnmbr ?
@@ -117,7 +121,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
           : null
         }
       </header>
-      { isLoading ? <h4>Loading...</h4>
+      { isLoading ? <Spinner />
         : <form className="flex-y" onSubmit={handleSubmit(onSubmit)}>
             <section className={`flex-x ${styles['client-status-section']}`}>
               <FormInput 
@@ -281,44 +285,39 @@ const ClientForm:React.FC<EditClientFormProps> = ({
               />
             </section>
 
-            <section className={styles["submit-button-section"]}>
+            <section className="submit-button-section">
               <Button type="submit" isDisabled={!isDirty}>
                 {FORM_BUTTON_TEXT[queryType]} 
               </Button>
             </section>
 
+            <footer className="form-footer">
+              { clientInfoSnippet.lastUpdated && 
+                <>
+                  <span>Last Updated: { clientInfoSnippet.lastUpdated.date }</span>
+                  <span className="italicized-text">{ clientInfoSnippet.lastUpdated.time }</span>
+                </>
+              }
+            </footer>
           </form>
       }
 
-      <footer className="form-footer">
-        { clientInfoSnippet.lastUpdated && 
-          <>
-            <span>Last Updated: { clientInfoSnippet.lastUpdated.date }</span>
-            <span className="italicized-text">{ clientInfoSnippet.lastUpdated.time }</span>
-          </>
-        }
-      </footer>
-      { queryType === 'update' 
-        && clientInfoSnippet.cnmbr 
-        // && clientInfoSnippet.compRef 
-        ?
+      { queryType === 'update' && clientInfoSnippet.cnmbr ?
         <Tabs>
           <TabList>
             <Tab>Properties</Tab>
-            {/* <Tab>Titles{titlesCount ? <span className="italicized-record-count">({titlesCount})</span>  : ''}</Tab> */}
+            <Tab>Titles{titlesCount ? <span className="italicized-record-count">({titlesCount})</span>  : ''}</Tab>
           </TabList>
 
           <TabPanel>
             <SubTableProperties cnmbr={clientInfoSnippet.cnmbr} />
-            {/* <SubTableSellerBuyer 
-              compRef={clientInfoSnippet.compRef} 
-            /> */}
           </TabPanel>
+
           <TabPanel>
-            {/* <SubTableINS 
-              pnmbr={clientInfoSnippet.pnmbr} 
+            <SubTableINS 
+              inmbr={clientInfoSnippet.cnmbr} 
               setTitlesCount={setTitlesCount}
-            /> */}
+            />
           </TabPanel>
         </Tabs>
         : null

@@ -8,21 +8,22 @@ import ClientCard from '@/components/ClientCard/ClientCard';
 import PropertyForm from '@/components/Forms/PropertyEditForm/EditPropertyForm';
 import InfoCard from '@/components/InfoCard/InfoCard';
 import ClientSearchForm from '@/components/Forms/ClientSearchForm/ClientSearchForm';
+import ClientsTable from '@/components/Tables/ClientsTable/ClientsTable';
 
 const SearchClientsPage = () => {
   const [showModal, setShowModal] = useState(false);
-  const [clientProperties, setClientProperties] = useState(null)
-  const [selectedPropId, setSelectedPropId] = useState<string|null>(null)
+  const [selectedclientId, setSelectedclientId] = useState<string|null>(null)
+  const [tableData, setTableData] = useState<Property[] | null>(null)
   const [noResults, setNoResults] = useState<boolean>(false)
 
-  const handleCardClick =(e: React.SyntheticEvent, propId: string) => {
+  const handleOpenModal =(e: React.SyntheticEvent, clientId: string) => {
     e.preventDefault()
-    setSelectedPropId(propId)
+    setSelectedclientId(clientId)
     setShowModal(true)
   }
 
   const handleModalClose = () => {
-    setSelectedPropId(null)
+    setSelectedclientId(null)
     setShowModal(false)
   }
 
@@ -30,25 +31,17 @@ const SearchClientsPage = () => {
     if(Object.keys(data).every(key => data[key] === '')) {
       alert('No search parameters were provided.')
     } else {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/properties/post-search-property`, data)
-      if(response.data.rows.length === 0) {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/clients/post-search-client`, data)
+      console.log(response.data)
+      if(response.data.length === 0) {
         setNoResults(true)
-        setClientProperties(null)
+        setTableData(null)
         return 
       }
       
       setNoResults(false)
 
-      const groupedByCustomer = response.data.rows.reduce((acc: any, property: Property) => {
-        type propKeyT = keyof typeof property
-        if (!acc[property.CNAME as propKeyT]) {
-          acc[property.CNAME as propKeyT] = []
-        } 
-        acc[property.CNAME as keyof typeof property].push(property)
-        return acc
-      },{})
-
-      setClientProperties(groupedByCustomer)
+      setTableData(response.data)
     }
   }
 
@@ -56,24 +49,17 @@ const SearchClientsPage = () => {
     <div className='search-page center-margin'>
       <ClientSearchForm onSubmit={onSubmit} />
       
-        { clientProperties && Object.keys(clientProperties).length > 0 ?
-          <div className='search-results-container'>
-            <h1>Properties by Client <span className='italicized-record-count'>(Clients: {Object.keys(clientProperties).length})</span></h1>
+      
+        { tableData && Object.keys(tableData).length > 0 ?
 
-              {Object.keys(clientProperties).map((key:string) =>  (
-                  <ClientCard 
-                    key={key}
-                    handleCardClick={handleCardClick}
-                    // @ts-ignore
-                    clientId={clientProperties[key][0].CNMBR} 
-                    // @ts-ignore
-                    clientName={clientProperties[key][0].CNAME} 
-                    // @ts-ignore
-                    clientProperties={clientProperties[key]} 
-                  />
-                )
-              )}
-          </div>
+            <div className='search-results-table-wrapper is-client-table'>           
+              <ClientsTable 
+                tableData={tableData} 
+                handleModalOpen={handleOpenModal} 
+                setTableData={setTableData} 
+              />
+            </div>
+
           : noResults ? <InfoCard line1='No Search Results Were Found' line2='For The Given Criteria'/>
           : <InfoCard line1='Search results will be displayed here'/>
         }
@@ -84,9 +70,9 @@ const SearchClientsPage = () => {
           show={showModal}
           title={''}
       >
-        { selectedPropId && 
+        { selectedclientId && 
           <PropertyForm 
-            propertyId={selectedPropId}
+            propertyId={selectedclientId}
             queryType='update' 
           />
         }

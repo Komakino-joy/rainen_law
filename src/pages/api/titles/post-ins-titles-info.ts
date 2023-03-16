@@ -17,7 +17,7 @@ export default async function handler(
             FROM public.ins i 
             WHERE i."INMBR" = $1;
           `
-        const result = await conn.query(getBuyerSellerInfoQuery, [req.body.PNMBR])
+        const result = await conn.query(getBuyerSellerInfoQuery, [req.body.inmbr])
 
         res.status(200).json({
           titles: result.rows,

@@ -75,12 +75,6 @@
 
 }
 
-.form-footer {
-  margin-bottom: 20px;
-  font-size: 12px;
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-}
-
 .search-form {
   max-width: 800px;
   position: relative;
@@ -105,5 +99,41 @@
 }
 
 .edit-form {
+  position: relative;
   padding: 15px 0px;
+
+  .spinner-container {
+    height: 250px;
+    width: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  header {
+    color: rgba(17, 39, 109, 0.822);
+    padding: 10px 10px;
+    font-size: 18px;
+  }
+
+  .submit-button-section {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+  }
+
+  form {
+    position: relative;
+
+  }
+  
+  .form-footer {
+    position: absolute;
+    bottom: 35px;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    width: fit-content;
+    color: rgb(141, 8, 8);
+  }
 }
