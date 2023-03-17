@@ -4,7 +4,6 @@ import { Property } from '@/types/common';
 import React, { useState } from 'react'
 import axios from 'axios';
 import Modal from '@/components/Modal/Modal';
-import ClientCard from '@/components/ClientCard/ClientCard';
 import PropertyForm from '@/components/Forms/PropertyEditForm/EditPropertyForm';
 import InfoCard from '@/components/InfoCard/InfoCard';
 import ClientSearchForm from '@/components/Forms/ClientSearchForm/ClientSearchForm';
@@ -28,11 +27,11 @@ const SearchClientsPage = () => {
   }
 
   const onSubmit = async (data:any) => {
-    if(Object.keys(data).every(key => data[key] === '')) {
+    if(Object.keys(data).every(key => data[key] === '' || data[key] === undefined || data[key] === null)) {
       alert('No search parameters were provided.')
     } else {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/clients/post-search-client`, data)
-      console.log(response.data)
+      
       if(response.data.length === 0) {
         setNoResults(true)
         setTableData(null)

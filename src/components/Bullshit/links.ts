@@ -2,7 +2,7 @@ const links = {
   properties: [
     {
       href: '/properties/add-new',
-      ctaText: 'Add new property'
+      ctaText: 'Create property'
     },
     {
       href: '/properties/search',
@@ -16,7 +16,7 @@ const links = {
   clients: [
     {
       href: '/clients/add-new',
-      ctaText: 'Add new client'
+      ctaText: 'Create client'
     },
     {
       href: '/clients/search',
@@ -30,7 +30,7 @@ const links = {
   ['title insurance']: [
     {
       href: '/ins-titles/add-new',
-      ctaText: 'Add new Insurance title'
+      ctaText: 'Create Insurance title'
     },
     {
       href: '/ins-titles/search',

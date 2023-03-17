@@ -1,7 +1,7 @@
 'use client';
 
 import { Property } from '@/types/common';
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import axios from 'axios';
 import Modal from '@/components/Modal/Modal';
 import ClientCard from '@/components/ClientCard/ClientCard';
@@ -11,17 +11,9 @@ import SearchPropertiesForm from '@/components/Forms/PropertySearchForm/SearchPr
 
 const SearchPropertiesPage = () => {
   const [showModal, setShowModal] = useState(false);
-  const [clientOptions, setClientOptions] = useState([])
   const [clientProperties, setClientProperties] = useState(null)
   const [selectedPropId, setSelectedPropId] = useState<string|null>(null)
   const [noResults, setNoResults] = useState<boolean>(false)
-
-  useEffect(() => {
-    (async() => {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/properties/get-all-clients-with-properties`)
-      setClientOptions(response.data)
-    })();
-  },[])
 
   const handleCardClick =(e: React.SyntheticEvent, propId: string) => {
     e.preventDefault()
@@ -35,7 +27,7 @@ const SearchPropertiesPage = () => {
   }
 
   const onSubmit = async (data:any) => {
-    if(Object.keys(data).every(key => data[key] === '')) {
+    if(Object.keys(data).every(key => data[key] === '' || data[key] === undefined || data[key] === null)) {
       alert('No search parameters were provided.')
     } else {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/properties/post-search-property`, data)
@@ -62,10 +54,7 @@ const SearchPropertiesPage = () => {
 
   return (
     <div className='search-page center-margin'>
-      <SearchPropertiesForm 
-        onSubmit={onSubmit}
-        clientOptions={clientOptions}
-      />
+      <SearchPropertiesForm onSubmit={onSubmit} />
       
         { clientProperties && Object.keys(clientProperties).length > 0 ?
           <div className='search-results-container'>

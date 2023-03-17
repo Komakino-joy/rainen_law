@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import toast from 'react-hot-toast'
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 import axios from "axios";
 
 import { FORM_BUTTON_TEXT } from "@/constants";
 import { timestampToDate } from "@/utils";
-import { abbreviatedStates } from "@/utils/UnitedStates";
+import { abbreviatedStatesLabelValuePair } from "@/utils/UnitedStates";
 import Button from "@/components/Button/Button";
 import FormInput from "../Common/FormInput/FormInput";
 import SubTableINS from "@/components/Tables/SubTableINS/SubTableINS";
@@ -28,6 +28,10 @@ const ClientForm:React.FC<EditClientFormProps> = ({
 
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [titlesCount, setTitlesCount] = useState(null)
+  const [defaultSelectValues , setDefaultSelectValues] = useState({
+    status: '',
+    state: ''
+  })
   const [clientInfoSnippet, setClientInfoSnippet] = useState<{
     id:string;
     cnmbr: string | null;
@@ -47,6 +51,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
     register, 
     handleSubmit, 
     reset,
+    control,
     formState: { errors, isDirty } 
   } = useForm({
     defaultValues: async () => {
@@ -71,6 +76,11 @@ const ClientForm:React.FC<EditClientFormProps> = ({
         }))
   
         setIsLoading(false)
+
+        setDefaultSelectValues({
+          status: CSTAT,
+          state: CSTATE
+        })
 
         return {
           clientName: CNAME ,
@@ -134,16 +144,29 @@ const ClientForm:React.FC<EditClientFormProps> = ({
                 register={register} 
                 errors={errors}
               />
-              <FormInput 
-                name="status"
-                customClass={styles.status}
-                labelKey="status"
-                labelText="Status"
-                type="select" 
-                isRequired={true}
-                register={register} 
-                options={['C','O']}
-                errors={errors}
+
+              <Controller 
+                name={"status"}  
+                control={control} 
+                render={({
+                  field: {onChange},
+                }) => {
+                  return (
+                    <FormInput 
+                      name="status"
+                      labelKey="status"
+                      labelText="Name"
+                      type="select" 
+                      defaultValue={defaultSelectValues.status}
+                      customClass={styles.status}
+                      selectOnChange={onChange}
+                      options={[{label:'C', value:'C'}, {label:'O', value:'O'}]}
+                      isRequired={true}
+                      register={register} 
+                      errors={errors}
+                    />
+                  ) 
+                }}
               />
             </section>
 
@@ -189,17 +212,29 @@ const ClientForm:React.FC<EditClientFormProps> = ({
                 errors={errors}
               />
 
-              <FormInput 
-                name="state"
-                labelKey="state"
-                labelText="State"
-                customClass={styles.state}
-                type="select" 
-                options={abbreviatedStates}
-                isRequired={true}
-                register={register} 
-                errors={errors}
-              />
+              <Controller 
+                  name={"state"}  
+                  control={control} 
+                  render={({
+                    field: {onChange},
+                  }) => {
+                    return (
+                      <FormInput 
+                        name="state"
+                        labelKey="state"
+                        labelText="State"
+                        type="select" 
+                        defaultValue={defaultSelectValues.state}
+                        customClass={styles.state}
+                        selectOnChange={onChange}
+                        options={abbreviatedStatesLabelValuePair}
+                        isRequired={true}
+                        register={register} 
+                        errors={errors}
+                      />
+                    ) 
+                  }}
+                />
 
               <FormInput 
                 name="zip"

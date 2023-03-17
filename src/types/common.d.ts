@@ -64,3 +64,22 @@ export interface Client {
   id: number;
   LAST_UPDATED: string;
 }
+
+export interface LabelValuePair {
+  label: string;
+  value: string;
+}
+
+export interface Company {
+  tnmbr: number;
+  tticoname: string;
+  tcity: string;
+  tadd1: string;
+  tzip: string;
+  tpercent: number;
+  tproduct1: number;
+  tproduct2: number;
+  tproduct3: number;
+  tproduct4: number;
+  tstat: string;
+}

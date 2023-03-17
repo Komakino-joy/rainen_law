@@ -1,97 +1,93 @@
 'use client';
 
 import { Client } from "@/types/common";
+import { hasValue, uniqueLabelValuePairs } from "@/utils/";
 import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
 
 interface ClientsContextProps {
-  clientsData: {
-    CNAME: [];
-    CNMBR: [];
-    CSTAT: [];
-    CCNTCT: [];
-    CSTATTO: [];
-    CCITY: [];
-    CSTATE: [];
-    CZIP: [];
-    CPHONE: [];
-    CFAX: [];
-    CEMAIL: [];
+  clientSelectOptions: {
+    CNAME: [{ label: string; value: string;}];
+    CNMBR: [{ label: string; value: string;}];
+    CSTAT: [{ label: string; value: string;}];
+    CCNTCT: [{ label: string; value: string;}];
+    CSTATTO: [{ label: string; value: string;}];
+    CCITY: [{ label: string; value: string;}];
+    CSTATE: [{ label: string; value: string;}];
+    CZIP: [{ label: string; value: string;}];
+    CPHONE: [{ label: string; value: string;}];
+    CFAX: [{ label: string; value: string;}];
+    CEMAIL: [{ label: string; value: string;}];
   };
 }
 
 const ClientsContext = createContext<ClientsContextProps>({
-  clientsData: {
-    CNAME: [],
-    CNMBR: [],
-    CSTAT: [],
-    CCNTCT: [],
-    CSTATTO: [],
-    CCITY: [],
-    CSTATE: [],
-    CZIP: [],
-    CPHONE: [],
-    CFAX: [],
-    CEMAIL: []
+  clientSelectOptions: {
+    CNAME: [{ label: '', value: ''}],
+    CNMBR: [{ label: '', value: ''}],
+    CSTAT: [{ label: '', value: ''}],
+    CCNTCT: [{ label: '', value: ''}],
+    CSTATTO: [{ label: '', value: ''}],
+    CCITY: [{ label: '', value: ''}],
+    CSTATE: [{ label: '', value: ''}],
+    CZIP: [{ label: '', value: ''}],
+    CPHONE: [{ label: '', value: ''}],
+    CFAX: [{ label: '', value: ''}],
+    CEMAIL: [{ label: '', value: ''}]
   },
 })
 
 export const ClientsContextProvider = ({children}: {children:any}) => {
-  const [clientsData, setClientsData] = useState<any>({})
+  const [clientSelectOptions, setclientSelectOptions] = useState<any>([])
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       (async() => {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/clients/get-all-clients`)
-        // Creating a map of all distinct client values
-        const clientProps = response.data.reduce((acc: any, row: Client) => {
-          if(!acc.CNAME) acc.CNAME = new Set()
-          if(!acc.CNMBR) acc.CNMBR = new Set()
-          if(!acc.CSTAT) acc.CSTAT = new Set()
-          if(!acc.CCNTCT) acc.CCNTCT = new Set()
-          if(!acc.CSTATTO) acc.CSTATTO = new Set()
-          if(!acc.CCITY) acc.CCITY = new Set()
-          if(!acc.CSTATE) acc.CSTATE = new Set()
-          if(!acc.CZIP) acc.CZIP = new Set()
-          if(!acc.CPHONE) acc.CPHONE = new Set()
-          if(!acc.CFAX) acc.CFAX = new Set()
-          if(!acc.CEMAIL) acc.CEMAIL = new Set()
-  
-          acc.CNAME.add(row.CNAME)
-          acc.CNMBR.add(row.CNMBR)
-          acc.CSTAT.add(row.CSTAT)
-          acc.CCNTCT.add(row.CCNTCT)
-          acc.CSTATTO.add(row.CSTATTO)
-          acc.CCITY.add(row.CCITY)
-          acc.CSTATE.add(row.CSTATE)
-          acc.CZIP.add(row.CZIP)
-          acc.CPHONE.add(row.CPHONE)
-          acc.CFAX.add(row.CFAX)
-          acc.CEMAIL.add(row.CEMAIL)
-  
+
+        // These are the only fields we care to make into Options for Select component
+        const fields = [
+          'CNAME', 'CNMBR', 'CSTAT', 'CCNTCT', 'CSTATTO',
+          'CCITY', 'CSTATE', 'CZIP', 'CPHONE', 'CFAX', 'CEMAIL'
+        ]
+
+        const clientsObject = response.data.reduce((acc: any, row: Client) => {
+          // Iterate through our fields and see if we have assigned a value for each property in our accumulator
+          // Assign empty array if no value is found
+          for(let i=0; i<fields.length; i++) {
+            if(!acc[fields[i]]) {
+              acc[fields[i]] = []
+            }
+          }
+          
+          type clientKey = keyof typeof row
+          
+          // Iterate through our fields and push to our accumulator arrays
+          for(let i=0; i<fields.length; i++) {
+            if(hasValue(row[fields[i] as clientKey])) {
+              acc[fields[i]].push({
+                label: row[fields[i] as clientKey], 
+                value:row[fields[i] as clientKey]
+              })
+            }
+          }
+
           return acc
         }, {})
+        
+        // Remove all duplicate objects from our new arrays
+        Object.keys(clientsObject).map(key => (
+            clientsObject[key] = uniqueLabelValuePairs(clientsObject[key])
+          ))
 
-        setClientsData({
-          CNAME: [...clientProps.CNAME],
-          CNMBR: [...clientProps.CNMBR],
-          CSTAT: [...clientProps.CSTAT],
-          CCNTCT: [...clientProps.CCNTCT],
-          CSTATTO: [...clientProps.CSTATTO],
-          CCITY: [...clientProps.CCITY],
-          CSTATE: [...clientProps.CSTATE],
-          CZIP: [...clientProps.CZIP],
-          CPHONE: [...clientProps.CPHONE],
-          CFAX: [...clientProps.CFAX],
-          CEMAIL: [...clientProps.CEMAIL]
-        })
+        setclientSelectOptions(clientsObject)
 
       })();
     } 
   },[])
-
+  
   return (
-    <ClientsContext.Provider value={{clientsData}}>
+    <ClientsContext.Provider value={{clientSelectOptions}}>
       {children}
     </ClientsContext.Provider>
   )

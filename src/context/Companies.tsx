@@ -1,5 +1,6 @@
 'use client';
 
+import { Company } from "@/types/common";
 import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
 
@@ -14,21 +15,20 @@ const CompaniesContext = createContext<CompaniesContextProps>({
 export const CompaniesContextProvider = ({children}: {children:any}) => {
   const [companiesList, setCompaniesList] = useState([])
 
-  console.log(companiesList)
-
   useEffect(() => {
     if (typeof window !== 'undefined') {
       (async() => {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/companies/get-companies`)
-        setCompaniesList(response.data)
+    
+        setCompaniesList(response.data.map((company:Company) => (
+          {label:company.tticoname, value:company.tnmbr}
+        )))
       })();
     } 
   },[])
 
   return (
-      <CompaniesContext.Provider 
-        value={{ companiesList }}
-      >
+      <CompaniesContext.Provider value={{ companiesList }}>
           {children}
       </CompaniesContext.Provider>
   )

@@ -17,10 +17,11 @@ export default async function handler(
             WHERE 
               cm."CNAME" IS NOT NULL
             ORDER BY
-              "CNAME" ASC;
+              "CNAME" ASC
+              LIMIT 50;
           `
         const result = await conn.query(getAllClientsQuery)
-        
+  
         res.status(200).json(result.rows)
       
       } catch ( error ) {

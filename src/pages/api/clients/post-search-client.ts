@@ -9,17 +9,17 @@ export default async function handler(
     if (req.method === "POST") { 
 
       const {
-        clientName,
-        clientNumber,
-        clientCity,
-        clientContact,
-        clientEmail,
-        clientFax,
-        clientPhone,
-        clientStat,
-        clientState,
-        clientStatementAddressee,
-        clientZip
+        clientName='',
+        clientNumber='',
+        clientCity='',
+        clientContact='',
+        clientEmail='',
+        clientFax='',
+        clientPhone='',
+        clientStat='',
+        clientState='',
+        clientStatementAddressee='',
+        clientZip=''
       } = req.body
 
 

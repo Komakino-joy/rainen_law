@@ -20,7 +20,7 @@
   }
 
   &:focus {
-    outline: 2px solid #0077d9ef;
+    outline: 1px solid #0077d9ef;
     font-weight: bold;
   }
 
@@ -35,7 +35,7 @@
     }
 
     &:focus {
-      outline: 2px solid rgba(255, 0, 0, 0.801);
+      outline: 1px solid rgba(255, 0, 0, 0.801);
       font-weight: bold;
     }
   }

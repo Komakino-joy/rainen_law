@@ -1,3 +1,4 @@
+import Select from '@/components/Select/Select';
 import React from 'react';
 
 // import styles from './FormInput.module.scss';
@@ -10,14 +11,14 @@ interface FormInput {
   type:string;
   register: any;
   errors: any;
-  options?: string[];
-  valuesDifferFromOptions?: string[] | null;
+  options?: any[];
   min?: string;
   step?: string;
   max?: string;
   defaultValue?: any;
   name:string;
   disabled?:boolean;
+  selectOnChange?: any;
 }
 
 const Required:React.FC = () => (
@@ -39,7 +40,7 @@ const FormInput:React.FC<FormInput> = ({
   max='',
   defaultValue='',
   disabled=false,
-  valuesDifferFromOptions=null
+  selectOnChange
 }) => {
 
   return(
@@ -48,40 +49,13 @@ const FormInput:React.FC<FormInput> = ({
         {labelText} {errors[labelKey] && isRequired ? <Required /> : ''}
       </label>  
       {
-        type === 'select'? 
-          (
-            
-            valuesDifferFromOptions ?
-              <select
-                name={name} 
-                defaultValue={defaultValue} {...register(labelKey, { required: isRequired })}
-              >
-                {options?.map( (option, idx) => (
-                  <option 
-                    key={option} 
-                    value={valuesDifferFromOptions[idx]}
-                  > 
-                    {option} 
-                  </option> 
-                ))}
-                
-              </select>
-            :
-              <select
-                name={name} 
-                defaultValue={defaultValue} {...register(labelKey, { required: isRequired })}
-              >
-                {options?.map( option => (
-                  <option 
-                    key={option} 
-                    value={option}
-                  > 
-                    {option} 
-                  </option> 
-                ))}
-                
-              </select>
-          )
+        type === 'select'  && options ? 
+          <Select 
+            onChange={selectOnChange} 
+            options={options}  
+            defaultValue={defaultValue}
+          /> 
+          
         : type === 'textarea' ? <textarea name={name} defaultValue={defaultValue} {...register(labelKey)}/>
         : <input 
             name={name}

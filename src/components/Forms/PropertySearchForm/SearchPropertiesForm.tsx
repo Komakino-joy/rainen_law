@@ -1,33 +1,37 @@
 import { 
   useForm, 
-  // Controller 
+  Controller 
 } from "react-hook-form";
 import { useRouter } from "next/router";
 import FormInput from "../Common/FormInput/FormInput";
+import { useClientsContext } from "@/context/Clients";
 import { usePropertiesContext } from "@/context/Properties";
-// import ComboBoxExample from "@/components/ComboBox/ComboBox";
 import Button from "@/components/Button/Button";
+import { useState } from "react";
 
 interface SearchPropertiesFormProps {
   onSubmit: any;
-  clientOptions: {CNAME: string}[];
 }
 
 const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
-  onSubmit,
-  clientOptions
+  onSubmit
 }) => {
+  const router = useRouter()
 
-  const {cityOptions, typeOptions, statusOptions} = usePropertiesContext()
+  const { propertiesSelectOptions} = usePropertiesContext()
+  const {clientSelectOptions} = useClientsContext()
+
+  const [clearSelectInputBoxes, setClearSelectInputBoxes] = useState(false)
 
   const { 
     register, 
     handleSubmit, 
     reset,
-    formState: { errors, isDirty, isValid, isSubmitting }
+    control,
+    formState: { errors, dirtyFields }
   } = useForm();
 
-  const router = useRouter()
+  const isDirtyAlt = !!Object.keys(dirtyFields).length === false
 
   const handleViewAllClick = (e:any) => {
     e.preventDefault()
@@ -43,36 +47,30 @@ const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
         className="flex-y" 
         onSubmit={handleSubmit(onSubmit)}
       >
-        {/* <section>
-          <Controller 
-            name={"downShift"}  
-            control={control} 
-            render={({ field }) => {
-              console.log(field)
-              return (
-              <ComboBoxExample
-                {...field}
-                setValue={setValue}
-                // options={props.languageOptionsToSelect}
-              />
-            )}}
-
-          />
-        </section> */}
-
         <section className="flex-x gap-sm">
-          { cityOptions && cityOptions.length > 0 &&
-            <FormInput 
-              name="city"
-              labelKey="city"
-              labelText="City"
-              type="select" 
-              customClass="f-100"
-              // @ts-ignore
-              options={['', ...cityOptions.map(city => city.PCITY)]}
-              isRequired={false}
-              register={register} 
-              errors={errors}
+        { propertiesSelectOptions.PCITY && propertiesSelectOptions.PCITY.length > 0 &&
+            <Controller 
+              name={"city"}  
+              control={control} 
+              render={({
+                field: {onChange},
+              }) => {
+                return (
+                  <FormInput 
+                    key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
+                    name="city"
+                    labelKey="city"
+                    labelText="City"
+                    type="select" 
+                    customClass="f-100"
+                    selectOnChange={onChange}
+                    options={propertiesSelectOptions.PCITY}
+                    isRequired={false}
+                    register={register} 
+                    errors={errors}
+                  />
+                ) 
+              }}
             />
           }
 
@@ -111,48 +109,80 @@ const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
         </section>
 
         <section className="flex-x gap-sm">
-          { clientOptions && clientOptions.length > 0 &&
-            <FormInput 
-              name="client"
-              labelKey="client"
-              labelText="Client"
-              type="select" 
-              customClass="f-100"
-              // @ts-ignore
-              options={['', ...clientOptions.map(client => client.CNAME)]}
-              isRequired={false}
-              register={register} 
-              errors={errors}
+          { clientSelectOptions.CNAME && clientSelectOptions.CNAME.length > 0 &&
+            <Controller 
+              name={"client"}  
+              control={control} 
+              render={({
+                field: { onChange},
+              }) => {
+                return (
+                  <FormInput 
+                    key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
+                    name="client"
+                    labelKey="client"
+                    labelText="Client"
+                    type="select" 
+                    customClass="f-100"
+                    selectOnChange={onChange}
+                    options={clientSelectOptions.CNAME}
+                    isRequired={false}
+                    register={register} 
+                    errors={errors}
+                  />
+                ) 
+              }}
             />
           }
 
-          { typeOptions && typeOptions.length > 0 &&
-            <FormInput 
-              name="type"
-              labelKey="type"
-              labelText="Type"
-              customClass="f-25"
-              type="select" 
-              // @ts-ignore
-              options={['', ...typeOptions.map(type => type.PTYPE)]}
-              isRequired={false}
-              register={register} 
-              errors={errors}
+          { propertiesSelectOptions.PTYPE && propertiesSelectOptions.PTYPE.length > 0 &&
+            <Controller 
+              name={"type"}  
+              control={control} 
+              render={({
+                field: { onChange},
+              }) => {
+                return (
+                  <FormInput 
+                    name="type"
+                    key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
+                    labelKey="type"
+                    labelText="Type"
+                    type="select" 
+                    customClass="f-25"
+                    selectOnChange={onChange}
+                    options={propertiesSelectOptions.PTYPE}
+                    isRequired={false}
+                    register={register} 
+                    errors={errors}
+                  />
+                ) 
+              }}
             />
           }
-
-          { statusOptions && statusOptions.length > 0 &&
-            <FormInput 
-              name="status"
-              labelKey="status"
-              labelText="Status"
-              customClass="f-25"
-              type="select" 
-              // @ts-ignore
-              options={['', ...statusOptions.map(status => status.PSTAT)]}
-              isRequired={false}
-              register={register} 
-              errors={errors}
+          
+          { propertiesSelectOptions.PSTAT && propertiesSelectOptions.PSTAT.length > 0 &&
+            <Controller 
+              name={"status"}  
+              control={control} 
+              render={({
+                field: { onChange},
+              }) => {
+                return (
+                  <FormInput 
+                    name="status"
+                    labelKey="status"
+                    labelText="Status"
+                    type="select" 
+                    customClass="f-25"
+                    selectOnChange={onChange}
+                    options={propertiesSelectOptions.PSTAT}
+                    isRequired={false}
+                    register={register} 
+                    errors={errors}
+                  />
+                ) 
+              }}
             />
           }
 
@@ -177,16 +207,19 @@ const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
             View All
           </Button>
           <Button  
-            isDisabled={!isDirty} 
+            isDisabled={isDirtyAlt} 
             onClick={() => {}} 
             type='submit'            
           >
             Submit Search
           </Button>
           <Button 
-            isDisabled={!isDirty} 
+            isDisabled={isDirtyAlt} 
             type='button'
-            onClick={() => reset()} 
+            onClick={() => {
+              reset()
+              setClearSelectInputBoxes(!clearSelectInputBoxes)
+            }} 
             redVariant
           >
             Clear Form

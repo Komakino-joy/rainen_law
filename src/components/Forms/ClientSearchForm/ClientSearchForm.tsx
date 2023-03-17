@@ -1,8 +1,9 @@
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { useRouter } from "next/router";
 import FormInput from "../Common/FormInput/FormInput";
 import { useClientsContext } from "@/context/Clients";
 import Button from "@/components/Button/Button";
+import { useState } from "react";
 
 interface ClientSearchFormProps {
   onSubmit: any;
@@ -11,8 +12,11 @@ interface ClientSearchFormProps {
 const ClientSearchForm:React.FC<ClientSearchFormProps> = ({
   onSubmit
 }) => {
+  const router = useRouter()
 
-  const {clientsData} = useClientsContext()
+  const {clientSelectOptions} = useClientsContext()
+  const [clearSelectInputBoxes, setClearSelectInputBoxes] = useState(false)
+
   const {
     CNAME: clientNames,
     CNMBR: clientNumbers,
@@ -25,16 +29,17 @@ const ClientSearchForm:React.FC<ClientSearchFormProps> = ({
     CPHONE: clientPhones,
     CFAX: clientFaxes,
     CEMAIL: clientEmails
-  } = clientsData
+  } = clientSelectOptions
 
   const { 
     register, 
     handleSubmit, 
     reset,
-    formState: { errors, isDirty }
+    control,
+    formState: { errors, dirtyFields }
   } = useForm();
 
-  const router = useRouter()
+  const isDirtyAlt = !!Object.keys(dirtyFields).length === false
 
   const handleViewAllClick = (e:any) => {
     e.preventDefault()
@@ -52,173 +57,294 @@ const ClientSearchForm:React.FC<ClientSearchFormProps> = ({
       >
         <section className="flex-x gap-sm">
           { clientNames && clientNames.length > 0 &&
-            <FormInput 
-              name="clientName"
-              labelKey="clientName"
-              labelText="Name"
-              type="select" 
-              customClass="f-100"
-              // @ts-ignore
-              options={['', ...clientNames.map(clientName => clientName)]}
-              isRequired={false}
-              register={register} 
-              errors={errors}
+            <Controller 
+              name={"clientName"}  
+              control={control} 
+              render={({
+                field: {onChange},
+              }) => {
+                return (
+                  <FormInput 
+                    key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
+                    name="clientName"
+                    labelKey="clientName"
+                    labelText="Name"
+                    type="select" 
+                    customClass="f-100"
+                    selectOnChange={onChange}
+                    options={clientNames}
+                    isRequired={false}
+                    register={register} 
+                    errors={errors}
+                  />
+                ) 
+              }}
             />
           }
 
           { clientNumbers && clientNumbers.length > 0 &&
-            <FormInput 
-              name="clientNumber"
-              labelKey="clientNumber"
-              labelText="Number"
-              type="select" 
-              customClass="f-100"
-              // @ts-ignore
-              options={['', ...clientNumbers.map(clientNumber => clientNumber)]}
-              isRequired={false}
-              register={register} 
-              errors={errors}
+            <Controller 
+              name={"clientNumber"}  
+              control={control} 
+              render={({
+                field: {onChange},
+              }) => {
+                return (
+                  <FormInput 
+                    key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
+                    name="clientNumber"
+                    labelKey="clientNumber"
+                    labelText="Number"
+                    type="select" 
+                    customClass="f-100"
+                    selectOnChange={onChange}
+                    options={clientNumbers}
+                    isRequired={false}
+                    register={register} 
+                    errors={errors}
+                  />
+                ) 
+              }}
             />
           }
 
           { clientStats && clientStats.length > 0 &&
-            <FormInput 
-              name="clientStat"
-              labelKey="clientStat"
-              labelText="Status"
-              type="select" 
-              customClass="f-50"
-              // @ts-ignore
-              options={['', ...clientStats.map(clientStat => clientStat)]}
-              isRequired={false}
-              register={register} 
-              errors={errors}
+            <Controller 
+              name={"clientStat"}  
+              control={control} 
+              render={({
+                field: {onChange},
+              }) => {
+                return (
+                  <FormInput 
+                    key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
+                    name="clientStat"
+                    labelKey="clientStat"
+                    labelText="Status"
+                    type="select" 
+                    customClass="f-50"
+                    selectOnChange={onChange}
+                    options={clientStats}
+                    isRequired={false}
+                    register={register} 
+                    errors={errors}
+                  />
+                ) 
+              }}
             />
           }
         </section>
 
         <section className="flex-x gap-sm">
-        { clientPhones && clientPhones.length > 0 &&
-            <FormInput 
-              name="clientPhone"
-              labelKey="clientPhone"
-              labelText="Phone Number"
-              type="select" 
-              customClass="f-100"
-              // @ts-ignore
-              options={['', ...clientPhones.map(clientPhone => clientPhone)]}
-              isRequired={false}
-              register={register} 
-              errors={errors}
+          { clientPhones && clientPhones.length > 0 &&
+            <Controller 
+              name={"clientPhone"}  
+              control={control} 
+              render={({
+                field: {onChange},
+              }) => {
+                return (
+                  <FormInput 
+                    key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
+                    name="clientPhone"
+                    labelKey="clientPhone"
+                    labelText="Phone Number"
+                    type="select" 
+                    customClass="f-100"
+                    selectOnChange={onChange}
+                    options={clientPhones}
+                    isRequired={false}
+                    register={register} 
+                    errors={errors}
+                  />
+                ) 
+              }}
             />
           }
 
           { clientFaxes && clientFaxes.length > 0 &&
-            <FormInput 
-              name="clientFax"
-              labelKey="clientFax"
-              labelText="Fax Number"
-              type="select" 
-              customClass="f-100"
-              // @ts-ignore
-              options={['', ...clientFaxes.map(clientFax => clientFax)]}
-              isRequired={false}
-              register={register} 
-              errors={errors}
+            <Controller 
+              name={"clientFax"}  
+              control={control} 
+              render={({
+                field: {onChange},
+              }) => {
+                return (
+                  <FormInput 
+                    key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
+                    name="clientFax"
+                    labelKey="clientFax"
+                    labelText="Fax Number"
+                    type="select" 
+                    customClass="f-100"
+                    selectOnChange={onChange}
+                    options={clientFaxes}
+                    isRequired={false}
+                    register={register} 
+                    errors={errors}
+                  />
+                ) 
+              }}
             />
           }
 
           { clientEmails && clientEmails.length > 0 &&
-            <FormInput 
-              name="clientEmail"
-              labelKey="clientEmail"
-              labelText="Email"
-              type="select" 
-              customClass="f-100"
-              // @ts-ignore
-              options={['', ...clientEmails.map(clientEmail => clientEmail)]}
-              isRequired={false}
-              register={register} 
-              errors={errors}
+            <Controller 
+              name={"clientEmail"}  
+              control={control} 
+              render={({
+                field: {onChange},
+              }) => {
+                return (
+                  <FormInput 
+                    key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
+                    name="clientEmail"
+                    labelKey="clientEmail"
+                    labelText="Email"
+                    type="select" 
+                    customClass="f-100"
+                    selectOnChange={onChange}
+                    options={clientEmails}
+                    isRequired={false}
+                    register={register} 
+                    errors={errors}
+                  />
+                ) 
+              }}
             />
           }
         </section>
 
         <section className="flex-x gap-sm">
           { clientContacts && clientContacts.length > 0 &&
-            <FormInput 
-              name="clientContact"
-              labelKey="clientContact"
-              labelText="Contact"
-              type="select" 
-              customClass="f-100"
-              // @ts-ignore
-              options={['', ...clientContacts.map(contact => contact)]}
-              isRequired={false}
-              register={register} 
-              errors={errors}
+            <Controller 
+              name={"clientContact"}  
+              control={control} 
+              render={({
+                field: {onChange},
+              }) => {
+                return (
+                  <FormInput 
+                    key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
+                    name="clientContact"
+                    labelKey="clientContact"
+                    labelText="Contact"
+                    type="select" 
+                    customClass="f-100"
+                    selectOnChange={onChange}
+                    options={clientContacts}
+                    isRequired={false}
+                    register={register} 
+                    errors={errors}
+                  />
+                ) 
+              }}
             />
           }
 
           { clientStattos && clientStattos.length > 0 &&
-            <FormInput 
-              name="clientStatementAddressee"
-              labelKey="clientStatementAddressee"
-              labelText="Statement Addressee"
-              type="select" 
-              customClass="f-100"
-              // @ts-ignore
-              options={['', ...clientStattos.map(statto => statto)]}
-              isRequired={false}
-              register={register} 
-              errors={errors}
+            <Controller 
+              name={"clientStatementAddressee"}  
+              control={control} 
+              render={({
+                field: {onChange},
+              }) => {
+                return (
+                  <FormInput 
+                    key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
+                    name="clientStatementAddressee"
+                    labelKey="clientStatementAddressee"
+                    labelText="Statement Addressee"
+                    type="select" 
+                    customClass="f-100"
+                    selectOnChange={onChange}
+                    options={clientStattos}
+                    isRequired={false}
+                    register={register} 
+                    errors={errors}
+                  />
+                ) 
+              }}
             />
           }
         </section>
 
         <section className="flex-x gap-sm">
           { clientCities && clientCities.length > 0 &&
-            <FormInput 
-              name="clientCity"
-              labelKey="clientCity"
-              labelText="City"
-              type="select" 
-              customClass="f-100"
-              // @ts-ignore
-              options={['', ...clientCities.map(city => city)]}
-              isRequired={false}
-              register={register} 
-              errors={errors}
+            <Controller 
+              name={"clientCity"}  
+              control={control} 
+              render={({
+                field: {onChange},
+              }) => {
+                return (
+                  <FormInput 
+                    key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
+                    name="clientCity"
+                    labelKey="clientCity"
+                    labelText="City"
+                    type="select" 
+                    customClass="f-100"
+                    selectOnChange={onChange}
+                    options={clientCities}
+                    isRequired={false}
+                    register={register} 
+                    errors={errors}
+                  />
+                ) 
+              }}
             />
           }
 
           { clientStates && clientStates.length > 0 &&
-            <FormInput 
-              name="clientState"
-              labelKey="clientState"
-              labelText="State"
-              type="select" 
-              customClass="f-50"
-              // @ts-ignore
-              options={['', ...clientStates.map(state => state)]}
-              isRequired={false}
-              register={register} 
-              errors={errors}
+            <Controller 
+              name={"clientState"}  
+              control={control} 
+              render={({
+                field: {onChange},
+              }) => {
+                return (
+                  <FormInput 
+                    key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
+                    name="clientState"
+                    labelKey="clientState"
+                    labelText="State"
+                    type="select" 
+                    customClass="f-50"
+                    selectOnChange={onChange}
+                    options={clientStates}
+                    isRequired={false}
+                    register={register} 
+                    errors={errors}
+                  />
+                ) 
+              }}
             />
           }
 
           { clientZips && clientZips.length > 0 &&
-            <FormInput 
-              name="clientZip"
-              labelKey="clientZip"
-              labelText="Zip Code"
-              type="select" 
-              customClass="f-100"
-              // @ts-ignore
-              options={['', ...clientZips.map(zip => zip)]}
-              isRequired={false}
-              register={register} 
-              errors={errors}
+            <Controller 
+              name={"clientZip"}  
+              control={control} 
+              render={({
+                field: {onChange},
+              }) => {
+                return (
+                  <FormInput 
+                    key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
+                    name="clientZip"
+                    labelKey="clientZip"
+                    labelText="Zip Code"
+                    type="select" 
+                    customClass="f-100"
+                    selectOnChange={onChange}
+                    options={clientZips}
+                    isRequired={false}
+                    register={register} 
+                    errors={errors}
+                  />
+                ) 
+              }}
             />
           }
         </section>
@@ -232,16 +358,19 @@ const ClientSearchForm:React.FC<ClientSearchFormProps> = ({
             View All
           </Button>
           <Button  
-            isDisabled={!isDirty} 
+            isDisabled={isDirtyAlt} 
             onClick={() => {}} 
             type='submit'            
           >
             Submit Search
           </Button>
           <Button 
-            isDisabled={!isDirty} 
+            isDisabled={isDirtyAlt} 
             type='button'
-            onClick={() => reset()} 
+            onClick={() => {
+              setClearSelectInputBoxes(!clearSelectInputBoxes)
+              reset()
+            }} 
             redVariant
           >
             Clear Form

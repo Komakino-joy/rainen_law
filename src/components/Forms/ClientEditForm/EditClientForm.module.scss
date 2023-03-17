@@ -11,12 +11,19 @@
   }
 
   .status {
-    flex: .1;
+    flex: .20;
   }
 
-  .city,
-  .zip  {
+  .state {
+    flex: .5;
+  }
+
+  .city{
     flex: 1;
+  }
+
+  .zip {
+    flex: .5;
   }
 
   .phone,

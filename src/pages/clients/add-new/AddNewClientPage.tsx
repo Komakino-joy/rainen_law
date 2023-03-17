@@ -21,7 +21,7 @@ const AddNewClientPage = () => {
 
   return (
     <div className='center-margin'>
-      <h1>Add new client</h1>
+      <h1>Create client</h1>
       <div className='light-border'>
         <EditClientForm 
           clientId={null} 

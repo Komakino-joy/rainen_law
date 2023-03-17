@@ -21,7 +21,7 @@ const AddNewPropertyPage = () => {
 
   return (
     <div className='center-margin'>
-      <h1>Add new property</h1>
+      <h1>Create property</h1>
       <div className='light-border'>
         <EditPropertyForm 
           propertyId={null} 

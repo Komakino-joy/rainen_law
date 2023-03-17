@@ -22,7 +22,7 @@ const AddNewINSTitlePage = () => {
 
   return (
     <div className='center-margin'>
-      <h1>Add new Insurance Title</h1>
+      <h1>Create Insurance Title</h1>
       <div className='light-border'>
         <EditINSFormForm 
           insTitleId={null} 

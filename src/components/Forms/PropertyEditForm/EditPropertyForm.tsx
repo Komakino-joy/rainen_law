@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -9,7 +9,7 @@ import Button from "@/components/Button/Button";
 import FormInput from "../Common/FormInput/FormInput";
 
 import { FORM_BUTTON_TEXT } from "@/constants";
-import { timestampToDate, abbreviatedStates } from "@/utils";
+import { timestampToDate, abbreviatedStatesLabelValuePair } from "@/utils";
 import { useClientsContext } from "@/context/Clients";
 import { usePropertiesContext } from "@/context/Properties";
 import styles from './EditPropertyForm.module.scss'
@@ -29,12 +29,28 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
   handleAfterSubmit = () => {},
 }) => {
 
-  const {clientsData} = useClientsContext()
-  const {assignOptions, typeOptions, statusOptions} = usePropertiesContext()
+  const {clientSelectOptions} = useClientsContext()
+  const {propertiesSelectOptions} = usePropertiesContext()
+  const {
+    CNAME: clientNames,
+  } = clientSelectOptions
+
+  const {
+    PSTAT: statusOptions,
+    PTYPE: typeOptions,
+    PASIGN: assignOptions,
+  } = propertiesSelectOptions
   
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [compRef, setCompRef] = useState(null)
   const [titlesCount, setTitlesCount] = useState(null)
+  const [defaultSelectValues, setDefaultSelectValues] = useState({
+    state: '',
+    status: '',
+    type:'',
+    assigned: '',
+    clientName: ''
+  })
 
   const [propertyInfoSnippet, setPropertyInfoSnippet] = useState<{
     id:string;
@@ -63,7 +79,8 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
   const { 
     register, 
     handleSubmit, 
-    formState: { errors, isDirty },
+    control,
+    formState: { errors, dirtyFields },
     reset,
   } = useForm({
       defaultValues: async () => {
@@ -81,7 +98,6 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
             PREQ='', PRDATE='', PCDATE='', PINSTR='', LAST_UPDATED='', PNMBR=''
           } = response.data[0]
 
-          console.log(response.data[0])
           setPropertyInfoSnippet((prevState) => ({
             ...prevState,
             id: PROPID,
@@ -92,6 +108,16 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
           }))
     
           setIsLoading(false)
+
+          console.log(PSTAT)
+
+          setDefaultSelectValues({
+            state: PSTATE,
+            status: PSTAT,
+            type:PTYPE,
+            assigned: PASIGN,
+            clientName: CNAME
+          })
 
           return {
             city: PCITY ,
@@ -107,7 +133,7 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
             lot: PLOT ,
             condo: PCONDO ,
             unit: PUNIT ,
-            status: PSTAT ,
+            status: {label: PSTAT, value:PSTAT} ,
             type: PTYPE ,
             assigned: PASIGN ,
             clientName:  CNAME,
@@ -124,8 +150,10 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
     }
   );
 
+  const isDirtyAlt = !!Object.keys(dirtyFields).length === false
+
   const onSubmit = async(data:any) => {
-    if(!isDirty) return 
+    if(isDirtyAlt) return 
     
     if(queryType === 'insert') {
       const response = await axios.post(`/api/properties/post-add-property`, data)
@@ -170,16 +198,28 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
                   errors={errors}
                 />
 
-                <FormInput 
-                  name="state"
-                  labelKey="state"
-                  labelText="State"
-                  customClass={styles.state}
-                  type="select" 
-                  options={abbreviatedStates}
-                  isRequired={true}
-                  register={register} 
-                  errors={errors}
+                <Controller 
+                  name={"state"}  
+                  control={control} 
+                  render={({
+                    field: {onChange},
+                  }) => {
+                    return (
+                      <FormInput 
+                        name="state"
+                        labelKey="state"
+                        labelText="State"
+                        type="select" 
+                        defaultValue={defaultSelectValues.state}
+                        customClass={styles.state}
+                        selectOnChange={onChange}
+                        options={abbreviatedStatesLabelValuePair}
+                        isRequired={true}
+                        register={register} 
+                        errors={errors}
+                      />
+                    ) 
+                  }}
                 />
 
                 <FormInput 
@@ -311,59 +351,105 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
           </section>
 
           <section className={`flex-y ${styles['mid-section']}`}>
-            <div className={`flex-x ${styles['status-type-assigned-section']}`}>
-              { statusOptions && statusOptions.length > 0 && 
-                <FormInput 
-                  name="status"
-                  labelKey="status"
-                  labelText="Status"
-                  type="select" 
-                  options={['',...statusOptions.map(type => type.PSTAT)]}
-                  isRequired={true}
-                  register={register} 
-                  errors={errors}
+            <div className={`flex-x ${styles['status-type-assigned-section']}`}>                
+              { statusOptions && statusOptions.length > 0 &&
+                <Controller 
+                  name={"status"}  
+                  control={control} 
+                  render={({
+                    field: {onChange},
+                  }) => {
+                    return (
+                      <FormInput 
+                        name="status"
+                        labelKey="status"
+                        labelText="Status"
+                        defaultValue={defaultSelectValues.status}
+                        type="select" 
+                        selectOnChange={onChange}
+                        options={statusOptions}
+                        isRequired={true}
+                        register={register} 
+                        errors={errors}
+                      />
+                    ) 
+                  }}
                 />
               }
-                
-              { typeOptions && typeOptions.length > 0 && 
-                <FormInput 
-                  name="type"
-                  labelKey="type"
-                  labelText="Type"
-                  type="select" 
-                  options={['', ...typeOptions.map(type => type.PTYPE)]}
-                  isRequired={true}
-                  register={register} 
-                  errors={errors}
+              { typeOptions && typeOptions.length > 0 &&
+                <Controller 
+                  name={"type"}  
+                  control={control} 
+                  render={({
+                    field: {onChange},
+                  }) => {
+                    return (
+                      <FormInput 
+                        name="type"
+                        labelKey="type"
+                        labelText="Type"
+                        defaultValue={defaultSelectValues.type}
+                        type="select" 
+                        selectOnChange={onChange}
+                        options={typeOptions}
+                        isRequired={true}
+                        register={register} 
+                        errors={errors}
+                      />
+                    ) 
+                  }}
                 />
               }
-              
-              { assignOptions && assignOptions.length > 0 &&                
-                <FormInput 
-                  name="assigned"
-                  labelKey="assigned"
-                  labelText="Assigned"
-                  type="select" 
-                  options={['', ...assignOptions.map(type => type.PASIGN)]}
-                  isRequired={true}
-                  register={register} 
-                  errors={errors}
+              { assignOptions && assignOptions.length > 0 &&
+                <Controller 
+                  name={"assigned"}  
+                  control={control} 
+                  render={({
+                    field: {onChange},
+                  }) => {
+                    return (
+                      <FormInput 
+                        name="assigned"
+                        labelKey="assigned"
+                        labelText="Assigned"
+                        defaultValue={defaultSelectValues.assigned}
+                        type="select" 
+                        selectOnChange={onChange}
+                        options={assignOptions}
+                        isRequired={true}
+                        register={register} 
+                        errors={errors}
+                      />
+                    ) 
+                  }}
                 />
               }
             </div>
 
             <div className={`flex-x ${styles['comp-ref-file-num-section']}`}>
-              { clientsData.CNAME && clientsData.CNAME.length > 0 &&
-                <FormInput 
-                  name="clientName"
-                  labelKey="clientName"
-                  labelText="Client Name"
-                  customClass={styles.clientName}
-                  type="select" 
-                  options={['', ...clientsData.CNAME.map((clientName) => clientName)]}
-                  isRequired={true}
-                  register={register} 
-                  errors={errors}
+              { clientNames && clientNames.length > 0 &&
+                <Controller 
+                  name={"clientName"}  
+                  control={control} 
+                  render={({
+                    field: {onChange},
+                  }) => {
+                    return (
+                      <FormInput 
+                        name="clientName"
+                        labelKey="clientName"
+                        labelText="Name"
+                        type="select" 
+                        defaultValue={defaultSelectValues.clientName}
+                        customClass={styles.clientName}
+                        selectOnChange={onChange}
+                        options={clientNames}
+                        isRequired={false}
+                        register={register} 
+                        errors={errors}
+                      />
+                    ) 
+                  }}
                 />
               }
 
@@ -449,7 +535,7 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
           </section>
 
           <section className="submit-button-section">
-            <Button type="submit" isDisabled={!isDirty}>
+            <Button type="submit" isDisabled={isDirtyAlt}>
               {FORM_BUTTON_TEXT[queryType]} 
             </Button>
           </section>

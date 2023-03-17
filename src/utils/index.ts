@@ -1,9 +1,14 @@
 import timestampToDate from "./timestampToDate";
-import { abbreviatedStates } from "./UnitedStates";
+import { abbreviatedStates, abbreviatedStatesLabelValuePair } from "./UnitedStates";
 import formatAddress from "./formatAddress";
+import hasValue from "./hasValue";
+import uniqueLabelValuePairs from "./uniqueLabelValuePairs";
 
 export {
   timestampToDate,
   abbreviatedStates,
-  formatAddress
+  formatAddress,
+  hasValue,
+  uniqueLabelValuePairs,
+  abbreviatedStatesLabelValuePair
 }

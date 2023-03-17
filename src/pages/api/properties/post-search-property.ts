@@ -9,21 +9,23 @@ export default async function handler(
     if (req.method === "POST") { 
 
       const {
-        city, 
-        street, 
-        lot, 
-        condo, 
-        instructions,
-        client, 
-        type, 
-        status,
+        city='', 
+        street='', 
+        lot='', 
+        condo='', 
+        instructions='',
+        client='', 
+        type='', 
+        status='',
       } = req.body
+
+      console.log(req.body)
 
       const andLikeClause = (table:string, field:string, paramNum:string) => {
         return `AND LOWER(${table}."${field}") LIKE '%' || $${paramNum} || '%'`
       }
       const andEqualsClause = (table:string, field:string, paramNum:string) => {
-        return `AND LOWER(${table}."${field}") = $${paramNum}`
+        return `AND ${table}."${field}" = $${paramNum}`
       }
 
       const param = {
@@ -86,19 +88,19 @@ export default async function handler(
           ORDER BY cm."CNMBR"
           ;
         `,[
-            city.toLowerCase(),
+            city,
             street.toLowerCase(),
             lot.toLowerCase(),
             condo.toLowerCase(),
             instructions.toLowerCase(),
-            client.toLowerCase(),
-            type.toLowerCase(),
-            status.toLowerCase()
+            client,
+            type,
+            status
           ]
         )
         
         const propertiesResults = (await conn.query(propertiesQuery)).rows
-            
+            console.log(propertiesResults)
           res.status(200).json({
             totalRows: totalRecordsResult,
             rows: propertiesResults
