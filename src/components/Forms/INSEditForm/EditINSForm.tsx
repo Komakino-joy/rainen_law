@@ -63,10 +63,10 @@ const EditINSFormForm:React.FC<EditINSFormFormProps> = ({
 
         setIsLoading(true)
         
-        const response = await axios.post('/api/titles/post-selected-title', {insTitleId})
+        const response = await axios.post('/api/titles/post-selected-ins-title', {insTitleId})
         
         const {
-          id='', LAST_UPDATED='', INMBR='', IFILE='', ICITY='', ISTATE='', IZIP='',
+          id='', tticoname='', LAST_UPDATED='', INMBR='', IFILE='', ICITY='', ISTATE='', IZIP='',
           ISTRET='', ILOT='', ICONDO='', IUNIT='', IPREMDUE='', IPREMPAID='', AGENTFEE='',
           ICDATE='', IPDATE='', IBILL='', IPOLDATE='', TITLECO='', ISTAT='', IREMIT='',
           P='', CNAME='', CFILE='', OPOLICYNUM='', OPOLICYAMT='', LPOLICYNUM='', LPOLICYAMT='', INOTES=''
@@ -85,7 +85,7 @@ const EditINSFormForm:React.FC<EditINSFormFormProps> = ({
 
         setDefaultSelectValues({
           state: ISTATE,
-          company: TITLECO,
+          company: tticoname,
           status: ISTAT,
           assigned: IREMIT,
           printed: P
