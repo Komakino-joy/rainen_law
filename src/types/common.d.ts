@@ -65,6 +65,16 @@ export interface Client {
   LAST_UPDATED: string;
 }
 
+export interface INSTitle {
+  tticoname: string;
+  INMBR: string; 
+  ISTAT: string; 
+  ISTATE: string; 
+  IZIP: string; 
+  IREMIT: string;
+  TITLECO: string;
+}
+
 export interface LabelValuePair {
   label: string;
   value: string;

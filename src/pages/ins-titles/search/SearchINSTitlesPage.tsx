@@ -12,49 +12,50 @@ import INSSearchForm from '@/components/Forms/INSSearchForm/INSSearchForm';
 const SearchINSTitlesPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [clientProperties, setClientProperties] = useState(null)
-  const [selectedPropId, setSelectedPropId] = useState<string|null>(null)
+  const [selectedInsTitleId, setSelectedInsTitleId] = useState<string|null>(null)
   const [noResults, setNoResults] = useState<boolean>(false)
 
-  const handleCardClick =(e: React.SyntheticEvent, propId: string) => {
+  const handleCardClick =(e: React.SyntheticEvent, insTitleId: string) => {
     e.preventDefault()
-    setSelectedPropId(propId)
+    setSelectedInsTitleId(insTitleId)
     setShowModal(true)
   }
 
   const handleModalClose = () => {
-    setSelectedPropId(null)
+    setSelectedInsTitleId(null)
     setShowModal(false)
   }
 
   const onSubmit = async (data:any) => {
+    console.log(data)
     if(Object.keys(data).every(key => data[key] === '' || data[key] === undefined || data[key] === null)) {
       alert('No search parameters were provided.')
     } else {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/properties/post-search-property`, data)
-      if(response.data.rows.length === 0) {
-        setNoResults(true)
-        setClientProperties(null)
-        return 
-      }
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/titles/post-search-ins-title`, data)
+      // if(response.data.rows.length === 0) {
+      //   setNoResults(true)
+      //   setClientProperties(null)
+      //   return 
+      // }
       
-      setNoResults(false)
+      // setNoResults(false)
 
-      const groupedByCustomer = response.data.rows.reduce((acc: any, property: Property) => {
-        type propKeyT = keyof typeof property
-        if (!acc[property.CNAME as propKeyT]) {
-          acc[property.CNAME as propKeyT] = []
-        } 
-        acc[property.CNAME as keyof typeof property].push(property)
-        return acc
-      },{})
+      // const groupedByCustomer = response.data.rows.reduce((acc: any, property: Property) => {
+      //   type propKeyT = keyof typeof property
+      //   if (!acc[property.CNAME as propKeyT]) {
+      //     acc[property.CNAME as propKeyT] = []
+      //   } 
+      //   acc[property.CNAME as keyof typeof property].push(property)
+      //   return acc
+      // },{})
 
-      setClientProperties(groupedByCustomer)
+      // setClientProperties(groupedByCustomer)
     }
   }
 
   return (
     <div className='search-page center-margin'>
-      <INSSearchForm onSubmit={onSubmit} />
+        <INSSearchForm onSubmit={onSubmit} />
       
         { clientProperties && Object.keys(clientProperties).length > 0 ?
           <div className='search-results-container'>
@@ -78,15 +79,14 @@ const SearchINSTitlesPage = () => {
           : <InfoCard line1='Search results will be displayed here'/>
         }
 
-    
       <Modal
-          onClose={handleModalClose}
-          show={showModal}
-          title={''}
+        onClose={handleModalClose}
+        show={showModal}
+        title={''}
       >
-        { selectedPropId && 
+        { selectedInsTitleId && 
           <PropertyForm 
-            propertyId={selectedPropId}
+            propertyId={selectedInsTitleId}
             queryType='update' 
           />
         }

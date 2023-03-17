@@ -4,8 +4,12 @@ import React, { useState } from 'react'
 import EditPropertyForm from '@/components/Forms/PropertyEditForm/EditPropertyForm'
 import EditINSFormForm from '@/components/Forms/INSEditForm/EditINSForm';
 import Modal from '@/components/Modal/Modal';
+import { useCompaniesContext } from '@/context/Companies';
+import Spinner from '@/components/Spinner/Spinner';
 
 const AddNewINSTitlePage = () => {
+
+  const {isLoadingCompaniescontext} = useCompaniesContext()
 
   const [selectedInsTitleId, setSelectedINSTitleId] = useState<string|null>(null)
   const [showModal, setShowModal] = useState(false);
@@ -22,14 +26,19 @@ const AddNewINSTitlePage = () => {
 
   return (
     <div className='center-margin'>
-      <h1>Create Insurance Title</h1>
-      <div className='light-border'>
-        <EditINSFormForm 
-          insTitleId={null} 
-          queryType={'insert'} 
-          handleAfterSubmit={handleAfterSubmit}
-        />
-      </div>
+      { isLoadingCompaniescontext ? <div className='page-spinner'> <Spinner /> </div>    
+        : 
+        <>
+          <h1>Create Insurance Title</h1>
+          <div className='light-border'>
+            <EditINSFormForm 
+              insTitleId={null} 
+              queryType={'insert'} 
+              handleAfterSubmit={handleAfterSubmit}
+            />
+          </div>
+        </>
+      }
       <Modal
           onClose={handleModalClose}
           show={showModal}

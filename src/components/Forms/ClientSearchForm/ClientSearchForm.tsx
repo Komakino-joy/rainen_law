@@ -33,7 +33,7 @@ const ClientSearchForm:React.FC<ClientSearchFormProps> = ({
 
   const { 
     register, 
-    handleSubmit, 
+    getValues,
     reset,
     control,
     formState: { errors, dirtyFields }
@@ -51,10 +51,7 @@ const ClientSearchForm:React.FC<ClientSearchFormProps> = ({
         <header>
           <span>Search For Clients</span>
         </header>
-      <form 
-        className="flex-y" 
-        onSubmit={handleSubmit(onSubmit)}
-      >
+      <form className="flex-y">
         <section className="flex-x gap-sm">
           { clientNames && clientNames.length > 0 &&
             <Controller 
@@ -359,8 +356,14 @@ const ClientSearchForm:React.FC<ClientSearchFormProps> = ({
           </Button>
           <Button  
             isDisabled={isDirtyAlt} 
-            onClick={() => {}} 
-            type='submit'            
+            type='button'            
+            onClick={(e) => {
+              e.preventDefault()
+              const data = getValues()
+              onSubmit(data)
+              setClearSelectInputBoxes(!clearSelectInputBoxes)
+              reset()
+            }}
           >
             Submit Search
           </Button>

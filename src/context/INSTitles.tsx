@@ -1,52 +1,81 @@
 'use client';
 
-import { Client, LabelValuePair } from "@/types/common";
+import { INSTitle, LabelValuePair } from "@/types/common";
 import { hasValue, uniqueLabelValuePairs } from "@/utils";
 import axios from "axios";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 
 interface INSTitlesContextProps {
+  isLoadingINSTitlescontext: boolean;
   insTitleSelectOptions: {
-    INMBR: LabelValuePair[]; ISTAT: LabelValuePair[]; tticoname: LabelValuePair[];
+    tticoname: LabelValuePair[];
+    INMBR: LabelValuePair[]; 
+    ISTAT: LabelValuePair[]; 
     ISTATE: LabelValuePair[]; 
-    IZIP: LabelValuePair[]; IREMIT: LabelValuePair[];
+    IZIP: LabelValuePair[]; 
+    IREMIT: LabelValuePair[];
+    ICITY: LabelValuePair[];
   };
 }
 
 interface insTitlesResponseObject {
-  INMBR: []; ISTAT: []; tticoname: [];
+  tticoname: [];
+  INMBR: []; 
+  ISTAT: []; 
   ISTATE: []; 
-  IZIP: []; IREMIT: [];
+  IZIP: []; 
+  IREMIT: [];
+  ICITY: [];
 }
 
 const INSTitlesContext = createContext<INSTitlesContextProps>({
+  isLoadingINSTitlescontext: false,
   insTitleSelectOptions: {
-    INMBR: [], ISTAT: [], tticoname: [],
+    tticoname: [],
+    INMBR: [], 
+    ISTAT: [], 
     ISTATE: [], 
-    IZIP: [], IREMIT: []
+    IZIP: [], 
+    IREMIT: [],
+    ICITY: []
   } 
 })
 
 export const INSTitlesContextProvider = ({children}: {children:any}) => {
-
+  const [isLoadingINSTitlescontext, setIsLoading] = useState<boolean>(false)
   const [insTitleSelectOptions, setINSTitleSelectOptions] = useState<insTitlesResponseObject>({
-    INMBR: [], ISTAT: [], tticoname: [],
+    tticoname: [],
+    INMBR: [], 
+    ISTAT: [], 
     ISTATE: [], 
-    IZIP: [], IREMIT: []
-  } )
+    IZIP: [], 
+    IREMIT: [],
+    ICITY: []
+  })
 
+  const mounted = useRef(false);
+  
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      mounted.current = true;
+
       const httpFetchProperyInfo = async() => {
+        setIsLoading(true)
+
         const allTitlesResponse = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/titles/get-all-ins-titles`)
 
         // These are the only fields we care to make into Options for Select component
         const fields = [
-          'tticoname', 'INMBR', 'ISTAT',
-           'ISTATE', 'IZIP', 'IREMIT'
+          'tticoname', 
+          'INMBR', 
+          'ISTAT',
+          'ISTATE', 
+          'IZIP', 
+          'IREMIT',
+          'ICITY'
         ]
 
-        const insTitlesObject = allTitlesResponse.data.reduce((acc: any, row: Client) => {
+        const insTitlesObject = allTitlesResponse.data.reduce((acc: any, row: INSTitle) => {
           // Iterate through our fields and see if we have assigned a value for each property in our accumulator
           // Assign empty array if no value is found
           for(let i=0; i<fields.length; i++) {
@@ -62,7 +91,8 @@ export const INSTitlesContextProvider = ({children}: {children:any}) => {
             if(hasValue(row[fields[i] as insTitlesKey])) {
               acc[fields[i]].push({
                 label: row[fields[i] as insTitlesKey], 
-                value:row[fields[i] as insTitlesKey]
+                // Making sure that the user can see company name while sending the company ID to the Database
+                value: fields[i] === 'tticoname' ? row.TITLECO  : row[fields[i] as insTitlesKey]
               })
             }
           }
@@ -76,16 +106,23 @@ export const INSTitlesContextProvider = ({children}: {children:any}) => {
         ))
 
         setINSTitleSelectOptions(insTitlesObject)
+
+        setIsLoading(false)
       }
       
-      httpFetchProperyInfo();
+      if(mounted) {
+        httpFetchProperyInfo()
+      }
+
+      return () => {
+        mounted.current = false
+      }
     } 
   },[])
 
-  console.log(insTitleSelectOptions)
 
   return (
-    <INSTitlesContext.Provider value={{insTitleSelectOptions}}>
+    <INSTitlesContext.Provider value={{insTitleSelectOptions, isLoadingINSTitlescontext}}>
         {children}
     </INSTitlesContext.Provider>
   )

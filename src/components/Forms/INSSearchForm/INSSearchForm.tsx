@@ -4,6 +4,7 @@ import FormInput from "../Common/FormInput/FormInput";
 import { useClientsContext } from "@/context/Clients";
 import Button from "@/components/Button/Button";
 import { useState } from "react";
+import { useINSTitlesContext } from "@/context/INSTitles";
 
 interface INSSearchFormProps {
   onSubmit: any;
@@ -15,29 +16,30 @@ const INSSearchForm:React.FC<INSSearchFormProps> = ({
   const router = useRouter()
 
   const {clientSelectOptions} = useClientsContext()
-  const [clearSelectInputBoxes, setClearSelectInputBoxes] = useState(false)
-
+  const {insTitleSelectOptions} = useINSTitlesContext()
   const {
-    CNAME: clientNames,
-    CNMBR: clientNumbers,
+    tticoname: titleCompanies,
+    INMBR: titleNumbers,
+    ICITY: titleCities,
+    ISTATE: titleStates,
+    IZIP: titleZipCodes
+  } = insTitleSelectOptions
+  
+  const {
     CSTAT: clientStats,
-    CCNTCT: clientContacts,
-    CSTATTO: clientStattos,
-    CCITY: clientCities,
-    CSTATE: clientStates,
-    CZIP: clientZips,
-    CPHONE: clientPhones,
-    CFAX: clientFaxes,
-    CEMAIL: clientEmails
   } = clientSelectOptions
 
+  const [clearSelectInputBoxes, setClearSelectInputBoxes] = useState(false)
+  
   const { 
     register, 
-    handleSubmit, 
     reset,
     control,
-    formState: { errors, dirtyFields }
+    formState,
+    getValues
   } = useForm();
+
+  const { errors, dirtyFields } = formState
 
   const isDirtyAlt = !!Object.keys(dirtyFields).length === false
 
@@ -49,16 +51,54 @@ const INSSearchForm:React.FC<INSSearchFormProps> = ({
   return (
     <div className='form-wrapper search-form'>
         <header>
-          <span>Search For Ins. Titles</span>
+          <span>Search For Insurance Titles</span>
         </header>
-      <form 
-        className="flex-y" 
-        onSubmit={handleSubmit(onSubmit)}
-      >
+      <form className="flex-y" >
+        <section className='flex-x gap-md date-inputs'>
+          <FormInput 
+            name="oPolicyNum"
+            labelKey="oPolicyNum"
+            labelText="O Policy Number"
+            type="text"
+            isRequired={false}
+            register={register} 
+            errors={errors}
+          />
+
+          <FormInput 
+            name="lPolicyNum"
+            labelKey="lPolicyNum"
+            labelText="L Policy Number"
+            type="text"
+            isRequired={false}
+            register={register} 
+            errors={errors}
+          />
+
+          <FormInput 
+            name="policyStartDate"
+            labelKey="policyStartDate"
+            labelText="Policy Start Date"
+            type="date"
+            isRequired={false}
+            register={register} 
+            errors={errors}
+          />
+
+          <FormInput 
+            name="policyEndDate"
+            labelKey="policyEndDate"
+            labelText="Policy End Date"
+            type="date"
+            isRequired={false}
+            register={register} 
+            errors={errors}
+          />
+        </section>
         <section className="flex-x gap-sm">
-          { clientNames && clientNames.length > 0 &&
+          { titleCompanies && titleCompanies.length > 0 &&
             <Controller 
-              name={"clientName"}  
+              name={"titleCompanyName"}  
               control={control} 
               render={({
                 field: {onChange},
@@ -66,13 +106,13 @@ const INSSearchForm:React.FC<INSSearchFormProps> = ({
                 return (
                   <FormInput 
                     key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
-                    name="clientName"
-                    labelKey="clientName"
-                    labelText="Name"
+                    name="titleCompanyName"
+                    labelKey="titleCompanyName"
+                    labelText="Title Company Name"
                     type="select" 
                     customClass="f-100"
                     selectOnChange={onChange}
-                    options={clientNames}
+                    options={titleCompanies}
                     isRequired={false}
                     register={register} 
                     errors={errors}
@@ -82,9 +122,9 @@ const INSSearchForm:React.FC<INSSearchFormProps> = ({
             />
           }
 
-          { clientNumbers && clientNumbers.length > 0 &&
+          { titleNumbers && titleNumbers.length > 0 &&
             <Controller 
-              name={"clientNumber"}  
+              name={"titleNumber"}  
               control={control} 
               render={({
                 field: {onChange},
@@ -92,13 +132,13 @@ const INSSearchForm:React.FC<INSSearchFormProps> = ({
                 return (
                   <FormInput 
                     key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
-                    name="clientNumber"
-                    labelKey="clientNumber"
-                    labelText="Number"
+                    name="titleNumber"
+                    labelKey="titleNumber"
+                    labelText="Title Number"
                     type="select" 
                     customClass="f-100"
                     selectOnChange={onChange}
-                    options={clientNumbers}
+                    options={titleNumbers}
                     isRequired={false}
                     register={register} 
                     errors={errors}
@@ -136,9 +176,9 @@ const INSSearchForm:React.FC<INSSearchFormProps> = ({
         </section>
 
         <section className="flex-x gap-sm">
-          { clientPhones && clientPhones.length > 0 &&
+          { titleCities && titleCities.length > 0 &&
             <Controller 
-              name={"clientPhone"}  
+              name={"titleCity"}  
               control={control} 
               render={({
                 field: {onChange},
@@ -146,147 +186,13 @@ const INSSearchForm:React.FC<INSSearchFormProps> = ({
                 return (
                   <FormInput 
                     key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
-                    name="clientPhone"
-                    labelKey="clientPhone"
-                    labelText="Phone Number"
-                    type="select" 
-                    customClass="f-100"
-                    selectOnChange={onChange}
-                    options={clientPhones}
-                    isRequired={false}
-                    register={register} 
-                    errors={errors}
-                  />
-                ) 
-              }}
-            />
-          }
-
-          { clientFaxes && clientFaxes.length > 0 &&
-            <Controller 
-              name={"clientFax"}  
-              control={control} 
-              render={({
-                field: {onChange},
-              }) => {
-                return (
-                  <FormInput 
-                    key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
-                    name="clientFax"
-                    labelKey="clientFax"
-                    labelText="Fax Number"
-                    type="select" 
-                    customClass="f-100"
-                    selectOnChange={onChange}
-                    options={clientFaxes}
-                    isRequired={false}
-                    register={register} 
-                    errors={errors}
-                  />
-                ) 
-              }}
-            />
-          }
-
-          { clientEmails && clientEmails.length > 0 &&
-            <Controller 
-              name={"clientEmail"}  
-              control={control} 
-              render={({
-                field: {onChange},
-              }) => {
-                return (
-                  <FormInput 
-                    key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
-                    name="clientEmail"
-                    labelKey="clientEmail"
-                    labelText="Email"
-                    type="select" 
-                    customClass="f-100"
-                    selectOnChange={onChange}
-                    options={clientEmails}
-                    isRequired={false}
-                    register={register} 
-                    errors={errors}
-                  />
-                ) 
-              }}
-            />
-          }
-        </section>
-
-        <section className="flex-x gap-sm">
-          { clientContacts && clientContacts.length > 0 &&
-            <Controller 
-              name={"clientContact"}  
-              control={control} 
-              render={({
-                field: {onChange},
-              }) => {
-                return (
-                  <FormInput 
-                    key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
-                    name="clientContact"
-                    labelKey="clientContact"
-                    labelText="Contact"
-                    type="select" 
-                    customClass="f-100"
-                    selectOnChange={onChange}
-                    options={clientContacts}
-                    isRequired={false}
-                    register={register} 
-                    errors={errors}
-                  />
-                ) 
-              }}
-            />
-          }
-
-          { clientStattos && clientStattos.length > 0 &&
-            <Controller 
-              name={"clientStatementAddressee"}  
-              control={control} 
-              render={({
-                field: {onChange},
-              }) => {
-                return (
-                  <FormInput 
-                    key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
-                    name="clientStatementAddressee"
-                    labelKey="clientStatementAddressee"
-                    labelText="Statement Addressee"
-                    type="select" 
-                    customClass="f-100"
-                    selectOnChange={onChange}
-                    options={clientStattos}
-                    isRequired={false}
-                    register={register} 
-                    errors={errors}
-                  />
-                ) 
-              }}
-            />
-          }
-        </section>
-
-        <section className="flex-x gap-sm">
-          { clientCities && clientCities.length > 0 &&
-            <Controller 
-              name={"clientCity"}  
-              control={control} 
-              render={({
-                field: {onChange},
-              }) => {
-                return (
-                  <FormInput 
-                    key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
-                    name="clientCity"
-                    labelKey="clientCity"
+                    name="titleCity"
+                    labelKey="titleCity"
                     labelText="City"
                     type="select" 
                     customClass="f-100"
                     selectOnChange={onChange}
-                    options={clientCities}
+                    options={titleCities}
                     isRequired={false}
                     register={register} 
                     errors={errors}
@@ -296,9 +202,9 @@ const INSSearchForm:React.FC<INSSearchFormProps> = ({
             />
           }
 
-          { clientStates && clientStates.length > 0 &&
+          { titleStates && titleStates.length > 0 &&
             <Controller 
-              name={"clientState"}  
+              name={"titleState"}  
               control={control} 
               render={({
                 field: {onChange},
@@ -306,13 +212,13 @@ const INSSearchForm:React.FC<INSSearchFormProps> = ({
                 return (
                   <FormInput 
                     key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
-                    name="clientState"
-                    labelKey="clientState"
+                    name="titleState"
+                    labelKey="titleState"
                     labelText="State"
                     type="select" 
                     customClass="f-50"
                     selectOnChange={onChange}
-                    options={clientStates}
+                    options={titleStates}
                     isRequired={false}
                     register={register} 
                     errors={errors}
@@ -322,9 +228,9 @@ const INSSearchForm:React.FC<INSSearchFormProps> = ({
             />
           }
 
-          { clientZips && clientZips.length > 0 &&
+          { titleZipCodes && titleZipCodes.length > 0 &&
             <Controller 
-              name={"clientZip"}  
+              name={"titleZip"}  
               control={control} 
               render={({
                 field: {onChange},
@@ -332,13 +238,13 @@ const INSSearchForm:React.FC<INSSearchFormProps> = ({
                 return (
                   <FormInput 
                     key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
-                    name="clientZip"
-                    labelKey="clientZip"
+                    name="titleZip"
+                    labelKey="titleZip"
                     labelText="Zip Code"
                     type="select" 
                     customClass="f-100"
                     selectOnChange={onChange}
-                    options={clientZips}
+                    options={titleZipCodes}
                     isRequired={false}
                     register={register} 
                     errors={errors}
@@ -359,8 +265,14 @@ const INSSearchForm:React.FC<INSSearchFormProps> = ({
           </Button>
           <Button  
             isDisabled={isDirtyAlt} 
-            onClick={() => {}} 
-            type='submit'            
+            onClick={(e) => {
+              e.preventDefault()
+              const data = getValues()
+              onSubmit(data)
+              setClearSelectInputBoxes(!clearSelectInputBoxes)
+              reset()
+            }}
+            type='button'            
           >
             Submit Search
           </Button>

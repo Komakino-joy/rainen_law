@@ -3,9 +3,10 @@
 import { Client } from "@/types/common";
 import { hasValue, uniqueLabelValuePairs } from "@/utils/";
 import axios from "axios";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 
 interface ClientsContextProps {
+  isLoadingClientsContext: boolean,
   clientSelectOptions: {
     CNAME: [{ label: string; value: string;}];
     CNMBR: [{ label: string; value: string;}];
@@ -22,6 +23,7 @@ interface ClientsContextProps {
 }
 
 const ClientsContext = createContext<ClientsContextProps>({
+  isLoadingClientsContext: false,
   clientSelectOptions: {
     CNAME: [{ label: '', value: ''}],
     CNMBR: [{ label: '', value: ''}],
@@ -38,18 +40,24 @@ const ClientsContext = createContext<ClientsContextProps>({
 })
 
 export const ClientsContextProvider = ({children}: {children:any}) => {
+  const [isLoadingClientsContext, setIsLoading] = useState<boolean>(false)
   const [clientSelectOptions, setclientSelectOptions] = useState<any>([])
+
+  const mounted = useRef(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      (async() => {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/clients/get-all-clients`)
 
+      const httpFetchClientInfo = async () => {
+        mounted.current = true;
+
+        setIsLoading(true)
         // These are the only fields we care to make into Options for Select component
         const fields = [
           'CNAME', 'CNMBR', 'CSTAT', 'CCNTCT', 'CSTATTO',
           'CCITY', 'CSTATE', 'CZIP', 'CPHONE', 'CFAX', 'CEMAIL'
         ]
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/clients/get-all-clients`)
 
         const clientsObject = response.data.reduce((acc: any, row: Client) => {
           // Iterate through our fields and see if we have assigned a value for each property in our accumulator
@@ -77,17 +85,26 @@ export const ClientsContextProvider = ({children}: {children:any}) => {
         
         // Remove all duplicate objects from our new arrays
         Object.keys(clientsObject).map(key => (
-            clientsObject[key] = uniqueLabelValuePairs(clientsObject[key])
-          ))
+          clientsObject[key] = uniqueLabelValuePairs(clientsObject[key])
+        ))
 
         setclientSelectOptions(clientsObject)
+        setIsLoading(false)
+      }
+      
+      if(mounted) {
+        httpFetchClientInfo();
+      }
 
-      })();
+      return () => {
+        mounted.current = false;
+      }
+    
     } 
   },[])
   
   return (
-    <ClientsContext.Provider value={{clientSelectOptions}}>
+    <ClientsContext.Provider value={{clientSelectOptions, isLoadingClientsContext}}>
       {children}
     </ClientsContext.Provider>
   )

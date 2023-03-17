@@ -8,8 +8,16 @@ import ClientCard from '@/components/ClientCard/ClientCard';
 import PropertyForm from '@/components/Forms/PropertyEditForm/EditPropertyForm';
 import InfoCard from '@/components/InfoCard/InfoCard';
 import SearchPropertiesForm from '@/components/Forms/PropertySearchForm/SearchPropertiesForm'
+import { useClientsContext } from '@/context/Clients';
+import { usePropertiesContext } from '@/context/Properties';
+import Spinner from '@/components/Spinner/Spinner';
 
 const SearchPropertiesPage = () => {
+
+  const {isLoadingClientsContext} = useClientsContext()
+  const {isLoadingPropertyContext} = usePropertiesContext()
+  const isLoading = isLoadingClientsContext || isLoadingPropertyContext
+
   const [showModal, setShowModal] = useState(false);
   const [clientProperties, setClientProperties] = useState(null)
   const [selectedPropId, setSelectedPropId] = useState<string|null>(null)
@@ -54,35 +62,41 @@ const SearchPropertiesPage = () => {
 
   return (
     <div className='search-page center-margin'>
-      <SearchPropertiesForm onSubmit={onSubmit} />
+      { isLoading ? <div className='page-spinner'> <Spinner /> </div>
+        :
+        (
+          <>
+            <SearchPropertiesForm onSubmit={onSubmit} />
+            
+            { clientProperties && Object.keys(clientProperties).length > 0 ?
+              <div className='search-results-container'>
+                <h1>Properties by Client <span className='italicized-record-count'>(Clients: {Object.keys(clientProperties).length})</span></h1>
       
-        { clientProperties && Object.keys(clientProperties).length > 0 ?
-          <div className='search-results-container'>
-            <h1>Properties by Client <span className='italicized-record-count'>(Clients: {Object.keys(clientProperties).length})</span></h1>
-
-              {Object.keys(clientProperties).map((key:string) =>  (
-                  <ClientCard 
-                    key={key}
-                    handleCardClick={handleCardClick}
-                    // @ts-ignore
-                    clientId={clientProperties[key][0].CNMBR} 
-                    // @ts-ignore
-                    clientName={clientProperties[key][0].CNAME} 
-                    // @ts-ignore
-                    clientProperties={clientProperties[key]} 
-                  />
-                )
-              )}
-          </div>
-          : noResults ? <InfoCard line1='No Search Results Were Found' line2='For The Given Criteria'/>
-          : <InfoCard line1='Search results will be displayed here'/>
-        }
-
+                  {Object.keys(clientProperties).map((key:string) =>  (
+                      <ClientCard 
+                        key={key}
+                        handleCardClick={handleCardClick}
+                        // @ts-ignore
+                        clientId={clientProperties[key][0].CNMBR} 
+                        // @ts-ignore
+                        clientName={clientProperties[key][0].CNAME} 
+                        // @ts-ignore
+                        clientProperties={clientProperties[key]} 
+                      />
+                    )
+                  )}
+              </div>
+              : noResults ? <InfoCard line1='No Search Results Were Found' line2='For The Given Criteria'/>
+              : <InfoCard line1='Search results will be displayed here'/>
+            }
+          </>
+        )
+      }
     
       <Modal
-          onClose={handleModalClose}
-          show={showModal}
-          title={''}
+        onClose={handleModalClose}
+        show={showModal}
+        title={''}
       >
         { selectedPropId && 
           <PropertyForm 

@@ -19,11 +19,10 @@ export default async function handler(
         status='',
       } = req.body
 
-      console.log(req.body)
-
       const andLikeClause = (table:string, field:string, paramNum:string) => {
         return `AND LOWER(${table}."${field}") LIKE '%' || $${paramNum} || '%'`
       }
+      
       const andEqualsClause = (table:string, field:string, paramNum:string) => {
         return `AND ${table}."${field}" = $${paramNum}`
       }

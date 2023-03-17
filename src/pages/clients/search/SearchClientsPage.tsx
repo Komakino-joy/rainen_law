@@ -8,8 +8,13 @@ import PropertyForm from '@/components/Forms/PropertyEditForm/EditPropertyForm';
 import InfoCard from '@/components/InfoCard/InfoCard';
 import ClientSearchForm from '@/components/Forms/ClientSearchForm/ClientSearchForm';
 import ClientsTable from '@/components/Tables/ClientsTable/ClientsTable';
+import { useClientsContext } from '@/context/Clients';
+import Spinner from '@/components/Spinner/Spinner';
 
 const SearchClientsPage = () => {
+  const {isLoadingClientsContext} = useClientsContext()
+  const isLoading = isLoadingClientsContext
+
   const [showModal, setShowModal] = useState(false);
   const [selectedclientId, setSelectedclientId] = useState<string|null>(null)
   const [tableData, setTableData] = useState<Property[] | null>(null)
@@ -46,28 +51,33 @@ const SearchClientsPage = () => {
 
   return (
     <div className='search-page center-margin'>
-      <ClientSearchForm onSubmit={onSubmit} />
-      
-      
-        { tableData && Object.keys(tableData).length > 0 ?
+      { isLoading ? <div className='page-spinner'> <Spinner /> </div>
+        :
+        (
+          <>
+            <ClientSearchForm onSubmit={onSubmit} />
+          
+            { tableData && Object.keys(tableData).length > 0 ?
 
-            <div className='search-results-table-wrapper is-client-table'>           
-              <ClientsTable 
-                tableData={tableData} 
-                handleModalOpen={handleOpenModal} 
-                setTableData={setTableData} 
-              />
-            </div>
+                <div className='search-results-table-wrapper is-client-table'>           
+                  <ClientsTable 
+                    tableData={tableData} 
+                    handleModalOpen={handleOpenModal} 
+                    setTableData={setTableData} 
+                  />
+                </div>
 
-          : noResults ? <InfoCard line1='No Search Results Were Found' line2='For The Given Criteria'/>
-          : <InfoCard line1='Search results will be displayed here'/>
-        }
+              : noResults ? <InfoCard line1='No Search Results Were Found' line2='For The Given Criteria'/>
+              : <InfoCard line1='Search results will be displayed here'/>
+            }
+          </>
+        )
+      }
 
-    
       <Modal
-          onClose={handleModalClose}
-          show={showModal}
-          title={''}
+        onClose={handleModalClose}
+        show={showModal}
+        title={''}
       >
         { selectedclientId && 
           <PropertyForm 

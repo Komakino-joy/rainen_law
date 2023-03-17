@@ -33,7 +33,9 @@ import styles from './Select.module.scss'
     }),
     indicatorsContainer: (provided: any, state: any) => ({
       display: "flex",
-      alignItems: "center",
+      flexDirection: 'column',
+      alignItems: "flex-end",
+      justifyContent: 'center'
     }),
     
     clearIndicator: (provided: any, state: any) => ({
@@ -41,17 +43,12 @@ import styles from './Select.module.scss'
       padding: '0 0 0 8px',
       cursor: 'pointer',
       "&:hover": {
-        color: "red"
-      }
+        color: "#9c3237"
+      },
     }),
     
     dropdownIndicator: (provided: any, state: any) => ({
-        ...provided,
-        padding: '0',
-        cursor: 'pointer',
-        "&:hover": {
-          color: "blue"
-        }
+      display: 'none'
     }),
 
     option: (provided: any, state: any) => ({
@@ -79,7 +76,7 @@ export default ({
       className={styles['select-container']}
       classNamePrefix="select"
       
-    
+      // @ts-ignore
       styles={customStyles}
       isClearable={true}
       isSearchable={true}

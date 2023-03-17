@@ -7,7 +7,7 @@ export default async function handler(
 ) {
     if (req.method === "POST") { 
       try {
-        const getBuyerSellerInfoQuery = `
+        const getInsTitlesInfoQuery = `
             SELECT 
               i."ISTRET",
               i."ICITY",
@@ -17,7 +17,7 @@ export default async function handler(
             FROM public.ins i 
             WHERE i."INMBR" = $1;
           `
-        const result = await conn.query(getBuyerSellerInfoQuery, [req.body.inmbr])
+        const result = await conn.query(getInsTitlesInfoQuery, [req.body.inmbr])
 
         res.status(200).json({
           titles: result.rows,

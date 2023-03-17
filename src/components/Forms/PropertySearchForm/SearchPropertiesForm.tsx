@@ -25,7 +25,7 @@ const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
 
   const { 
     register, 
-    handleSubmit, 
+    getValues,
     reset,
     control,
     formState: { errors, dirtyFields }
@@ -43,10 +43,7 @@ const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
         <header>
           <span>Search For Properties</span>
         </header>
-      <form 
-        className="flex-y" 
-        onSubmit={handleSubmit(onSubmit)}
-      >
+      <form className="flex-y">
         <section className="flex-x gap-sm">
         { propertiesSelectOptions.PCITY && propertiesSelectOptions.PCITY.length > 0 &&
             <Controller 
@@ -208,8 +205,14 @@ const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
           </Button>
           <Button  
             isDisabled={isDirtyAlt} 
-            onClick={() => {}} 
-            type='submit'            
+            type='button'            
+            onClick={(e) => {
+              e.preventDefault()
+              const data = getValues()
+              onSubmit(data)
+              setClearSelectInputBoxes(!clearSelectInputBoxes)
+              reset()
+            }}
           >
             Submit Search
           </Button>

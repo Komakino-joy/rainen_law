@@ -2,9 +2,10 @@
 
 import { LabelValuePair } from "@/types/common";
 import axios from "axios";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 
 interface PropertiesContextProps {
+  isLoadingPropertyContext: boolean;
   propertiesSelectOptions: {
     PCITY: LabelValuePair[]; 
     PTYPE: LabelValuePair[]; 
@@ -13,7 +14,7 @@ interface PropertiesContextProps {
   };
 }
 
-interface propertyResponseObject {
+interface propertiesSelectOptions {
   PCITY: []; 
   PTYPE: []; 
   PSTAT: []; 
@@ -22,6 +23,7 @@ interface propertyResponseObject {
 
 
 const PropertiesContext = createContext<PropertiesContextProps>({
+  isLoadingPropertyContext: false,
   propertiesSelectOptions: {
     PCITY: [], 
     PTYPE: [], 
@@ -31,45 +33,61 @@ const PropertiesContext = createContext<PropertiesContextProps>({
 })
 
 export const PropertiesContextProvider = ({children}: {children:any}) => {
-  const [propertiesResponseObject, setPropertiesResponseObject] = useState<propertyResponseObject>({
+  const [isLoadingPropertyContext, setIsLoading] = useState<boolean>(false)
+  const [propertiesSelectOptions, setPropertiesSelectOptions] = useState<propertiesSelectOptions>({
     PCITY: [], 
     PTYPE: [], 
     PSTAT: [], 
     PASIGN:[]
   })
+  
+  const mounted = useRef(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
+
       const httpFetchProperyInfo = async() => {
+        mounted.current = true;
+        
+        setIsLoading(true)
         const cityResponse = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/properties/get-distinct-city-options`)
         const typeResponse = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/properties/get-distinct-type-options`)
         const statusResponse = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/properties/get-distinct-status-options`)
         const assignResponse = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/properties/get-distinct-assign-options`)
 
-        setPropertiesResponseObject({
+        type propKey = keyof typeof propertiesResponseMap
+
+        const propertiesResponseMap = {
           PCITY: cityResponse.data,
           PTYPE: typeResponse.data,
           PSTAT: statusResponse.data,
           PASIGN: assignResponse.data
-        })
+        }
+
+        const propertiesSelectOptions = Object.keys(propertiesResponseMap).reduce((acc:any, fieldName:any) => {
+          acc[fieldName] = propertiesResponseMap[fieldName as propKey].map((field:any) => ({
+            label: field[fieldName],
+            value: field[fieldName]
+          }))
+          return acc
+        },{})
+        
+        setPropertiesSelectOptions(propertiesSelectOptions)    
+        setIsLoading(false)
       }
 
-      httpFetchProperyInfo();
+      if(mounted) {
+        httpFetchProperyInfo();
+      }
+
+      return () => {
+        mounted.current = false;
+      }
     } 
   },[])
 
-  type propKey = keyof typeof propertiesResponseObject
-
-  const propertiesSelectOptions = Object.keys(propertiesResponseObject).reduce((acc:any, fieldName:any) => {
-    acc[fieldName] = propertiesResponseObject[fieldName as propKey].map((field:any) => ({
-      label: field[fieldName],
-      value: field[fieldName]
-    }))
-    return acc
-  },{})
-
   return (
-    <PropertiesContext.Provider value={{propertiesSelectOptions}}>
+    <PropertiesContext.Provider value={{propertiesSelectOptions, isLoadingPropertyContext}}>
         {children}
     </PropertiesContext.Provider>
   )
