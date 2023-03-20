@@ -4,14 +4,19 @@ import '../styles/tables.scss'
 import '../styles/forms.scss'
 import '../styles/layout.scss'
 import '../styles/pages.scss'
+import { Roboto } from '@next/font/google'
 
+const roboto = Roboto({
+  weight: '400',
+  subsets: ['latin'],
+})
 export default function MyApp({ Component, pageProps }) {
   return (
     <>
       <Layout>
-        <section className='app-content' >
+        <main className={`app-content ${roboto.className}`}  >
           <Component {...pageProps} />
-        </section>
+        </main>
       </Layout>
       <div id="modal-root"></div>
     </>

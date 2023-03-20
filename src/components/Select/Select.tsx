@@ -14,6 +14,7 @@ import styles from './Select.module.scss'
       minHeight: '30px',
       height: '30px',
       boxShadow: state.isFocused ? null : null,
+      minWidth: '80px'
     }),
 
     valueContainer: (provided: any, state: any) => ({

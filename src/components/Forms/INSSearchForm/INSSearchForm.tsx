@@ -15,19 +15,15 @@ const INSSearchForm:React.FC<INSSearchFormProps> = ({
 }) => {
   const router = useRouter()
 
-  const {clientSelectOptions} = useClientsContext()
   const {insTitleSelectOptions} = useINSTitlesContext()
   const {
     tticoname: titleCompanies,
     INMBR: titleNumbers,
     ICITY: titleCities,
     ISTATE: titleStates,
-    IZIP: titleZipCodes
+    IZIP: titleZipCodes,
+    ISTAT: titleStats
   } = insTitleSelectOptions
-  
-  const {
-    CSTAT: clientStats,
-  } = clientSelectOptions
 
   const [clearSelectInputBoxes, setClearSelectInputBoxes] = useState(false)
   
@@ -148,9 +144,9 @@ const INSSearchForm:React.FC<INSSearchFormProps> = ({
             />
           }
 
-          { clientStats && clientStats.length > 0 &&
+          { titleStats && titleStats.length > 0 &&
             <Controller 
-              name={"clientStat"}  
+              name={"titleStatus"}  
               control={control} 
               render={({
                 field: {onChange},
@@ -158,13 +154,13 @@ const INSSearchForm:React.FC<INSSearchFormProps> = ({
                 return (
                   <FormInput 
                     key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
-                    name="clientStat"
-                    labelKey="clientStat"
+                    name="titleStatus"
+                    labelKey="titleStatus"
                     labelText="Status"
                     type="select" 
                     customClass="f-50"
                     selectOnChange={onChange}
-                    options={clientStats}
+                    options={titleStats}
                     isRequired={false}
                     register={register} 
                     errors={errors}

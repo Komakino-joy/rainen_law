@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Property } from '@/types/common';
-import { ChevronUp, ChevronDown } from '../Icons/Icons';
+import { ChevronUp, ChevronDown, PencilIcon } from '../Icons/Icons';
 import styles from './ClientCard.module.scss'
 import { formatAddress } from '@/utils';
 
@@ -54,6 +54,9 @@ const ClientCard:React.FC<ClientCardProps> = ({
                           <span><b>Type:&nbsp;</b>{prop.PTYPE}</span>
                           <span><b>Status:&nbsp;</b>{prop.PSTAT}</span>
                         </section>
+                        <span title={`Edit ${address}`}>
+                          <PencilIcon />
+                        </span>
                       </div> 
                   )
                 })

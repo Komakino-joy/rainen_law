@@ -62,9 +62,9 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
       time:string
     } | null;
   }>({
-    id: 'New', 
-    address: 'New',
-    pnmbr: 'New',
+    id: '', 
+    address: '',
+    pnmbr: '',
     compRef: null,
     lastUpdated: null
   })
@@ -108,8 +108,6 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
           }))
     
           setIsLoading(false)
-
-          console.log(PSTAT)
 
           setDefaultSelectValues({
             state: PSTATE,

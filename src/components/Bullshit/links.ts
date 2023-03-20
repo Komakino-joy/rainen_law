@@ -45,6 +45,14 @@ const links = {
     {
       href: '/reports/property-report',
       ctaText: 'Property Report'
+    },
+    {
+      href: '/reports/policies-by-client-report',
+      ctaText: 'Policies By Client Report'
+    },
+    {
+      href: '/reports/policies-by-company-report',
+      ctaText: 'Policies By Company Report'
     }
   ]
 }

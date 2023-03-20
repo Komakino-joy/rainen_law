@@ -47,7 +47,7 @@ const SearchPropertiesPage = () => {
       
       setNoResults(false)
 
-      const groupedByCustomer = response.data.rows.reduce((acc: any, property: Property) => {
+      const groupedByClient = response.data.rows.reduce((acc: any, property: Property) => {
         type propKeyT = keyof typeof property
         if (!acc[property.CNAME as propKeyT]) {
           acc[property.CNAME as propKeyT] = []
@@ -56,7 +56,7 @@ const SearchPropertiesPage = () => {
         return acc
       },{})
 
-      setClientProperties(groupedByCustomer)
+      setClientProperties(groupedByClient)
     }
   }
 

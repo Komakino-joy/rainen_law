@@ -73,6 +73,16 @@ export interface INSTitle {
   IZIP: string; 
   IREMIT: string;
   TITLECO: string;
+  IPOLDATE: string;
+  ILOT: string;
+  ISTRET: string;
+  ICITY: string;
+  PREMDUE: number;
+  LPOLICYAMT: number
+  LPOLICYNUM: string;
+  OPOLICYAMT: number;
+  OPOLICYNUM: string
+  CNAME: string;
 }
 
 export interface LabelValuePair {

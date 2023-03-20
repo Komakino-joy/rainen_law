@@ -1,0 +1,105 @@
+.report-container{ 
+  font-family: 'Courier New', Courier, monospace;
+
+  header {
+    margin: 30px 0px 20px 0px;
+
+    .header-span-group {
+      gap: 0px;
+      margin-bottom: 5px;
+      span {
+        margin-left: 20px;
+    
+        &:first-child{
+          width: 120px;
+        }
+    
+        &:nth-child(2) {
+          width: 195px;
+        }
+    
+      }
+    }
+  }
+
+  h4 {
+    text-align: center;
+    margin: 10px 0px;
+    font-weight: normal;
+  }
+
+  h5 {
+    margin: 15px 0px 10px 0px;
+    font-size: 16px;
+  }
+
+  .company-policy-container {
+    display: flex;
+    flex-direction: column;
+
+    .policy-list {
+      display: flex;
+      gap: 20px;
+      line-height: 22px;
+      margin-left: 20px;
+      margin-bottom: 20px;
+  
+      .col-1 {
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+        width: 105px;
+      }
+  
+      .col-2 {
+        display: flex;
+        flex-direction: column;
+  
+      }
+    }
+  } 
+
+  footer {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 0;
+    margin-bottom: 20px;
+    background-color: rgba(207, 207, 207, 0.26);
+    gap: 0px;
+    
+    span {
+      &:first-child{
+        width: 180px;
+        margin-right: 10px;
+        text-align: right;
+      }
+    }
+  }
+}
+
+
+.span-group {
+  span {
+    &:first-child{
+      width: 75px;
+    }
+
+    &:nth-child(2) {
+      width: 130px;
+    }
+
+    white-space: nowrap;
+  }
+}
+
+.report-page-wrapper {
+  position: relative;
+  max-width: 950px;
+  margin: 100px auto 0px auto;
+
+  .print-report-button {
+    top: -50px;
+    right: 0;
+    position: absolute;
+  }
+}

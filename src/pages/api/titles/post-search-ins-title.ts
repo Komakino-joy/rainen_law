@@ -12,7 +12,7 @@ export default async function handler(
         titleCity='',  
         titleCompanyName='',
         titleNumber='', 
-        clientStat='', 
+        titleStatus='', 
         titleState='',
         titleZip='',
         policyStartDate='', 
@@ -37,7 +37,7 @@ export default async function handler(
         titleCity: titleCity !== '' ? andEqualsClause('ins','ICITY', '1') : '',
         titleCompanyName: titleCompanyName !== '' ? andEqualsClause('ins','TITLECO', '2') : '',
         titleNumber: titleNumber !== '' ? andEqualsClause('ins','INMBR', '3') : '',
-        clientStat: clientStat !== '' ? andEqualsClause('cm','CSTAT', '4'): '',
+        titleStatus: titleStatus !== '' ? andEqualsClause('ins','ISTAT', '4'): '',
         titleState: titleState !== '' ? andEqualsClause('ins','CSTATE', '5'): '',
         titleZip: titleZip !== '' ? andEqualsClause('ins','CZIP', '6'): '',
         policyDateRange: policyStartDate !== '' && policyEndDate !== '' ? andBetweenClause('ins','IPOLDATE', '7', '8'): '',
@@ -83,7 +83,7 @@ export default async function handler(
           ${param.titleCity}
           ${param.titleCompanyName}
           ${param.titleNumber}
-          ${param.clientStat}
+          ${param.titleStatus}
           ${param.titleState}
           ${param.titleZip}
           ${param.policyDateRange}
@@ -95,7 +95,7 @@ export default async function handler(
             titleCity,  
             titleCompanyName,
             titleNumber, 
-            clientStat, 
+            titleStatus, 
             titleState,
             titleZip,
             policyStartDate, 
