@@ -1,5 +1,3 @@
-import { Property } from '@/types/common';
-
 import { useEffect, useMemo, useState } from 'react';
 import { useTable, useFilters } from 'react-table';
 import axios from 'axios';
@@ -7,6 +5,7 @@ import axios from 'axios';
 import { timestampToDate } from '@/utils';
 import { PencilIcon } from '@/components/Icons/Icons';
 import EditPropertyModal from '@/components/Modals/EditPropertyModal';
+import { useRouter } from 'next/router';
 
 interface SubTablePropertiesProps {
   cnmbr: string
@@ -15,6 +14,7 @@ interface SubTablePropertiesProps {
 const SubTableProperties:React.FC<SubTablePropertiesProps> = ({
   cnmbr
 }) => {
+  const router = useRouter()
 
   const [tableData, setTableData] = useState([])
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -28,13 +28,13 @@ const SubTableProperties:React.FC<SubTablePropertiesProps> = ({
     })();
   },[])
 
+
   const handleModalClose = () => {
     setSelectedPropId(null)
     setShowModal(false)
 
     if(shouldReload) {
-      console.log('reloading')
-      // router.reload()
+      router.reload()
     }
   }
 

@@ -12,7 +12,6 @@ export default async function handler(
           FROM public."propmstr" pm;
         `
         const propertiesResults = (await conn.query(newCompRefQuery)).rows;
-        console.log(propertiesResults)
         res.status(200).send({
           newCompRef: propertiesResults[0].COMPREF
         })

@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react'
-import EditPropertyForm from '@/components/Forms/PropertyEditForm/EditPropertyForm'
 import EditINSFormForm from '@/components/Forms/INSEditForm/EditINSForm';
 import Modal from '@/components/Modal/Modal';
 import { useCompaniesContext } from '@/context/Companies';
@@ -32,7 +31,7 @@ const AddNewINSTitlePage = () => {
           <h1>Create Insurance Title</h1>
           <div className='light-border'>
             <EditINSFormForm 
-              insTitleId={null} 
+              insTitleId={selectedInsTitleId} 
               queryType={'insert'} 
               handleAfterSubmit={handleAfterSubmit}
             />
@@ -45,8 +44,8 @@ const AddNewINSTitlePage = () => {
           title={''}
       >
         { selectedInsTitleId && 
-          <EditPropertyForm 
-            propertyId={selectedInsTitleId} 
+          <EditINSFormForm 
+            insTitleId={selectedInsTitleId} 
             queryType='update'
           />
         }

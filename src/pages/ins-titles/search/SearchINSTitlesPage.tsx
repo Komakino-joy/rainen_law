@@ -3,19 +3,20 @@
 import React, { useState } from 'react'
 import axios from 'axios';
 import Modal from '@/components/Modal/Modal';
-import ClientCard from '@/components/ClientCard/ClientCard';
-import PropertyForm from '@/components/Forms/PropertyEditForm/EditPropertyForm';
 import InfoCard from '@/components/InfoCard/InfoCard';
 import INSSearchForm from '@/components/Forms/INSSearchForm/INSSearchForm';
 import { useINSTitlesContext } from '@/context/INSTitles';
 import Spinner from '@/components/Spinner/Spinner';
+import PoliciesByCompanyCard from '@/components/PoliciesByCompanyCard/PoliciesByCompanyCard';
+import { Policy } from '@/types/common';
+import EditINSForm from '@/components/Forms/INSEditForm/EditINSForm';
 
 const SearchINSTitlesPage = () => {
   const {isLoadingINSTitlescontext} = useINSTitlesContext()
   const isLoading = isLoadingINSTitlescontext
 
   const [showModal, setShowModal] = useState(false);
-  const [clientProperties, setClientProperties] = useState(null)
+  const [policiesByCompany, setPoliciesByCompany] = useState(null)
   const [selectedInsTitleId, setSelectedInsTitleId] = useState<string|null>(null)
   const [noResults, setNoResults] = useState<boolean>(false)
 
@@ -31,29 +32,28 @@ const SearchINSTitlesPage = () => {
   }
 
   const onSubmit = async (data:any) => {
-    console.log(data)
     if(Object.keys(data).every(key => data[key] === '' || data[key] === undefined || data[key] === null)) {
       alert('No search parameters were provided.')
     } else {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/titles/post-search-ins-title`, data)
-      // if(response.data.rows.length === 0) {
-      //   setNoResults(true)
-      //   setClientProperties(null)
-      //   return 
-      // }
+      if(response.data.length === 0) {
+        setNoResults(true)
+        setPoliciesByCompany(null)
+        return 
+      }
       
-      // setNoResults(false)
+      setNoResults(false)
 
-      // const groupedByCustomer = response.data.rows.reduce((acc: any, property: Property) => {
-      //   type propKeyT = keyof typeof property
-      //   if (!acc[property.CNAME as propKeyT]) {
-      //     acc[property.CNAME as propKeyT] = []
-      //   } 
-      //   acc[property.CNAME as keyof typeof property].push(property)
-      //   return acc
-      // },{})
+      const groupedByCompanyName = response.data.reduce((acc: any, policy: Policy) => {
+        type propKeyT = keyof typeof policy
+        if (!acc[policy.tticoname as propKeyT]) {
+          acc[policy.tticoname as propKeyT] = []
+        } 
+        acc[policy.tticoname as keyof typeof policy].push(policy)
+        return acc
+      },{})
 
-      // setClientProperties(groupedByCustomer)
+      setPoliciesByCompany(groupedByCompanyName)
     }
   }
 
@@ -65,23 +65,23 @@ const SearchINSTitlesPage = () => {
           <>
             <INSSearchForm onSubmit={onSubmit} />
           
-            { clientProperties && Object.keys(clientProperties).length > 0 ?
+            { policiesByCompany && Object.keys(policiesByCompany).length > 0  ?
               <div className='search-results-container'>
-                <h1>Properties by Client <span className='italicized-record-count'>(Clients: {Object.keys(clientProperties).length})</span></h1>
+                <h1>Properties by Company <span className='italicized-record-count'>(Companies: {Object.keys(policiesByCompany).length})</span></h1>
 
-                  {Object.keys(clientProperties).map((key:string) =>  (
-                      <ClientCard 
+                  {Object.keys(policiesByCompany).map((key:string) =>  (
+                      <PoliciesByCompanyCard 
                         key={key}
                         handleCardClick={handleCardClick}
                         // @ts-ignore
-                        clientId={clientProperties[key][0].CNMBR} 
+                        policyId={policiesByCompany[key][0].TITLECO} 
                         // @ts-ignore
-                        clientName={clientProperties[key][0].CNAME} 
+                        companyName={policiesByCompany[key][0].tticoname} 
                         // @ts-ignore
-                        clientProperties={clientProperties[key]} 
+                        policiesByCompany={policiesByCompany[key]} 
                       />
                     )
-                  )}
+                  )} 
               </div>
               : noResults ? <InfoCard line1='No Search Results Were Found' line2='For The Given Criteria'/>
               : <InfoCard line1='Search results will be displayed here'/>
@@ -96,8 +96,8 @@ const SearchINSTitlesPage = () => {
         title={''}
       >
         { selectedInsTitleId && 
-          <PropertyForm 
-            propertyId={selectedInsTitleId}
+          <EditINSForm
+            insTitleId={selectedInsTitleId}
             queryType='update' 
           />
         }

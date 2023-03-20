@@ -31,9 +31,7 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
 
   const {clientSelectOptions} = useClientsContext()
   const {propertiesSelectOptions} = usePropertiesContext()
-  const {
-    CNAME: clientNames,
-  } = clientSelectOptions
+  const { CNAME: clientNames } = clientSelectOptions
 
   const {
     PSTAT: statusOptions,

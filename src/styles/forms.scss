@@ -41,12 +41,13 @@
     .form-input-group {
       position: relative;
       padding-top: 15px;
+      margin: 5px 0px 0px 0px;
       
       label {
         position: absolute;
         font-size: 11px;
         font-weight: 500;
-        top: 0;
+        top: 2px;
         white-space: nowrap;
       }
 

@@ -18,7 +18,10 @@ export default async function handler(
         policyStartDate='', 
         policyEndDate='',
         lPolicyNum='', 
-        oPolicyNum=''
+        oPolicyNum='',
+        fileNumber='',
+        createdAtStartDate='',
+        createdAtEndDate=''
       } = req.body
 
       const andEqualsClause = (table:string, field:string, paramNum:string) => {
@@ -43,12 +46,16 @@ export default async function handler(
         policyDateRange: policyStartDate !== '' && policyEndDate !== '' ? andBetweenClause('ins','IPOLDATE', '7', '8'): '',
         lPolicyNum: lPolicyNum !== '' ? andLikeClause('ins','LPOLICYNUM', '9'): '',
         oPolicyNum: oPolicyNum !== '' ? andLikeClause('ins','OPOLICYNUM', '10'): '',
+        fileNumber: fileNumber !== '' ? andEqualsClause('ins','IFILE', '11'): '',
+        createdAtDateRange: createdAtStartDate !== '' && createdAtEndDate !== '' ? andBetweenClause('ins','created_at', '12', '13'): '',
       }
 
       try {
         const insTitlesQuery = pgPromise.as.format(`
           SELECT
+            ins.id,
             comp.tticoname,
+            ins."IPOLDATE",
             ins."IFILE",
             ins."ICITY",
             ins."ISTRET",
@@ -89,6 +96,8 @@ export default async function handler(
           ${param.policyDateRange}
           ${param.lPolicyNum}
           ${param.oPolicyNum}
+          ${param.fileNumber}
+          ${param.createdAtDateRange}
           ORDER BY comp.tticoname
           ;
         `,[
@@ -101,7 +110,10 @@ export default async function handler(
             policyStartDate, 
             policyEndDate,
             lPolicyNum.toLowerCase(),
-            oPolicyNum.toLowerCase()
+            oPolicyNum.toLowerCase(),
+            fileNumber,
+            createdAtStartDate,
+            createdAtEndDate
           ]
         )
         const insTitlesResults = (await conn.query(insTitlesQuery)).rows

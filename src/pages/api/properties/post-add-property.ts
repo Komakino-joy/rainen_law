@@ -43,7 +43,7 @@ export default async function handler(
         const clientIdResponse = await conn.query(clientIDQuery, [clientName])
 
         const addNewPropertyQuery = pgPromise.as.format(`
-          INSERT INTO public."propmstr"
+          INSERT INTO public.propmstr
           (
             "PTDATE",
             "PCITY",

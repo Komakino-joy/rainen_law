@@ -99,7 +99,6 @@ export default async function handler(
         )
         
         const propertiesResults = (await conn.query(propertiesQuery)).rows
-            console.log(propertiesResults)
           res.status(200).json({
             totalRows: totalRecordsResult,
             rows: propertiesResults

@@ -207,6 +207,8 @@ const PoliciesByClientReportPage = () => {
             </div>
           </div>
         )
+        : reportData && Object.keys(reportData).length === 0 
+        ? <InfoCard line1='No results found' />
         : <InfoCard line1='Select Client and Policy Date Range' line2='to Generate Report' />
       }
     </>

@@ -41,7 +41,7 @@ const INSSearchForm:React.FC<INSSearchFormProps> = ({
 
   const handleViewAllClick = (e:any) => {
     e.preventDefault()
-    router.push('/clients/1')
+    router.push('/ins-titles/1')
   }
 
   return (
@@ -50,6 +50,39 @@ const INSSearchForm:React.FC<INSSearchFormProps> = ({
           <span>Search For Insurance Titles</span>
         </header>
       <form className="flex-y" >
+        <section className="flex-x jc-between pr-8">
+          <FormInput 
+            name="fileNumber"
+            labelKey="fileNumber"
+            labelText="File Number"
+            type="text"
+            isRequired={false}
+            register={register} 
+            errors={errors}
+          />
+
+          <div className='flex-x gap-md date-inputs'>
+            <FormInput 
+              name="createdAtStartDate"
+              labelKey="createdAtStartDate"
+              labelText="Created At Start Date"
+              type="date"
+              isRequired={false}
+              register={register} 
+              errors={errors}
+            />
+
+            <FormInput 
+              name="createdAtEndDate"
+              labelKey="createdAtEndDate"
+              labelText="Created At End Date"
+              type="date"
+              isRequired={false}
+              register={register} 
+              errors={errors}
+            />
+          </div>
+        </section>
         <section className='flex-x gap-md date-inputs'>
           <FormInput 
             name="oPolicyNum"

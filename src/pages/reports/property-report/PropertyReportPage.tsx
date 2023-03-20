@@ -11,9 +11,11 @@ import InfoCard from '@/components/InfoCard/InfoCard';
 import RegistryOfDeedsBreakDown from '@/components/RegistryOfDeedsBreakDown/RegistryOfDeedsBreakDown';
 import TitlesBreakDown from '@/components/TitleBreakDown/TitlesBreakDown';
 import { useReactToPrint } from 'react-to-print';
+import Spinner from '@/components/Spinner/Spinner';
 
 export default function PropertyReport() {
   
+  const [isLoading, setIsLoading] = useState(false)
   const [propertiesData, setPropertiesData] = useState<Property[] | null>(null)
   const [countyCountMap, setCountyCountMap] = useState({})
   const [titleTypeMap, setTitleTypeMap] = useState({})
@@ -35,6 +37,7 @@ export default function PropertyReport() {
   });
 
   const onSubmit = async(data:any) => {
+    setIsLoading(true)
     setReportRunDate({
       start: data.startDate,
       end: data.endDate
@@ -62,6 +65,7 @@ export default function PropertyReport() {
     }, {}))
 
     reset()
+    setIsLoading(false)
   };
 
   const componentRef = useRef(null);
@@ -105,7 +109,8 @@ export default function PropertyReport() {
           </section>
         </form>
       </div>
-      { propertiesData && propertiesData.length > 0 ?
+      { isLoading ? <div className='page-spinner'><Spinner/></div> 
+        : propertiesData && propertiesData.length > 0 ?
         <div className={styles['property-report-wrapper']} >
           <style>{getPageMargins()}</style>
             <Button 

@@ -7,7 +7,6 @@ export default async function handler(
   res: NextApiResponse,
 ) {
     if (req.method === "POST") { 
-
       const { insTitleId } = req.body
 
       try {

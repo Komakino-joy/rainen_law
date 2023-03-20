@@ -103,3 +103,34 @@ export interface Company {
   tproduct4: number;
   tstat: string;
 }
+
+export interface Policy {
+  id: string;
+  tticoname: string,
+  IPOLDATE: string;
+  IFILE: string;
+  ICITY: string;
+  ISTRET: string;
+  ILOT: string;
+  ICONDO: string;
+  IUNIT: string;
+  INMBR: string;
+  PREMDUE: string;
+  PREMPAID: string;
+  AGENTFEE: string;
+  TICOFEE: string;
+  RWFEE: string;
+  TITLECO: string;
+  OPOLICYNUM: string;
+  LPOLICYNUM: string;
+  OPOLICYAMT: string;
+  LPOLICYAMT: string;
+  ISTAT: string;
+  DATEBILLED: string;
+  DATEPAID: string;
+  IBILL: string;
+  POLICYDATE: string;
+  IREMIT: string;
+  ISTATE: string;
+  IZIP: string;
+}

@@ -3,7 +3,6 @@ import FormInput from '@/components/Forms/Common/FormInput/FormInput'
 import InfoCard from '@/components/InfoCard/InfoCard'
 import Spinner from '@/components/Spinner/Spinner'
 import { useCompaniesContext } from '@/context/Companies'
-import { useINSTitlesContext } from '@/context/INSTitles'
 import { INSTitle } from '@/types/common'
 import { timestampToDate } from '@/utils'
 import formatNumber from '@/utils/formatNumber'
@@ -11,9 +10,9 @@ import axios from 'axios'
 import React, { useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useReactToPrint } from 'react-to-print'
-import styles from './PoliciesByClientReport.module.scss'
+import styles from './PoliciesByCompanyReport.module.scss'
 
-const PoliciesByClientReportPage = () => {
+const PoliciesByCompanyReportPage = () => {
 
   const { companiesList, companyIdMap } = useCompaniesContext()
 
@@ -214,6 +213,8 @@ const PoliciesByClientReportPage = () => {
             </div>
           </div>
         )
+        : reportData && Object.keys(reportData).length === 0 
+        ? <InfoCard line1='No results found.' />
         : <InfoCard line1='Select Client and Policy Date Range' line2='to Generate Report' />
       }
     </>
@@ -221,4 +222,4 @@ const PoliciesByClientReportPage = () => {
   )
 }
 
-export default PoliciesByClientReportPage
+export default PoliciesByCompanyReportPage

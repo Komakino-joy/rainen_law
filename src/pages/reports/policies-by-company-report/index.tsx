@@ -1,2 +1,2 @@
-import PoliciesByClientReportPage from './PoliciesByClientReportPage'
+import PoliciesByClientReportPage from './PoliciesByCompanyReportPage'
 export default PoliciesByClientReportPage

@@ -97,7 +97,6 @@ const Properties:React.FC<PropertiesProps> = ({
     setTableData(properties)
   },[])
 
-  
   return (
     <>
       { tableData ? 

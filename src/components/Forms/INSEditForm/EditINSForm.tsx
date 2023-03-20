@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
+import toast from "react-hot-toast";
 import { useCompaniesContext } from "@/context/Companies";
 import { timestampToDate } from "@/utils";
 import { abbreviatedStatesLabelValuePair } from "@/utils/UnitedStates";
@@ -8,35 +9,38 @@ import FormInput from "../Common/FormInput/FormInput";
 import styles from './EditINSForm.module.scss'
 import Button from "@/components/Button/Button";
 import { FORM_BUTTON_TEXT } from "@/constants";
+import Spinner from "@/components/Spinner/Spinner";
+import { useClientsContext } from "@/context/Clients";
 
-interface EditINSFormFormProps {
+interface EditINSFormProps {
   insTitleId: string | null;
   queryType: 'update' | 'insert';
   handleAfterSubmit?: (propId: string) => void;
 }
 
-const EditINSFormForm:React.FC<EditINSFormFormProps> = ({
+const EditINSForm:React.FC<EditINSFormProps> = ({
   insTitleId,
   queryType,
-  handleAfterSubmit
+  handleAfterSubmit = () => {},
 }) => {
 
   const {companiesList} = useCompaniesContext()
+  const {clientSelectOptions} = useClientsContext()
+  const { CNAME: clientNames } = clientSelectOptions
 
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [compRef, setCompRef] = useState(null)
-  const [titlesCount, setTitlesCount] = useState(null)
   
   const [defaultSelectValues , setDefaultSelectValues] = useState({
     state: '',
     company: '',
     status: '',
     assigned: '',
-    printed: ''
+    printed: '',
+    clientName: ''
   })
 
   const [insTitleInfoSnippet, setInsTitleInfoSnippet] = useState<{
-    id:string;
+    id:string | null;
     inmbr: string | null;
     city: string | null;
     fileNumber: string | null;
@@ -45,8 +49,8 @@ const EditINSFormForm:React.FC<EditINSFormFormProps> = ({
       time:string
     } | null;
   }>({
-    id: 'New', 
-    inmbr: 'New',
+    id: null, 
+    inmbr: null,
     city: null,
     fileNumber: null,
     lastUpdated: null
@@ -56,7 +60,8 @@ const EditINSFormForm:React.FC<EditINSFormFormProps> = ({
     register, 
     handleSubmit, 
     control,
-    formState: { errors, isDirty } 
+    reset,
+    formState: { errors, dirtyFields } 
   } = useForm({
     defaultValues: async () => {
       if (insTitleId) {
@@ -67,9 +72,10 @@ const EditINSFormForm:React.FC<EditINSFormFormProps> = ({
         
         const {
           id='', tticoname='', LAST_UPDATED='', INMBR='', IFILE='', ICITY='', ISTATE='', IZIP='',
-          ISTRET='', ILOT='', ICONDO='', IUNIT='', IPREMDUE='', IPREMPAID='', AGENTFEE='',
+          ISTRET='', ILOT='', ICONDO='', IUNIT='', PREMDUE='', PREMPAID='', AGENTFEE='',
           ICDATE='', IPDATE='', IBILL='', IPOLDATE='', TITLECO='', ISTAT='', IREMIT='',
-          P='', CNAME='', CFILE='', OPOLICYNUM='', OPOLICYAMT='', LPOLICYNUM='', LPOLICYAMT='', INOTES=''
+          P='', CNAME='', CFILE='', OPOLICYNUM='', OPOLICYAMT='', LPOLICYNUM='', LPOLICYAMT='', INOTES='',
+          TICOFEE
         } = response.data[0]
 
         setInsTitleInfoSnippet((prevState) => ({
@@ -88,7 +94,8 @@ const EditINSFormForm:React.FC<EditINSFormFormProps> = ({
           company: tticoname,
           status: ISTAT,
           assigned: IREMIT,
-          printed: P
+          printed: P,
+          clientName: CNAME
         })
 
         return {
@@ -100,13 +107,10 @@ const EditINSFormForm:React.FC<EditINSFormFormProps> = ({
           lot: ILOT,
           condo: ICONDO,
           unit: IUNIT,
-          premiumDue: IPREMDUE,
-          premiumPaid: IPREMPAID,
+          premiumDue: PREMDUE,
+          premiumPaid: PREMPAID,
           agentFee: AGENTFEE,
-          dateBilled: ICDATE,
-          datePaid: IPDATE,
           billNumber: IBILL,
-          policyDate: IPOLDATE,
           titleCompany: TITLECO,
           status: ISTAT,
           assigned: IREMIT,
@@ -117,13 +121,43 @@ const EditINSFormForm:React.FC<EditINSFormFormProps> = ({
           oPolicyAmount: OPOLICYAMT,
           lPolicyNumber: LPOLICYNUM,
           lPolicyAmount: LPOLICYAMT,
-          notes: INOTES
+          notes: INOTES,
+          datePaid: IPDATE ? timestampToDate(IPDATE, 'yyyyMMdd').date : null,
+          dateBilled: ICDATE ? timestampToDate(ICDATE, 'yyyyMMdd').date : null,
+          policyDate: IPOLDATE ?timestampToDate(IPOLDATE, 'yyyyMMdd').date : null,
+          ticoFee: TICOFEE
         };
       }
     }
   });
 
-  const onSubmit = (data:any) => console.log(data);
+  const isDirtyAlt = !!Object.keys(dirtyFields).length === false
+
+  const onSubmit = async(data:any) => {
+    if(isDirtyAlt) return 
+    
+    if(queryType === 'insert') {
+      const response = await axios.post(`/api/titles/post-add-ins-title`, data)
+      reset()
+      handleAfterSubmit(response.data.newInsTitleId)
+      // @ts-ignore
+      toast[response.data.status](response.data.message)
+    }
+
+    if(queryType === 'update') {
+      const response = await axios.post(`/api/titles/post-update-ins-title`, {id: insTitleInfoSnippet.id, ...data}) // Passing id to update correct record
+      if (insTitleInfoSnippet.id) {
+        handleAfterSubmit(insTitleInfoSnippet.id)
+        reset(response.data.updatedRecord)
+        // @ts-ignore
+        toast[response.data.status](response.data.message)
+      }
+    }
+  };
+
+  if(isLoading) {
+    return <div className='form-wrapper edit-form'><Spinner /></div>
+  }
 
   return (
     <div className='form-wrapper edit-form'>
@@ -145,8 +179,9 @@ const EditINSFormForm:React.FC<EditINSFormFormProps> = ({
               labelKey="fileNumber"
               labelText="File #"
               customClass={styles.fileNumber}
-              type="text" 
-              isRequired={true}
+              type="number" 
+              defaultValue={0}
+              isRequired={false}
               register={register} 
               errors={errors}
             />
@@ -157,7 +192,7 @@ const EditINSFormForm:React.FC<EditINSFormFormProps> = ({
               labelText="Street"
               customClass={styles.street}
               type="text" 
-              isRequired={true}
+              isRequired={false}
               register={register} 
               errors={errors}
             />
@@ -166,7 +201,7 @@ const EditINSFormForm:React.FC<EditINSFormFormProps> = ({
               labelKey="city"
               labelText="City"
               type="text" 
-              isRequired={true}
+              isRequired={false}
               register={register} 
               errors={errors}
             />
@@ -188,7 +223,7 @@ const EditINSFormForm:React.FC<EditINSFormFormProps> = ({
                       selectOnChange={onChange}
                       defaultValue={defaultSelectValues.state}
                       options={abbreviatedStatesLabelValuePair}
-                      isRequired={true}
+                      isRequired={false}
                       register={register} 
                       errors={errors}
                     />
@@ -202,7 +237,7 @@ const EditINSFormForm:React.FC<EditINSFormFormProps> = ({
                 labelText="Zip Code"
                 customClass={styles.zip}
                 type="text" 
-                isRequired={true}
+                isRequired={false}
                 register={register} 
                 errors={errors}
               />
@@ -253,9 +288,10 @@ const EditINSFormForm:React.FC<EditINSFormFormProps> = ({
               labelKey="premiumDue"
               labelText="Premium Due"
               type="number" 
-              min="0.01" 
+              defaultValue={0}
+              min="0.00" 
               step="0.01" 
-              max="2500000"
+              max="2500000000"
               isRequired={false}
               register={register} 
               errors={errors}
@@ -266,9 +302,10 @@ const EditINSFormForm:React.FC<EditINSFormFormProps> = ({
               labelKey="premiumPaid"
               labelText="Premium Paid"
               type="number" 
-              min="0.01" 
+              defaultValue={0}
+              min="0.00" 
               step="0.01" 
-              max="2500000"
+              max="2500000000"
               isRequired={false}
               register={register} 
               errors={errors}
@@ -279,15 +316,28 @@ const EditINSFormForm:React.FC<EditINSFormFormProps> = ({
               labelKey="agentFee"
               labelText="Agent Fee"
               type="number" 
-              min="0.01" 
+              defaultValue={0}
+              min="0.00" 
               step="0.01" 
-              max="2500000"
+              max="2500000000"
               isRequired={false}
               register={register} 
               errors={errors}
             />
 
-            <div className={styles["input-placeholder"]}/>
+            <FormInput 
+              name="ticoFee"
+              labelKey="ticoFee"
+              labelText="Tico Fee"
+              type="number" 
+              defaultValue={0}
+              min="0.00" 
+              step="0.01" 
+              max="2500000000"
+              isRequired={false}
+              register={register} 
+              errors={errors}
+            />
           </div>
 
           <div className={`flex-y ${styles['column-3']}`}>
@@ -317,6 +367,7 @@ const EditINSFormForm:React.FC<EditINSFormFormProps> = ({
               labelText="Bill #"
               min="0"
               type="number" 
+              defaultValue={0}
               isRequired={false}
               register={register} 
               errors={errors}
@@ -354,7 +405,7 @@ const EditINSFormForm:React.FC<EditINSFormFormProps> = ({
                       customClass={styles["title-company-select"]}
                       selectOnChange={onChange}
                       options={companiesList}
-                      isRequired={true}
+                      isRequired={false}
                       register={register} 
                       errors={errors}
                     />
@@ -424,7 +475,7 @@ const EditINSFormForm:React.FC<EditINSFormFormProps> = ({
                     selectOnChange={onChange}
                     defaultValue={defaultSelectValues.printed}
                     options={[{label:'N', value:'N'}, {label:'Y', value:'Y'}]}
-                    isRequired={true}
+                    isRequired={false}
                     register={register} 
                     errors={errors}
                   />
@@ -434,16 +485,31 @@ const EditINSFormForm:React.FC<EditINSFormFormProps> = ({
           </div>
 
           <div className={`flex-x ${styles['comp-ref-file-num-section']}`}>
-            <FormInput 
-              name="clientName"
-              labelKey="clientName"
-              labelText="Interpolate ID"
-              customClass={styles.clientName}
-              type="text" 
-              isRequired={true}
-              register={register} 
-              errors={errors}
-            />
+          { clientNames && clientNames.length > 0 &&
+                <Controller 
+                  name={"clientName"}  
+                  control={control} 
+                  render={({
+                    field: {onChange},
+                  }) => {
+                    return (
+                      <FormInput 
+                        name="clientName"
+                        labelKey="clientName"
+                        labelText="Name"
+                        type="select" 
+                        defaultValue={defaultSelectValues.clientName}
+                        customClass={styles.clientName}
+                        selectOnChange={onChange}
+                        options={clientNames}
+                        isRequired={false}
+                        register={register} 
+                        errors={errors}
+                      />
+                    ) 
+                  }}
+                />
+              }
 
             <FormInput 
               name="clientFileNumber"
@@ -451,7 +517,7 @@ const EditINSFormForm:React.FC<EditINSFormFormProps> = ({
               labelText="Client's File #"
               customClass={styles.clientFileNumber}
               type="text" 
-              isRequired={true}
+              isRequired={false}
               register={register} 
               errors={errors}
             />
@@ -475,9 +541,10 @@ const EditINSFormForm:React.FC<EditINSFormFormProps> = ({
               labelText="O Policy Amount"
               customClass={styles.oPolicyAmount}
               type="number" 
-              min="0.01" 
+              defaultValue={0}
+              min="0.00" 
               step="0.01" 
-              max="2500000"
+              max="2500000000"
               isRequired={false}
               register={register} 
               errors={errors}
@@ -502,9 +569,10 @@ const EditINSFormForm:React.FC<EditINSFormFormProps> = ({
               labelText="L Policy Amount"
               customClass={styles.lPolicyAmount}
               type="number" 
-              min="0.01" 
+              defaultValue={0}
+              min="0.00" 
               step="0.01" 
-              max="2500000"
+              max="2500000000"
               isRequired={false}
               register={register} 
               errors={errors}
@@ -526,7 +594,10 @@ const EditINSFormForm:React.FC<EditINSFormFormProps> = ({
 
 
         <section className="submit-button-section">
-            <Button type="submit" isDisabled={!isDirty}>
+            <Button 
+              type="submit" 
+              isDisabled={isDirtyAlt}
+            >
               {FORM_BUTTON_TEXT[queryType]} 
             </Button>
           </section>
@@ -544,4 +615,4 @@ const EditINSFormForm:React.FC<EditINSFormFormProps> = ({
   );
 }
 
-export default EditINSFormForm
+export default EditINSForm

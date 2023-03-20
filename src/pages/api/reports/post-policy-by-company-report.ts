@@ -12,8 +12,6 @@ export default async function handler(
         endDate
       } = req.body
 
-      console.log(req.body)
-
       try {
         const getPoliciesByClientReportQuery = `
           SELECT 
@@ -48,13 +46,13 @@ export default async function handler(
           AND ins."IPOLDATE" BETWEEN DATE($2) AND DATE($3)
           ORDER BY ins."IBILL" LIMIT 100;
         `
-        const result = await conn.query(getPoliciesByClientReportQuery, [       
-          titleCompanyNumber,
-          startDate, 
-          endDate]
+        const result = await conn.query(getPoliciesByClientReportQuery, 
+          [       
+            titleCompanyNumber,
+            startDate, 
+            endDate
+          ]
         )
-
-        console.log(result.rows)
   
         res.status(200).json(result.rows)
       
