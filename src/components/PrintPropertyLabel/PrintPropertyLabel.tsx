@@ -3,10 +3,17 @@ import { hasValue, timestampToDate } from '@/utils';
 import React, { useRef } from 'react'
 import { useReactToPrint } from 'react-to-print';
 import Button from '../Button/Button'
+import { PrinterIcon } from '../Icons/Icons';
 
 import styles from './PrintPropertyLabel.module.scss'
 
-const PropertyLabel = ({propertyInfo}: {propertyInfo: Property}) => {
+const PropertyLabel = ({
+  propertyInfo, 
+  usePrinterIcon
+}: {
+  propertyInfo: Property; 
+  usePrinterIcon?:boolean;
+}) => {
 
   const {
     PTYPE, 
@@ -50,13 +57,19 @@ const PropertyLabel = ({propertyInfo}: {propertyInfo: Property}) => {
 
   return (
     <>
-      <Button 
-        type="button" 
-        isDisabled={false}
-        onClick={handlePrint}
-      >
-        Print Label
-      </Button>
+      { usePrinterIcon ? 
+        <span onClick={handlePrint}>
+          <PrinterIcon />
+        </span>  
+        :
+        <Button 
+          type="button" 
+          isDisabled={false}
+          onClick={handlePrint}
+        >
+          Print Label
+        </Button>
+      }
 
       <div className={styles['label-container']}>
         <style>{getPageMargins()}</style>

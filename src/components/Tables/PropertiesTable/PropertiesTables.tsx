@@ -9,6 +9,7 @@ import axios from 'axios';
 
 import { PencilIcon, TrashIcon } from '@/components/Icons/Icons';
 import { timestampToDate } from '@/utils';
+import PrintPropertyLabel from '@/components/PrintPropertyLabel/PrintPropertyLabel';
 
 interface PropertiesTableProps {
   tableData: any;
@@ -62,6 +63,20 @@ const PropertiesTable:React.FC<PropertiesTableProps> = ({
 
   const columns = useMemo(
     () => [
+      {
+        Header: 'Print',
+        accessor: (d:any) => d,
+        Cell: ({value}:{value:any}) => (
+          <span 
+          title={`Print Property: ${value.PROPID}`} 
+          >
+            <PrintPropertyLabel 
+              usePrinterIcon={true}
+              propertyInfo={value}
+            />
+          </span>
+        )
+      },
       {
         Header: 'Date',
         accessor: (d:any) => timestampToDate(d.PTDATE, 'mmDDyyyy').date,

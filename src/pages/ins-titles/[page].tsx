@@ -1,4 +1,3 @@
-"use client";
 import { INSTitle } from '@/types/common';
 
 import React, { useEffect, useState } from 'react'
