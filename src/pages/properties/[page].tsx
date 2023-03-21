@@ -4,10 +4,8 @@ import { Property } from '@/types/common';
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router';
 
-import Modal from '@/components/Modal/Modal';
 import Pagination from '@/components/Pagination/Pagination'
 import PropertiesTable from '@/components/Tables/PropertiesTable/PropertiesTables'
-import EditPropertyForm from '@/components/Forms/PropertyEditForm/EditPropertyForm';
 import conn from '../../lib/db'
 import InfoCard from '@/components/InfoCard/InfoCard';
 import EditPropertyModal from '@/components/Modals/EditPropertyModal';
@@ -17,7 +15,7 @@ export async function getServerSideProps(context:any) {
     const pageSize = 50
     const pageOffset = pageSize * (page - 1)
 
-    const totalRecordsQuery = `select COUNT(*) from public."propmstr"`
+    const totalRecordsQuery = `select COUNT(*) from public.propmstr`
     const totalRecordsResult = (await conn.query(totalRecordsQuery)).rows[0].count;
 
     const allProperties = `
@@ -36,8 +34,8 @@ export async function getServerSideProps(context:any) {
         pm."PCOMPREF",
         pm."PINSTR",
         pm."PROPID"
-      FROM public."propmstr" pm
-      LEFT JOIN public."clntmstr" cm 
+      FROM public.propmstr pm
+      LEFT JOIN public.clntmstr cm 
       ON cm."CNMBR" = pm."PNMBR"
       ORDER by pm."PTDATE" DESC
       OFFSET $1 LIMIT ${pageSize}
@@ -100,7 +98,7 @@ const Properties:React.FC<PropertiesProps> = ({
   return (
     <>
       { tableData ? 
-        <div className='center-margin'>
+        <div className='all-records-view-page'>
           <h1>
             All Properties 
             <span className='italicized-record-count'>

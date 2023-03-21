@@ -1,4 +1,4 @@
-import { Property } from '@/types/common';
+import { INSTitle } from '@/types/common';
 
 import { useMemo } from 'react';
 import { useTable, useFilters } from 'react-table';
@@ -8,20 +8,22 @@ import toast from 'react-hot-toast'
 import axios from 'axios';
 
 import { PencilIcon, TrashIcon } from '@/components/Icons/Icons';
+import { formatAddress, timestampToDate } from '@/utils';
+import formatNumber from '@/utils/formatNumber';
 
-interface ClientsTableProps {
+interface InsTitlesTableProps {
   tableData: any;
-  handleModalOpen: (e: React.SyntheticEvent, propId: string) => void;
-  setTableData: (tableData: Property[]) => void;
+  handleModalOpen: (e: React.SyntheticEvent, insTitleId: string) => void;
+  setTableData: (tableData: INSTitle[]) => void;
 }
 
-const ClientsTable:React.FC<ClientsTableProps> = ({
+const InsTitlesTable:React.FC<InsTitlesTableProps> = ({
   tableData,
   handleModalOpen,
   setTableData
 }) => {
 
-  const handleDelete = (e: React.SyntheticEvent, propId: string) => {
+  const handleDelete = (e: React.SyntheticEvent, insTitleId: string) => {
     e.preventDefault()
 
     confirmAlert({
@@ -31,23 +33,23 @@ const ClientsTable:React.FC<ClientsTableProps> = ({
         {
           label: 'Yes',
           onClick: async() => {
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/properties/post-delete-property`, {propId})
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/titles/post-delete-ins-title`, {insTitleId})
             if(response.data.status = 'success') {
-              toast.success(response.data.message, {id: 'delete-property'})
+              toast.success(response.data.message, {id: 'delete-ins-title'})
 
-              const filteredArray = tableData.filter((row: Property) => row.PROPID !== propId);
+              const filteredArray = tableData.filter((row: INSTitle) => row.id !== insTitleId);
               setTableData(filteredArray);
             }
 
             if(response.data.status = 'error') {
-              toast.error(response.data.message, {id: 'delete-property'})
+              toast.error(response.data.message, {id: 'delete-ins-title'})
             }
           }
         },
         {
           label: 'No',
           onClick: () => toast.error('Operation Cancelled.', {
-            id: 'delete-property'
+            id: 'delete-ins-title'
           })
         }
       ]
@@ -62,51 +64,76 @@ const ClientsTable:React.FC<ClientsTableProps> = ({
   const columns = useMemo(
     () => [
       {
-        Header: 'Client Name',
-        accessor: (d:any) => d.CNAME,
+        Header: 'ID',
+        accessor: (d:any) => d.id,
+      },
+      {
+        Header: 'File #',
+        accessor: (d:any) => d.IFILE,
+      },
+      {
+        Header: 'Bill #',
+        accessor: (d:any) => d.IBILL,
       },
       {
         Header: 'Address',
-        accessor: (d:any) => `${d.CADD1} ${d.CADD2 ? d.CADD2 : ''}`,
+        accessor: (d:any) => formatAddress({
+          street: d.ISTRET,
+          condo: d.ICONDO,
+          unit: d.IUNIT,
+          lot: d.ILOT
+        }),
       },
       {
-        Header: 'City',
-        accessor: (d:any) => d.CCITY,
+        Header: 'Client',
+        accessor: (d:any) => d.CNAME,
       },
       {
-        Header: 'State',
-        accessor: (d:any) => d.CSTATE,
+        Header: 'Premium Due',
+        accessor: (d:any) => `$${ d.PREMDUE ? formatNumber(d.PREMDUE) : '0.00'}`,
       },
       {
-        Header: 'Zip',
-        accessor: (d:any) => d.CZIP,
+        Header: 'Premium Paid',
+        accessor: (d:any) => `$${ d.PREMPAID ?formatNumber(d.PREMPAID) : '0.00'}`,
       },
       {
-        Header: 'Phone',
-        accessor: (d:any) => d.CPHONE,
+        Header: 'Date Billed',
+        accessor: (d:any) => d.ICDATE ? timestampToDate(d.ICDATE, 'mmDDyyyy').date : 'n/a',
       },
       {
-        Header: 'Fax',
-        accessor: (d:any) => d.CFAX,
+        Header: 'Policy Date',
+        accessor: (d:any) => d.IPOLDATE ? timestampToDate(d.IPOLDATE, 'mmDDyyyy').date : 'n/a',
       },
       {
-        Header: 'Is Client?',
-        accessor: (d:any) => d.ISCLIENT ? 'Yes' : "No",
+        Header: 'Notes',
+        accessor: (d:any) => d.INOTES,
       },
       {
-        Header: 'Properties',
-        accessor: (d:any) => d.PROPCOUNT,
+        Header: 'Date Paid',
+        accessor: (d:any) => d.IPDATE ? timestampToDate(d.IPDATE, 'mmDDyyyy').date : 'n/a',
       },
       {
-        Header: 'Titles',
-        accessor: (d:any) => d.TITLESCOUNT,
+        Header: 'L Policy #',
+        accessor: (d:any) => d.LPOLICYNUM,
+      },
+      {
+        Header: 'O Policy #',
+        accessor: (d:any) => d.OPOLICYNUM,
+      },
+      {
+        Header: 'L Policy Amt',
+        accessor: (d:any) => `$${ d.LPOLICYAMT ?formatNumber(d.LPOLICYAMT) : '0.00'}`,
+      },
+      {
+        Header: 'O Policy Amt',
+        accessor: (d:any) => `$${ d.OPOLICYAMT ?formatNumber(d.OPOLICYAMT) : '0.00'}`,
       },
       {
         Header: 'View / Edit',
         accessor: (d:any) => d.id,
         Cell: ({value}:{value:any}) => (
           <span
-            title={`Edit Property: ${value}`} 
+            title={`Edit Policy: ${value}`} 
             onClick={(e) => handleModalOpen(e, value)}
           >
             <PencilIcon />
@@ -118,7 +145,7 @@ const ClientsTable:React.FC<ClientsTableProps> = ({
         accessor: (d:any) => d.id,
         Cell: ({value}:{value:any}) => (
           <span 
-            title={`Delete Property: ${value}`} 
+            title={`Delete Policy: ${value}`} 
             onClick={(e) => handleDelete(e, value)}
           >
             <TrashIcon />
@@ -160,7 +187,7 @@ const ClientsTable:React.FC<ClientsTableProps> = ({
   )
 
   return (
-    <table className='is-all-clients-table' {...getTableProps()}>
+    <table className='is-all-ins-titles-table' {...getTableProps()}>
       <thead>
         {headerGroups.map((headerGroup,idx) => (
         //@ts-ignore
@@ -197,4 +224,4 @@ const ClientsTable:React.FC<ClientsTableProps> = ({
   )
 }
 
-export default ClientsTable
+export default InsTitlesTable

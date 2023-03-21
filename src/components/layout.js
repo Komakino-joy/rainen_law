@@ -1,4 +1,4 @@
-import Bullshit from "./Bullshit/Bullshit";
+import NavBar from "./NavBar/NavBar";
 import { Toaster } from 'react-hot-toast';
 import { PropertiesContextProvider } from "@/context/Properties";
 import { ClientsContextProvider } from "@/context/Clients";
@@ -8,7 +8,7 @@ import { INSTitlesContextProvider } from "@/context/INSTitles";
 export default function Layout({ children }) {
   return (
     <div className="app">
-      <Bullshit />
+      <NavBar />
       <INSTitlesContextProvider>
         <CompaniesContextProvider>
           <ClientsContextProvider>

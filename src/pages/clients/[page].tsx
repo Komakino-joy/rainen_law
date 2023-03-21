@@ -110,7 +110,7 @@ const Clients:React.FC<ClientsProps> = ({
   return (
     <>
       { tableData ? 
-        <div className='center-margin'>
+        <div className='all-records-view-page'>
           <h1>
             All Clients 
             <span className='italicized-record-count'>

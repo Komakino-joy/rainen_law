@@ -1,4 +1,5 @@
 export interface Property {
+  PTDATE: string;
   CNAME: string;
   CNMBR: string;
   PROPID: string;
@@ -27,6 +28,27 @@ export interface Property {
   PPAGE2: string;
   PCERT1: string;
   QBEXPORT: string;
+  PRDATE: string;
+  PTYPE: string;
+  PTDATE: string;
+  PCOMPREF: string;
+  PUNIT: string;
+  PCONDO: string;
+  PBOOK1: string;
+  PBOOK2: string;
+  PPAGE1: string;
+  PPAGE2: string;
+  PCERT1: string;
+  PSELR1: string;
+  PSELR2: string;
+  PSELR3: string;
+  PSELR4: string;
+  PBUYR1: string;
+  PBUYR2: string;
+  PINSTR: string;
+  CNAME: string;
+  PREQ: string;
+  CFILE: string;
 }
 
 export interface ReportProperty {
@@ -66,6 +88,7 @@ export interface Client {
 }
 
 export interface INSTitle {
+  id: string;
   tticoname: string;
   INMBR: string; 
   ISTAT: string; 

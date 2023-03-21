@@ -126,6 +126,7 @@
   .submit-button-section {
     display: flex;
     justify-content: flex-end;
+    gap: 10px;
     margin-top: 10px;
   }
 
@@ -153,3 +154,4 @@
     outline: 0 none !important;
   }
 }
+

@@ -106,7 +106,7 @@ export const INSTitlesContextProvider = ({children}: {children:any}) => {
         ))
 
         setINSTitleSelectOptions(insTitlesObject)
-
+        console.log(insTitlesObject)
         setIsLoading(false)
       }
       

@@ -1,3 +1,5 @@
+import { Property } from "@/types/common";
+
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
@@ -6,16 +8,18 @@ import toast from "react-hot-toast";
 import 'react-tabs/style/react-tabs.css';
 
 import Button from "@/components/Button/Button";
+import Spinner from "@/components/Spinner/Spinner";
 import FormInput from "../Common/FormInput/FormInput";
+import SubTableINS from "@/components/Tables/SubTableINS/SubTableINS";
+import PrintPropertyLabel from "@/components/PrintPropertyLabel/PrintPropertyLabel";
+import SubTableSellerBuyer from "@/components/Tables/SubTableSellerBuyer/SubTableSellerBuyer";
 
 import { FORM_BUTTON_TEXT } from "@/constants";
-import { timestampToDate, abbreviatedStatesLabelValuePair } from "@/utils";
 import { useClientsContext } from "@/context/Clients";
 import { usePropertiesContext } from "@/context/Properties";
+import { timestampToDate, abbreviatedStatesLabelValuePair } from "@/utils";
+
 import styles from './EditPropertyForm.module.scss'
-import SubTableSellerBuyer from "@/components/Tables/SubTableSellerBuyer/SubTableSellerBuyer";
-import SubTableINS from "@/components/Tables/SubTableINS/SubTableINS";
-import Spinner from "@/components/Spinner/Spinner";
 
 interface EditPropertyFormProps {
   propertyId: string | null;
@@ -28,7 +32,6 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
   queryType, 
   handleAfterSubmit = () => {},
 }) => {
-
   const {clientSelectOptions} = useClientsContext()
   const {propertiesSelectOptions} = usePropertiesContext()
   const { CNAME: clientNames } = clientSelectOptions
@@ -42,6 +45,7 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [compRef, setCompRef] = useState(null)
   const [titlesCount, setTitlesCount] = useState(null)
+  const [printLabelInfo, setPrintLabelInfo] = useState({})
   const [defaultSelectValues, setDefaultSelectValues] = useState({
     state: '',
     status: '',
@@ -78,6 +82,7 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
     register, 
     handleSubmit, 
     control,
+    getValues,
     formState: { errors, dirtyFields },
     reset,
   } = useForm({
@@ -93,8 +98,15 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
             PBOOK1='', PBOOK2='', PDOCNUM='', PPAGE1='', PPAGE2='',
             PCERT1='', PLOT='', PCONDO='', PUNIT='', PSTAT='', PTYPE='', 
             PASIGN='', CNAME='', PCOMPREF='', PFILE='', CFILE='', 
-            PREQ='', PRDATE='', PCDATE='', PINSTR='', LAST_UPDATED='', PNMBR=''
+            PREQ='', PRDATE='', PCDATE='', PINSTR='', LAST_UPDATED='', PNMBR='',
+            PTDATE='', PSELR1='', PSELR2='', PSELR3='', PSELR4='', PBUYR1='', PBUYR2=''
           } = response.data[0]
+
+          setPrintLabelInfo((prevState) => ({
+            ...prevState,
+            PRDATE, PTYPE, PTDATE, PCOMPREF, PUNIT, PCONDO, PBOOK1, PBOOK2, PPAGE1, CFILE, 
+            PPAGE2, PCERT1, PSELR1, PSELR2, PSELR3, PSELR4, PBUYR1, PBUYR2, PINSTR, CNAME, PREQ
+          }))
 
           setPropertyInfoSnippet((prevState) => ({
             ...prevState,
@@ -166,7 +178,7 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
       // @ts-ignore
       toast[response.data.status](response.data.message)
     }
-  };
+  }
 
   return (
     <div className='form-wrapper edit-form'>
@@ -531,6 +543,7 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
           </section>
 
           <section className="submit-button-section">
+            { queryType === 'update' ? <PrintPropertyLabel propertyInfo={printLabelInfo as Property} /> : null }
             <Button type="submit" isDisabled={isDirtyAlt}>
               {FORM_BUTTON_TEXT[queryType]} 
             </Button>

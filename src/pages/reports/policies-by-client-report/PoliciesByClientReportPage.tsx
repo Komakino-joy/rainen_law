@@ -1,15 +1,18 @@
+import React, { useRef, useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import { useReactToPrint } from 'react-to-print'
+import axios from 'axios'
+
 import Button from '@/components/Button/Button'
 import FormInput from '@/components/Forms/Common/FormInput/FormInput'
 import InfoCard from '@/components/InfoCard/InfoCard'
 import Spinner from '@/components/Spinner/Spinner'
+
 import { useClientsContext } from '@/context/Clients'
 import { INSTitle } from '@/types/common'
 import { timestampToDate } from '@/utils'
 import formatNumber from '@/utils/formatNumber'
-import axios from 'axios'
-import React, { useRef, useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
-import { useReactToPrint } from 'react-to-print'
+
 import styles from './PoliciesByClientReport.module.scss'
 
 const PoliciesByClientReportPage = () => {

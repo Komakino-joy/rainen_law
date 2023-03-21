@@ -15,7 +15,8 @@ export default async function handler(
               ins."ISTAT",
               ins."ISTATE",
               ins."IZIP",
-              ins."TITLECO"
+              ins."TITLECO",
+              ins."ICITY"
             FROM public.ins ins
             LEFT JOIN public.companies comp
             ON ins."TITLECO" = comp.tnmbr

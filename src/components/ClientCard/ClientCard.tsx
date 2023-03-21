@@ -36,7 +36,12 @@ const ClientCard:React.FC<ClientCardProps> = ({
           <div className={`${isExpanded ? styles.expanded : ''} ${styles['dropdown-content']}`}>
               { cProps.map((prop:Property) => {          
 
-                  const address = formatAddress({propertyDetails: prop})
+                  const address = formatAddress({
+                    street: prop.PSTRET,
+                    condo: prop.PCONDO,
+                    unit: prop.PUNIT,
+                    lot: prop.PLOT
+                  })
 
                   return (
                       <div

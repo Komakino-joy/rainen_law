@@ -1,9 +1,9 @@
 import React from 'react'
 import NavBarFacet from '../NavBarFacet/NavBarFacet'
 import links, { LinkType } from './links'
-import styles from './Bullshit.module.scss'
+import styles from './NavBar.module.scss'
 
-const Bullshit = () => {
+const NavBar = () => {
   return (
     <div className={styles['nav-bar-wrapper']}>
       <span className={styles.title}>Rainen Law</span>
@@ -19,4 +19,4 @@ const Bullshit = () => {
   )
 }
 
-export default Bullshit
+export default NavBar

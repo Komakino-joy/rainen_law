@@ -1,11 +1,20 @@
-const formatAddress = ({propertyDetails}:{propertyDetails:any}) => {
-  const address = [
-    propertyDetails.PSTRET,
-  ]
+const formatAddress = ({
+  street, 
+  condo, 
+  unit, 
+  lot
+}:{
+  street: string; 
+  condo:string; 
+  unit:string; 
+  lot:string;
+} ) => {
 
-  if(propertyDetails.PCONDO) address.push(`${propertyDetails.PCONDO}`) 
-  if(propertyDetails.PUNIT) address.push(`Unit ${propertyDetails.PUNIT}`) 
-  if(propertyDetails.PLOT) address.push(`Lot ${propertyDetails.PLOT}`) 
+  const address = [street]
+
+  if(condo) address.push(condo) 
+  if(unit) address.push(`Unit ${unit}`) 
+  if(lot) address.push(`Lot ${lot}`) 
 
   return address.join(', ')
 }

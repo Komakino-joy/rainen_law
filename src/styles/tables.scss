@@ -53,6 +53,42 @@ table{
     }
   }
 
+  &.is-all-clients-table {
+    th {
+      &:nth-child(1),
+      &:nth-child(2) {
+        text-align: left;
+      }
+      
+    }
+
+    td {
+      &:nth-child(1),
+      &:nth-child(2) {
+        text-align: left;
+      }
+    }
+  }
+
+  &.is-all-ins-titles-table {
+    th {
+      &:nth-child(4),
+      &:nth-child(5),
+      &:nth-child(10) {
+        text-align: left;
+      }
+      
+    }
+
+    td {
+      &:nth-child(4),
+      &:nth-child(5),
+      &:nth-child(10) {
+        text-align: left;
+      }
+    }
+  }
+
 }
 
 

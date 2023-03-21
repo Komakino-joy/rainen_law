@@ -52,6 +52,16 @@ const INSSearchForm:React.FC<INSSearchFormProps> = ({
       <form className="flex-y" >
         <section className="flex-x jc-between pr-8">
           <FormInput 
+            name="id"
+            labelKey="id"
+            labelText="Record ID"
+            type="number"
+            isRequired={false}
+            register={register} 
+            errors={errors}
+          />
+
+          <FormInput 
             name="fileNumber"
             labelKey="fileNumber"
             labelText="File Number"
@@ -204,7 +214,7 @@ const INSSearchForm:React.FC<INSSearchFormProps> = ({
           }
         </section>
 
-        <section className="flex-x gap-sm">
+        <section className="flex-x gap-sm">        
           { titleCities && titleCities.length > 0 &&
             <Controller 
               name={"titleCity"}  

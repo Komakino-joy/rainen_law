@@ -21,7 +21,8 @@ export default async function handler(
         oPolicyNum='',
         fileNumber='',
         createdAtStartDate='',
-        createdAtEndDate=''
+        createdAtEndDate='',
+        id=0,
       } = req.body
 
       const andEqualsClause = (table:string, field:string, paramNum:string) => {
@@ -48,6 +49,7 @@ export default async function handler(
         oPolicyNum: oPolicyNum !== '' ? andLikeClause('ins','OPOLICYNUM', '10'): '',
         fileNumber: fileNumber !== '' ? andEqualsClause('ins','IFILE', '11'): '',
         createdAtDateRange: createdAtStartDate !== '' && createdAtEndDate !== '' ? andBetweenClause('ins','created_at', '12', '13'): '',
+        id: id !== '' ? andEqualsClause('ins','id', '14'): '',
       }
 
       try {
@@ -98,6 +100,7 @@ export default async function handler(
           ${param.oPolicyNum}
           ${param.fileNumber}
           ${param.createdAtDateRange}
+          ${param.id}
           ORDER BY comp.tticoname
           ;
         `,[
@@ -113,7 +116,8 @@ export default async function handler(
             oPolicyNum.toLowerCase(),
             fileNumber,
             createdAtStartDate,
-            createdAtEndDate
+            createdAtEndDate,
+            id
           ]
         )
         const insTitlesResults = (await conn.query(insTitlesQuery)).rows
