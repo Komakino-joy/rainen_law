@@ -8,6 +8,7 @@ import toast from 'react-hot-toast'
 import axios from 'axios';
 
 import { PencilIcon, TrashIcon } from '@/components/Icons/Icons';
+import PrintClientLabel from '@/components/PrintClientLabel/PrintPropertyLabel';
 
 interface ClientsTableProps {
   tableData: any;
@@ -102,11 +103,25 @@ const ClientsTable:React.FC<ClientsTableProps> = ({
         accessor: (d:any) => d.TITLESCOUNT,
       },
       {
+        Header: 'Print',
+        accessor: (d:any) => d,
+        Cell: ({value}:{value:any}) => (
+          <span 
+          title={`Print Property: ${value.PROPID}`} 
+          >
+            <PrintClientLabel 
+              usePrinterIcon={true}
+              clientInfo={value}
+            />
+          </span>
+        )
+      },
+      {
         Header: 'View / Edit',
         accessor: (d:any) => d.id,
         Cell: ({value}:{value:any}) => (
           <span
-            title={`Edit Property: ${value}`} 
+            title={`Edit Client: ${value}`} 
             onClick={(e) => handleModalOpen(e, value)}
           >
             <PencilIcon />
@@ -118,7 +133,7 @@ const ClientsTable:React.FC<ClientsTableProps> = ({
         accessor: (d:any) => d.id,
         Cell: ({value}:{value:any}) => (
           <span 
-            title={`Delete Property: ${value}`} 
+            title={`Delete Client: ${value}`} 
             onClick={(e) => handleDelete(e, value)}
           >
             <TrashIcon />

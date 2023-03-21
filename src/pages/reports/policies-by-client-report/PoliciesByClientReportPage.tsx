@@ -23,6 +23,7 @@ const PoliciesByClientReportPage = () => {
 
   const [reportData, setReportData] = useState<any>({})
   const [isLoading, setIsLoading] = useState(false)
+  const [hasSearched, sethasSearched] = useState(false)
   const [clientName, setClientName] = useState('')
   const [reportRunDate, setReportRunDate] = useState({
     start: '',
@@ -65,7 +66,7 @@ const PoliciesByClientReportPage = () => {
 
     setReportData(insTitleGroupedByCompany)
     setIsLoading(false)
-
+    sethasSearched(true)
     reset()
   };
 
@@ -148,7 +149,7 @@ const PoliciesByClientReportPage = () => {
             >
               Print Report
             </Button>
-            <div ref={componentRef} className={styles['report-container']}>
+            <div ref={componentRef} className={`report-font ${styles['report-container']}`}>
               <h4>{`Title Insurance Policies for ${clientName}`}</h4>
               <h4>{timestampToDate(reportRunDate.start, 'mmDDyyyy').date} - {timestampToDate(reportRunDate.end, 'mmDDyyyy').date}</h4>
               <header>
@@ -210,7 +211,7 @@ const PoliciesByClientReportPage = () => {
             </div>
           </div>
         )
-        : reportData && Object.keys(reportData).length === 0 
+        : reportData && Object.keys(reportData).length === 0 && hasSearched
         ? <InfoCard line1='No results found' />
         : <InfoCard line1='Select Client and Policy Date Range' line2='to Generate Report' />
       }

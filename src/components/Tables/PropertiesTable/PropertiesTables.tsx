@@ -64,20 +64,6 @@ const PropertiesTable:React.FC<PropertiesTableProps> = ({
   const columns = useMemo(
     () => [
       {
-        Header: 'Print',
-        accessor: (d:any) => d,
-        Cell: ({value}:{value:any}) => (
-          <span 
-          title={`Print Property: ${value.PROPID}`} 
-          >
-            <PrintPropertyLabel 
-              usePrinterIcon={true}
-              propertyInfo={value}
-            />
-          </span>
-        )
-      },
-      {
         Header: 'Date',
         accessor: (d:any) => timestampToDate(d.PTDATE, 'mmDDyyyy').date,
       },
@@ -96,6 +82,20 @@ const PropertiesTable:React.FC<PropertiesTableProps> = ({
       {
         Header: 'Condo',
         accessor: (d:any) => d.PCONDO !== 'null' ? d.PCONDO : '',
+      },
+      {
+        Header: 'Print',
+        accessor: (d:any) => d,
+        Cell: ({value}:{value:any}) => (
+          <span 
+          title={`Print Property: ${value.PROPID}`} 
+          >
+            <PrintPropertyLabel 
+              usePrinterIcon={true}
+              propertyInfo={value}
+            />
+          </span>
+        )
       },
       {
         Header: 'View / Edit',

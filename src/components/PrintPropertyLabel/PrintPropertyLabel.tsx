@@ -71,10 +71,10 @@ const PropertyLabel = ({
         </Button>
       }
 
-      <div className={styles['label-container']}>
+      <div className={`${styles['label-container']}`}>
         <style>{getPageMargins()}</style>
         <div ref={componentRef}>
-            <div style={{lineHeight: '22px', fontFamily: 'monospace', fontSize: '16px'}}>
+            <div style={{lineHeight: '22px', fontFamily: `'Courier New', Courier, monospace`, fontSize: '16px'}}>
               <p> { formatPRDATE}&nbsp;{'('}<b>{PTYPE}</b>{') '}<span style={{fontSize: '14px'}}>{'(Input '}{formatPTDATE}{') '}</span>{'CR#'}{PCOMPREF || ''}</p>
               <p> {`${formatPUNIT} ${PCONDO || ''}`} </p>
               <p> {`B:${PBOOK1 || ''} P:${PPAGE1 || ''} B:${PBOOK2 || ''} P:${PPAGE2 || ''} C:${PCERT1 || ''}`} </p>

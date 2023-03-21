@@ -47,12 +47,20 @@ const links = {
       ctaText: 'Property Report'
     },
     {
+      href: '/reports/remittance-report',
+      ctaText: 'Remittance Report'
+    },
+    {
       href: '/reports/policies-by-client-report',
       ctaText: 'Policies By Client Report'
     },
     {
       href: '/reports/policies-by-company-report',
       ctaText: 'Policies By Company Report'
+    },
+    {
+      href: '/reports/title-ins-prem-outstanding-report',
+      ctaText: 'Outstanding Ins. Titles Report'
     }
   ]
 }

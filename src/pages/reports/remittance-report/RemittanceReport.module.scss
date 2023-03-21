@@ -1,0 +1,136 @@
+.company-name-selection {
+  width: 350px;
+}
+
+.remittance-report-container{ 
+  line-height: 25px;
+
+  hr {
+    width: 400px;
+    margin: 0 auto;
+  }
+
+  header {
+    margin: 0px 0px 30px 0px;
+    line-height: 20px;
+    p {
+      &:first-child {
+        margin-bottom: 10px;
+      }
+    }
+  }
+
+  h4 {
+    text-align: center;
+    margin: 10px 0px;
+    font-weight: normal;
+  }
+
+  h5 {
+    margin: 15px 0px 10px 0px;
+    font-size: 16px;
+    font-weight: normal;
+    text-align: center;
+    line-height: 5px;
+  }
+
+  p {
+    line-height: 22px;
+  }
+
+  .remittance-report-content {
+    display: flex;
+    flex-direction: column;
+
+    .remittance-list {
+      margin-bottom: 20px;
+
+      .address-file-num-section {
+        display: flex;
+        justify-content: space-between;
+      }
+  
+
+      .prem-agent-remit-section {
+        display: flex;
+        gap: 50px;
+        text-align: center;
+        justify-content: center;
+        margin-top: 5px;
+
+        span {
+          &:first-child {
+            text-decoration: underline;
+          }
+        }
+
+        div {
+          display: flex;
+          flex-direction: column;
+        }
+      }
+
+
+      .policy-details-section {
+        display: flex;
+        .col-1-a {
+          display: flex;
+          flex-direction: column;
+          span {
+            width: 350px;
+          }
+        }
+    
+        .col-2-a {
+          display: flex;
+          flex-direction: column;
+        }
+      }
+
+
+      .address-file-num-section {
+        .col-1-b {
+          display: flex;
+          flex-direction: column;
+          span {
+            width: 350px;
+          }
+        }
+    
+        .col-2-b {
+          display: flex;
+          flex-direction: column;
+        }
+      }
+
+    }
+  } 
+
+  footer {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    margin-bottom: 20px;
+    background-color: rgba(207, 207, 207, 0.26);
+    gap: 5px;
+  }
+}
+
+
+.report-page-wrapper {
+  position: relative;
+  max-width: 950px;
+  margin: 100px auto 0px auto;
+
+  .print-report-button {
+    top: -50px;
+    right: 0;
+    position: absolute;
+  }
+}
+
+
+.submit-button-section {
+  display: flex;
+  justify-content: flex-end;
+}

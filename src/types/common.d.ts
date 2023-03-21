@@ -106,6 +106,32 @@ export interface INSTitle {
   OPOLICYAMT: number;
   OPOLICYNUM: string
   CNAME: string;
+  IFILE: string;
+  AGENTFEE: string;
+  PREMPAID: string;
+}
+
+export interface OutstandingInsTitleReportEntry {
+  CNAME: string;
+  CADD1: string;
+  CADD2: string;
+  CCITY: string;
+  CSTATE: string;
+  CZIP: string;
+  CCNTCT: string;
+  ISTRET: string;
+  ICITY: string;
+  OPOLICYNUM: string;
+  LPOLICYNUM: string;
+  OPOLICYAMT: number;
+  LPOLICYAMT: number;
+  IFILE: number;
+  ILOT: string;
+  IPOLDATE: string;
+  PREMDUE: number;
+  IBILL: number;
+  PREMPAID: number;
+  filter: number;
 }
 
 export interface LabelValuePair {
@@ -156,4 +182,33 @@ export interface Policy {
   IREMIT: string;
   ISTATE: string;
   IZIP: string;
+}
+
+export interface RemittanceReportEntry {
+  CNAME: string;
+  CADD1: string;
+  CADD2: string;
+  CCITY: string;
+  CSTATE: string;
+  CZIP: string;
+  CCNTCT: string;
+  ISTRET: string;
+  ICITY: string;
+  OPOLICYNUM: string;
+  LPOLICYNUM: string;
+  OPOLICYAMT: number;
+  LPOLICYAMT: number;
+  IFILE: string;
+  ILOT: string;
+  IPOLDATE: string;
+  PREMDUE: number;
+  IBILL: number;
+  PREMPAID: number;
+  filter: number;
+  tticoname: string;
+  tadd1: string;
+  tcity: string;
+  tstate: string;
+  tzip: string;
+  AGENTFEE: number;
 }

@@ -16,6 +16,7 @@ import Spinner from '@/components/Spinner/Spinner';
 export default function PropertyReport() {
   
   const [isLoading, setIsLoading] = useState(false)
+  const [hasSearched, sethasSearched] = useState(false)
   const [propertiesData, setPropertiesData] = useState<Property[] | null>(null)
   const [countyCountMap, setCountyCountMap] = useState({})
   const [titleTypeMap, setTitleTypeMap] = useState({})
@@ -66,6 +67,7 @@ export default function PropertyReport() {
 
     reset()
     setIsLoading(false)
+    sethasSearched(true)
   };
 
   const componentRef = useRef(null);
@@ -141,10 +143,11 @@ export default function PropertyReport() {
             />
           </div>
         </div>
-        : 
-        <div className={styles['info-section']}>
-          <InfoCard line1='Select a date range' line2='to generate report' />
-        </div>
+        : propertiesData?.length === 0 && hasSearched 
+        ? <InfoCard line1='No results found' />
+        :  <div className={styles['info-section']}>
+            <InfoCard line1='Select a date range' line2='to generate report' />
+          </div>
       }
     </div>
   );

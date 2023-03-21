@@ -543,7 +543,12 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
           </section>
 
           <section className="submit-button-section">
-            { queryType === 'update' ? <PrintPropertyLabel propertyInfo={printLabelInfo as Property} /> : null }
+            { queryType === 'update' 
+              ? <PrintPropertyLabel 
+                  propertyInfo={printLabelInfo as Property} 
+                /> 
+              : null 
+            }
             <Button type="submit" isDisabled={isDirtyAlt}>
               {FORM_BUTTON_TEXT[queryType]} 
             </Button>

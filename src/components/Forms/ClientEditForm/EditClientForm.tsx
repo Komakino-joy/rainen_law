@@ -13,6 +13,8 @@ import SubTableINS from "@/components/Tables/SubTableINS/SubTableINS";
 import SubTableProperties from "@/components/Tables/SubTableProperties/SubTableProperties";
 import styles from './EditClientForm.module.scss'
 import Spinner from "@/components/Spinner/Spinner";
+import PrintClientLabel from "@/components/PrintClientLabel/PrintPropertyLabel";
+import { Client } from "@/types/common";
 
 interface EditClientFormProps {
   clientId: string | null;
@@ -28,6 +30,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
 
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [titlesCount, setTitlesCount] = useState(null)
+  const[printLabelInfo, setPrintLabelInfo] = useState({})
   const [defaultSelectValues , setDefaultSelectValues] = useState({
     status: '',
     state: ''
@@ -66,6 +69,16 @@ const ClientForm:React.FC<EditClientFormProps> = ({
           CADD2='', CCITY='', CSTATE='', CZIP='', CPHONE='',
           CFAX='', CEMAIL='', CCNTCT='', CSTATTO='', CNOTES=''
         } = response.data[0]
+
+        setPrintLabelInfo((prevState) => ({
+          ...prevState,
+          CNAME,
+          CADD1,
+          CADD2,
+          CCITY,
+          CSTATE,
+          CZIP
+        }))
 
         setClientInfoSnippet((prevState) => ({
           ...prevState,
@@ -155,7 +168,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
                     <FormInput 
                       name="status"
                       labelKey="status"
-                      labelText="Name"
+                      labelText="Status"
                       type="select" 
                       defaultValue={defaultSelectValues.status}
                       customClass={styles.status}
@@ -321,6 +334,13 @@ const ClientForm:React.FC<EditClientFormProps> = ({
             </section>
 
             <section className="submit-button-section">
+              { 
+                queryType === 'update' 
+                ? <PrintClientLabel 
+                    clientInfo={printLabelInfo as Client} 
+                  /> 
+                : null 
+              }
               <Button type="submit" isDisabled={!isDirty}>
                 {FORM_BUTTON_TEXT[queryType]} 
               </Button>

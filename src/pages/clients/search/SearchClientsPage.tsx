@@ -10,6 +10,7 @@ import ClientSearchForm from '@/components/Forms/ClientSearchForm/ClientSearchFo
 import ClientsTable from '@/components/Tables/ClientsTable/ClientsTable';
 import { useClientsContext } from '@/context/Clients';
 import Spinner from '@/components/Spinner/Spinner';
+import ClientForm from '@/components/Forms/ClientEditForm/EditClientForm';
 
 const SearchClientsPage = () => {
   const {isLoadingClientsContext} = useClientsContext()
@@ -80,8 +81,8 @@ const SearchClientsPage = () => {
         title={''}
       >
         { selectedclientId && 
-          <PropertyForm 
-            propertyId={selectedclientId}
+          <ClientForm 
+            clientId={selectedclientId}
             queryType='update' 
           />
         }
