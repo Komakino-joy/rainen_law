@@ -1,0 +1,2 @@
+import CompanyActivityReportPage from "./CompanyActivityReportPage";
+export default CompanyActivityReportPage

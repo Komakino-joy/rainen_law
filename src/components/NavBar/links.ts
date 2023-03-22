@@ -59,6 +59,10 @@ const links = {
       ctaText: 'Policies By Company Report'
     },
     {
+      href: '/reports/company-activity-report',
+      ctaText: 'Company Activity Report'
+    },
+    {
       href: '/reports/title-ins-prem-outstanding-report',
       ctaText: 'Outstanding Ins. Titles Report'
     }

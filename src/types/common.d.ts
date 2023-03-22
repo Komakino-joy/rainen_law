@@ -213,3 +213,39 @@ export interface RemittanceReportEntry {
   tzip: string;
   AGENTFEE: number;
 }
+
+export interface CompanyActivityReportTotDollarsEntry {
+  tnmbr: string;
+  tticoname: string;
+  avg_prem: number;
+  selected_period: number;
+  qtr_1: number;
+  qtr_2: number;
+  qtr_3: number;
+  qtr_4: number;
+  qtr_1_af: number;
+  qtr_2_af: number;
+  qtr_3_af: number;
+  qtr_4_af: number;
+}
+
+
+export interface CompanyActivityReportTotDollarsPctEntry  {
+  tnmbr: string;
+  tticoname: string;
+  avg_pct_all: number;
+  selected_period: number;
+  qtr_1: number;
+  qtr_2: number;
+  qtr_3: number;
+  qtr_4: number;
+}
+
+export interface CompanyActivityReportYearlyTotalEntry {
+  tnmbr: string;
+  tticoname: string;
+  total_prem_ytd: number;
+  total_agent_fee_ytd: number;
+  total_prem_past_12_months: number;
+  average_prem: number;
+}
