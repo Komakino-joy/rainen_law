@@ -32,11 +32,14 @@ export async function getServerSideProps(context:any) {
         pm."PSTAT",
         pm."PCOMPREF",
         pm."PINSTR",
-        pm."PROPID"
+        pm.id
       FROM public.propmstr pm
       LEFT JOIN public.clntmstr cm 
       ON cm."CNMBR" = pm."PNMBR"
-      ORDER by pm."PTDATE" DESC
+      ORDER BY 
+        pm.last_updated DESC,
+        pm."PTDATE" DESC,
+        pm.id DESC
       OFFSET $1 LIMIT ${pageSize}
     `
     const propertiesResults = JSON.parse(JSON.stringify((await conn.query(allProperties, [pageOffset])).rows));

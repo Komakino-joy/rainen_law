@@ -71,7 +71,7 @@ const EditINSForm:React.FC<EditINSFormProps> = ({
         const response = await axios.post('/api/titles/post-selected-ins-title', {insTitleId})
         
         const {
-          id='', tticoname='', LAST_UPDATED='', INMBR='', IFILE='', ICITY='', ISTATE='', IZIP='',
+          id='', tticoname='', last_updated='', INMBR='', IFILE='', ICITY='', ISTATE='', IZIP='',
           ISTRET='', ILOT='', ICONDO='', IUNIT='', PREMDUE='', PREMPAID='', AGENTFEE='',
           ICDATE='', IPDATE='', IBILL='', IPOLDATE='', TITLECO='', ISTAT='', IREMIT='',
           P='', CNAME='', CFILE='', OPOLICYNUM='', OPOLICYAMT='', LPOLICYNUM='', LPOLICYAMT='', INOTES='',
@@ -84,7 +84,7 @@ const EditINSForm:React.FC<EditINSFormProps> = ({
           inmbr: INMBR,
           fileNumber: IFILE,
           city: ICITY,
-          lastUpdated: LAST_UPDATED ? timestampToDate(LAST_UPDATED, 'mmDDyyyy') : null
+          lastUpdated: last_updated ? timestampToDate(last_updated, 'mmDDyyyy') : null
         }))
   
         setIsLoading(false)

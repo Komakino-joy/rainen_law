@@ -71,9 +71,9 @@ export default async function handler(
             "PDOCNUM" = $24,
             "PRDATE" = $25,
             "PCDATE" = $26,
-            "LAST_UPDATED" = $27 
+            "last_updated" = $27 
           
-          WHERE pm."PROPID" = $28
+          WHERE pm.id = $28
 
             RETURNING *
           ;

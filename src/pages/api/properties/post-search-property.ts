@@ -46,7 +46,7 @@ export default async function handler(
           SELECT
             cm."CNAME",  
             cm."CNMBR",
-            pm."PROPID",
+            pm.id,
             pm."PCITY",
             pm."PSTRET",
             pm."PLOT",
@@ -75,7 +75,7 @@ export default async function handler(
           FROM public.propmstr pm
           LEFT JOIN public.clntmstr cm
           ON cm."CNMBR" = pm."PNMBR"
-          WHERE pm."PROPID" IS NOT NULL
+          WHERE pm.id IS NOT NULL
           ${param.city}
           ${param.street}
           ${param.lot}

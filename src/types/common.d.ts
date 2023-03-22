@@ -1,8 +1,9 @@
+export type ModalType = 'property' | 'client' | 'ins-title'
 export interface Property {
   PTDATE: string;
   CNAME: string;
   CNMBR: string;
-  PROPID: string;
+  id: string;
   PCITY: string;
   PSTRET: string;
   PLOT: string;
@@ -84,7 +85,7 @@ export interface Client {
   CEMAIL: string;
   CNOTES: string;
   id: number;
-  LAST_UPDATED: string;
+  last_updated: string;
 }
 
 export interface INSTitle {

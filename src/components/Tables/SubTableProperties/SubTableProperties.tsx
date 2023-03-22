@@ -78,7 +78,7 @@ const SubTableProperties:React.FC<SubTablePropertiesProps> = ({
       },
       {
         Header: 'View / Edit',
-        accessor: (d:any) => d.PROPID,
+        accessor: (d:any) => d.id,
         Cell: ({value}:{value:any}) => (
           <span
             title={`Edit Property: ${value}`} 

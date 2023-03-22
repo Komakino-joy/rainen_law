@@ -65,7 +65,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
         const response = await axios.post('/api/clients/post-selected-client', {clientId})
         
         const {
-          id='', CNMBR='', CNAME='', LAST_UPDATED=null, CSTAT='', CSEARCH='', CADD1='', 
+          id='', CNMBR='', CNAME='', last_updated=null, CSTAT='', CSEARCH='', CADD1='', 
           CADD2='', CCITY='', CSTATE='', CZIP='', CPHONE='',
           CFAX='', CEMAIL='', CCNTCT='', CSTATTO='', CNOTES=''
         } = response.data[0]
@@ -85,7 +85,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
           id: id,
           cnmbr: CNMBR,
           clientName: CNAME,
-          lastUpdated: LAST_UPDATED ? timestampToDate(LAST_UPDATED, 'mmDDyyyy') : null
+          lastUpdated: last_updated ? timestampToDate(last_updated, 'mmDDyyyy') : null
         }))
   
         setIsLoading(false)

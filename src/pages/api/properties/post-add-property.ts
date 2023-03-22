@@ -71,7 +71,7 @@ export default async function handler(
             "PDOCNUM",
             "PRDATE",
             "PCDATE",
-            "LAST_UPDATED"
+            "last_updated"
           )
           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11,
             $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, 
@@ -114,7 +114,7 @@ export default async function handler(
         await conn.query('COMMIT')
         
         res.status(200).json({
-          newPropId: newRecord.rows[0].PROPID,
+          newPropId: newRecord.rows[0].id,
           message: 'New record inserted',
           status: 'success'
         })

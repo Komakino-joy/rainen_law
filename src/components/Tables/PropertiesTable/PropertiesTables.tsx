@@ -1,4 +1,4 @@
-import { Property } from '@/types/common';
+import { ModalType, Property } from '@/types/common';
 
 import { useMemo } from 'react';
 import { useTable, useFilters } from 'react-table';
@@ -13,14 +13,16 @@ import PrintPropertyLabel from '@/components/PrintPropertyLabel/PrintPropertyLab
 
 interface PropertiesTableProps {
   tableData: any;
-  handleModalOpen: (e: React.SyntheticEvent, propId: string) => void;
+  handleModalOpen: (e: React.SyntheticEvent, propId: string, type: ModalType) => void;
   setTableData: (tableData: Property[]) => void;
+  hiddenColumns?: string[];
 }
 
 const PropertiesTable:React.FC<PropertiesTableProps> = ({
   tableData,
   handleModalOpen,
-  setTableData
+  setTableData,
+  hiddenColumns=['']
 }) => {
 
   const handleDelete = (e: React.SyntheticEvent, propId: string) => {
@@ -34,14 +36,14 @@ const PropertiesTable:React.FC<PropertiesTableProps> = ({
           label: 'Yes',
           onClick: async() => {
             const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/properties/post-delete-property`, {propId})
-            if(response.data.status = 'success') {
+            if(response.data.status === 'success') {
               toast.success(response.data.message, {id: 'delete-property'})
 
-              const filteredArray = tableData.filter((row: Property) => row.PROPID !== propId);
+              const filteredArray = tableData.filter((row: Property) => row.id !== propId);
               setTableData(filteredArray);
             }
 
-            if(response.data.status = 'error') {
+            if(response.data.status === 'error') {
               toast.error(response.data.message, {id: 'delete-property'})
             }
           }
@@ -64,7 +66,7 @@ const PropertiesTable:React.FC<PropertiesTableProps> = ({
   const columns = useMemo(
     () => [
       {
-        Header: 'Date',
+        Header: 'PT Date',
         accessor: (d:any) => timestampToDate(d.PTDATE, 'mmDDyyyy').date,
       },
       {
@@ -88,7 +90,7 @@ const PropertiesTable:React.FC<PropertiesTableProps> = ({
         accessor: (d:any) => d,
         Cell: ({value}:{value:any}) => (
           <span 
-          title={`Print Property: ${value.PROPID}`} 
+          title={`Print Property: ${value.id}`} 
           >
             <PrintPropertyLabel 
               usePrinterIcon={true}
@@ -99,11 +101,11 @@ const PropertiesTable:React.FC<PropertiesTableProps> = ({
       },
       {
         Header: 'View / Edit',
-        accessor: (d:any) => d.PROPID,
+        accessor: (d:any) => d.id,
         Cell: ({value}:{value:any}) => (
           <span
             title={`Edit Property: ${value}`} 
-            onClick={(e) => handleModalOpen(e, value)}
+            onClick={(e) => handleModalOpen(e, value, 'property')}
           >
             <PencilIcon />
           </span>
@@ -111,7 +113,7 @@ const PropertiesTable:React.FC<PropertiesTableProps> = ({
       },
       {
         Header: 'Delete',
-        accessor: (d:any) => d.PROPID,
+        accessor: (d:any) => d.id,
         Cell: ({value}:{value:any}) => (
           <span 
             title={`Delete Property: ${value}`} 
@@ -144,13 +146,14 @@ const PropertiesTable:React.FC<PropertiesTableProps> = ({
     headerGroups,
     rows,
     prepareRow,
-  } = useTable(
-    {
+  } = useTable({
       //@ts-ignore
       columns,
       data,
       defaultColumn, // Be sure to pass the defaultColumn option
-      initialState: {}
+      initialState: {
+        hiddenColumns
+      }
     },
     useFilters, // useFilters!
   )

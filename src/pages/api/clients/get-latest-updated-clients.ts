@@ -15,7 +15,8 @@ export default async function handler(
             ORDER BY
               cm.last_updated DESC,
               cm."CNAME" ASC,
-              cm.id;
+              cm.id
+            LIMIT 10;
           `
         const result = await conn.query(getAllClientsQuery)
   

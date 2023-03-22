@@ -1,4 +1,4 @@
-import { INSTitle } from '@/types/common';
+import { INSTitle, ModalType } from '@/types/common';
 
 import { useMemo } from 'react';
 import { useTable, useFilters } from 'react-table';
@@ -13,14 +13,16 @@ import formatNumber from '@/utils/formatNumber';
 
 interface InsTitlesTableProps {
   tableData: any;
-  handleModalOpen: (e: React.SyntheticEvent, insTitleId: string) => void;
+  handleModalOpen: (e: React.SyntheticEvent, insTitleId: string, type: ModalType) => void;
   setTableData: (tableData: INSTitle[]) => void;
+  hiddenColumns?: string[];
 }
 
 const InsTitlesTable:React.FC<InsTitlesTableProps> = ({
   tableData,
   handleModalOpen,
-  setTableData
+  setTableData,
+  hiddenColumns=['']
 }) => {
 
   const handleDelete = (e: React.SyntheticEvent, insTitleId: string) => {
@@ -134,7 +136,7 @@ const InsTitlesTable:React.FC<InsTitlesTableProps> = ({
         Cell: ({value}:{value:any}) => (
           <span
             title={`Edit Policy: ${value}`} 
-            onClick={(e) => handleModalOpen(e, value)}
+            onClick={(e) => handleModalOpen(e, value, 'ins-title')}
           >
             <PencilIcon />
           </span>
@@ -181,7 +183,9 @@ const InsTitlesTable:React.FC<InsTitlesTableProps> = ({
       columns,
       data,
       defaultColumn, // Be sure to pass the defaultColumn option
-      initialState: {}
+      initialState: {
+        hiddenColumns
+      }
     },
     useFilters, // useFilters!
   )

@@ -19,7 +19,7 @@ export default async function handler(
           FROM public.propmstr pm
           LEFT JOIN public.clntmstr cm
           ON cm."CNMBR" = pm."PNMBR"
-          WHERE pm."PROPID" = $1
+          WHERE pm.id = $1
           ;
         `,[propertyId]
         )

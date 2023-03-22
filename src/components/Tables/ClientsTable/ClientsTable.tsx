@@ -1,4 +1,4 @@
-import { Property } from '@/types/common';
+import { ModalType, Property } from '@/types/common';
 
 import { useMemo } from 'react';
 import { useTable, useFilters } from 'react-table';
@@ -12,14 +12,16 @@ import PrintClientLabel from '@/components/PrintClientLabel/PrintPropertyLabel';
 
 interface ClientsTableProps {
   tableData: any;
-  handleModalOpen: (e: React.SyntheticEvent, propId: string) => void;
+  handleModalOpen: (e: React.SyntheticEvent, propId: string, type:ModalType) => void;
   setTableData: (tableData: Property[]) => void;
+  hiddenColumns?: string[];
 }
 
 const ClientsTable:React.FC<ClientsTableProps> = ({
   tableData,
   handleModalOpen,
-  setTableData
+  setTableData,
+  hiddenColumns=['']
 }) => {
 
   const handleDelete = (e: React.SyntheticEvent, propId: string) => {
@@ -36,7 +38,7 @@ const ClientsTable:React.FC<ClientsTableProps> = ({
             if(response.data.status = 'success') {
               toast.success(response.data.message, {id: 'delete-property'})
 
-              const filteredArray = tableData.filter((row: Property) => row.PROPID !== propId);
+              const filteredArray = tableData.filter((row: Property) => row.id !== propId);
               setTableData(filteredArray);
             }
 
@@ -107,7 +109,7 @@ const ClientsTable:React.FC<ClientsTableProps> = ({
         accessor: (d:any) => d,
         Cell: ({value}:{value:any}) => (
           <span 
-          title={`Print Property: ${value.PROPID}`} 
+          title={`Print Property: ${value.id}`} 
           >
             <PrintClientLabel 
               usePrinterIcon={true}
@@ -122,7 +124,7 @@ const ClientsTable:React.FC<ClientsTableProps> = ({
         Cell: ({value}:{value:any}) => (
           <span
             title={`Edit Client: ${value}`} 
-            onClick={(e) => handleModalOpen(e, value)}
+            onClick={(e) => handleModalOpen(e, value, 'client')}
           >
             <PencilIcon />
           </span>
@@ -169,7 +171,9 @@ const ClientsTable:React.FC<ClientsTableProps> = ({
       columns,
       data,
       defaultColumn, // Be sure to pass the defaultColumn option
-      initialState: {}
+      initialState: {
+        hiddenColumns
+      }
     },
     useFilters, // useFilters!
   )

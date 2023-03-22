@@ -47,7 +47,7 @@ export default async function handler(
             "CSTATTO" = $12, 
             "CEMAIL" = $13,
             "CNOTES" = $14,
-            "LAST_UPDATED" = $15
+            "last_updated" = $15
           
           WHERE cm.id = $16
           RETURNING *;

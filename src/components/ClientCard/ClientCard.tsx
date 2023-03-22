@@ -45,8 +45,8 @@ const ClientCard:React.FC<ClientCardProps> = ({
 
                   return (
                       <div
-                        key={prop.PROPID}
-                        onClick={(e) => handleCardClick(e, prop.PROPID)} 
+                        key={prop.id}
+                        onClick={(e) => handleCardClick(e, prop.id)} 
                         className={`flex-x ${styles['client-card-info']}`}
                       >
                         <section className='flex-y f-100'>

@@ -7,16 +7,8 @@ export default async function handler(
 ) {
     if (req.method === "GET") { 
       try {
-        const getAllINSTitlesQuery = `
-            SELECT
-              comp.tticoname,
-              ins."INMBR",
-              ins."IREMIT",
-              ins."ISTAT",
-              ins."ISTATE",
-              ins."IZIP",
-              ins."TITLECO",
-              ins."ICITY"
+        const getLatestInsTitles = `
+            SELECT *
             FROM public.ins ins
             LEFT JOIN public.companies comp
             ON ins."TITLECO" = comp.tnmbr
@@ -24,8 +16,9 @@ export default async function handler(
               ins.last_updated,
               ins.created_at,
               ins."IPOLDATE"
+            LIMIT 10
           ;`
-        const result = await conn.query(getAllINSTitlesQuery)
+        const result = await conn.query(getLatestInsTitles)
   
         res.status(200).json(result.rows)
       

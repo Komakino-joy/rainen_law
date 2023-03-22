@@ -94,11 +94,11 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
           const response = await axios.post('/api/properties/post-selected-property', {propertyId})
           
           const {
-            PROPID='', PCITY='', PSTRET='', PSTATE='', PZIP='', 
+            id='', PCITY='', PSTRET='', PSTATE='', PZIP='', 
             PBOOK1='', PBOOK2='', PDOCNUM='', PPAGE1='', PPAGE2='',
             PCERT1='', PLOT='', PCONDO='', PUNIT='', PSTAT='', PTYPE='', 
             PASIGN='', CNAME='', PCOMPREF='', PFILE='', CFILE='', 
-            PREQ='', PRDATE='', PCDATE='', PINSTR='', LAST_UPDATED='', PNMBR='',
+            PREQ='', PRDATE='', PCDATE='', PINSTR='', last_updated='', PNMBR='',
             PTDATE='', PSELR1='', PSELR2='', PSELR3='', PSELR4='', PBUYR1='', PBUYR2=''
           } = response.data[0]
 
@@ -110,11 +110,11 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
 
           setPropertyInfoSnippet((prevState) => ({
             ...prevState,
-            id: PROPID,
+            id: id,
             pnmbr: PNMBR,
             address: `${PCITY} / ${PSTRET}`,
             compRef: PCOMPREF,
-            lastUpdated: LAST_UPDATED ? timestampToDate(LAST_UPDATED, 'mmDDyyyy') : null
+            lastUpdated: last_updated ? timestampToDate(last_updated, 'mmDDyyyy') : null
           }))
     
           setIsLoading(false)

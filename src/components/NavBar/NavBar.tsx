@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import React from 'react'
 import NavBarFacet from '../NavBarFacet/NavBarFacet'
 import links, { LinkType } from './links'
@@ -6,7 +7,12 @@ import styles from './NavBar.module.scss'
 const NavBar = () => {
   return (
     <div className={styles['nav-bar-wrapper']}>
-      <span className={styles.title}>Rainen Law</span>
+      <Link 
+        href={'/'}
+        className={styles.title} 
+      >
+        Rainen Law
+      </Link>
       { Object.keys(links).map(key => (
           <NavBarFacet 
             key={key}
