@@ -65,6 +65,12 @@ const links = {
     {
       href: '/reports/title-ins-prem-outstanding-report',
       ctaText: 'Outstanding Ins. Titles Report'
+    },
+  ],
+  Management: [
+    {
+      href: '/manage',
+      ctaText: 'Site Management'
     }
   ]
 }

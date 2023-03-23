@@ -41,32 +41,31 @@ export default async function handler(
         )
         
         const totalDollarsPctQuery = pgPromise.as.format(`
-            SELECT 
-              comp.tnmbr, 
-              comp.tticoname, 
-              ROUND((SUM(i."PREMDUE")/
-              ( 
-                SELECT SUM(i2."PREMDUE") 
-                FROM public.companies comp 
-                RIGHT JOIN public.ins i2 
-                  ON i2."TITLECO"  = comp.tnmbr
-                WHERE i2."IPOLDATE" 
-                  BETWEEN DATE($1) AND DATE($2)
-              )*100)::numeric, 2) AS avg_pct_all,
-              ROUND((SUM((CASE WHEN EXTRACT(QUARTER FROM i."IPOLDATE") = 1 THEN i."PREMDUE" END))/SUM(i."PREMDUE")*100)::numeric, 2) AS qtr_1,
-              ROUND((SUM((CASE WHEN EXTRACT(QUARTER FROM i."IPOLDATE") = 2 THEN i."PREMDUE" END))/SUM(i."PREMDUE")*100)::numeric, 2) AS qtr_2,
-              ROUND((SUM((CASE WHEN EXTRACT(QUARTER FROM i."IPOLDATE") = 3 THEN i."PREMDUE" END))/SUM(i."PREMDUE")*100)::numeric, 2) AS qtr_3,
-              ROUND((SUM((CASE WHEN EXTRACT(QUARTER FROM i."IPOLDATE") = 4 THEN i."PREMDUE" END))/SUM(i."PREMDUE")*100)::numeric, 2) AS qtr_4
-            FROM public.companies comp 
-            RIGHT JOIN public.ins i ON i."TITLECO"  = comp.tnmbr
-            WHERE i."IPOLDATE" BETWEEN DATE($1) AND DATE($2)
-            GROUP BY 
-              comp.tnmbr, 
-              comp.tticoname
-            ORDER BY 
-              comp.tnmbr
-            ;
-        `,[startDate, endDate]
+          SELECT 
+            comp.tnmbr, 
+            comp.tticoname, 
+            ROUND((SUM(i."PREMDUE")/
+            ( 
+              SELECT SUM(i2."PREMDUE") 
+              FROM public.companies comp 
+              RIGHT JOIN public.ins i2 
+                ON i2."TITLECO"  = comp.tnmbr
+              WHERE i2."IPOLDATE" 
+                BETWEEN DATE($1) AND DATE($2)
+            )*100)::numeric, 2) AS avg_pct_all,
+            ROUND((SUM((CASE WHEN EXTRACT(QUARTER FROM i."IPOLDATE") = 1 THEN i."PREMDUE" END))/SUM(i."PREMDUE")*100)::numeric, 2) AS qtr_1,
+            ROUND((SUM((CASE WHEN EXTRACT(QUARTER FROM i."IPOLDATE") = 2 THEN i."PREMDUE" END))/SUM(i."PREMDUE")*100)::numeric, 2) AS qtr_2,
+            ROUND((SUM((CASE WHEN EXTRACT(QUARTER FROM i."IPOLDATE") = 3 THEN i."PREMDUE" END))/SUM(i."PREMDUE")*100)::numeric, 2) AS qtr_3,
+            ROUND((SUM((CASE WHEN EXTRACT(QUARTER FROM i."IPOLDATE") = 4 THEN i."PREMDUE" END))/SUM(i."PREMDUE")*100)::numeric, 2) AS qtr_4
+          FROM public.companies comp 
+          RIGHT JOIN public.ins i ON i."TITLECO"  = comp.tnmbr
+          WHERE i."IPOLDATE" BETWEEN DATE($1) AND DATE($2)
+          GROUP BY 
+            comp.tnmbr, 
+            comp.tticoname
+          ORDER BY 
+            comp.tnmbr;
+          `,[startDate, endDate]
         )
 
         const yearlyTotalsQuery = pgPromise.as.format(`
@@ -74,9 +73,12 @@ export default async function handler(
             comp.tnmbr, 
             comp.tticoname,
             COALESCE(ROUND(SUM(CASE WHEN date_part('year', i."IPOLDATE") = 2014 THEN i."PREMDUE" END):: numeric, 2),0) AS total_prem_ytd,
+            COALESCE(ROUND(SUM(CASE WHEN date_part('year', i."IPOLDATE") = 2014 THEN i."AGENTFEE" END):: numeric, 2),0) AS total_prem_ytd_af,
             COALESCE(ROUND(SUM(CASE WHEN date_part('year', i."IPOLDATE") = 2014 THEN i."AGENTFEE" END):: numeric, 2),0) AS total_agent_fee_ytd,
             COALESCE(ROUND(SUM(CASE WHEN i."IPOLDATE" > (DATE(CURRENT_DATE) - INTERVAL '12 months') THEN i."PREMDUE" END):: numeric, 2),0) AS total_prem_past_12_months,
-            COALESCE(ROUND(AVG(i."PREMDUE"):: numeric,2),0) AS average_prem
+            COALESCE(ROUND(SUM(CASE WHEN i."IPOLDATE" > (DATE(CURRENT_DATE) - INTERVAL '12 months') THEN i."AGENTFEE" END):: numeric, 2),0) AS total_prem_past_12_months_af,
+            COALESCE(ROUND(AVG(i."PREMDUE"):: numeric,2),0) AS average_prem,
+            COALESCE(ROUND(AVG(i."AGENTFEE"):: numeric,2),0) AS average_prem_af
           FROM public.companies comp  
           RIGHT JOIN public.ins i ON i."TITLECO"  = comp.tnmbr
           GROUP BY 

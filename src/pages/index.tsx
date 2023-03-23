@@ -1,7 +1,6 @@
 import { Client, INSTitle, ModalType, Property } from '@/types/common';
 
 import React, { useEffect, useRef, useState } from 'react'
-import { useRouter } from 'next/router';
 
 import Modal from '@/components/Modal/Modal';
 import ClientsTable from '@/components/Tables/ClientsTable/ClientsTable';
@@ -17,8 +16,6 @@ import HomeRecordPreviewCard from '@/components/HomeRecordPreviewCard/HomeRecord
 import styles from '../styles/home.module.scss'
 
 const HomePage:React.FC = () =>  {
-  const router = useRouter()
-
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [propertyData, setPropertyData] = useState<Property[] | null>(null)
   const [clientData, setClientData] = useState<Client[] | null>(null)
@@ -35,15 +32,12 @@ const HomePage:React.FC = () =>  {
     
     switch(type) {
       case 'property':
-        console.log({type})
         setSelectedPropertyId(selectedRecordId)
         break
       case 'client':
-        console.log({type})
         setSelectedClientId(selectedRecordId)
         break
       case 'ins-title': 
-      console.log({type})
         setSelectedInsTitleId(selectedRecordId)
         break
       default:

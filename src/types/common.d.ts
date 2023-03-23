@@ -248,4 +248,32 @@ export interface CompanyActivityReportYearlyTotalEntry {
   total_agent_fee_ytd: number;
   total_prem_past_12_months: number;
   average_prem: number;
+  total_prem_ytd_af: number;
+  total_prem_past_12_months_af: number;
+  average_prem_af: number;
+}
+
+
+export interface ClientStatus {
+  id: number;
+  'status_code': string;
+  'status_desc': string;
+}
+
+export interface InsStatus {
+  id: number;
+  'status_code': string;
+  'status_desc': string;
+}
+
+export interface PropertyStatus {
+  id: number;
+  'status_code': string;
+  'status_desc': string;
+}
+
+export interface PropertyType {
+  id: number;
+  'type_code': string;
+  'type_desc': string;
 }
