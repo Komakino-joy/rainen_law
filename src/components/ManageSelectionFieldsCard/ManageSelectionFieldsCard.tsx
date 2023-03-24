@@ -8,6 +8,7 @@ import SelectOptionsTable from '../Tables/SelectOptions/SelectOptionsTable'
 import styles from './ManageSelectionFieldsCard.module.scss'
 import Modal from '../Modal/Modal'
 import EditStatusCodeForm from '../Forms/StatusCodeEditForm/EditStatusCodeForm'
+import EditCompanyForm from '../Forms/CompantEditForm/EditCompanyForm'
 
 const ManageSelectionFieldsCard = () => {
 
@@ -25,7 +26,7 @@ const ManageSelectionFieldsCard = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [selectionType, setSelectionType] = useState<TableRefs | ''>('')
   const [queryType, setQueryType] = useState<'insert' | 'update'>('insert')
-  const [selectedStatusCodeItemId, setSelectedStatusCodeItemId] = useState<string|null>(null)
+  const [selectedItemId, setSelectedItemId] = useState<string|null>(null)
   const [tableData, setTableData] = useState<Company[] | County[] | PropertyType[] | PropertyStatus[] | ClientStatus[] | InsStatus[]>([])
 
   const editableFields = [
@@ -74,7 +75,7 @@ const ManageSelectionFieldsCard = () => {
     e.preventDefault()
     
     setQueryType(formQueryType)
-    setSelectedStatusCodeItemId(selectedRecordId)
+    setSelectedItemId(selectedRecordId)
 
     switch(tableRef) {
       case 'companies':
@@ -102,7 +103,7 @@ const ManageSelectionFieldsCard = () => {
   }
 
   const handleModalClose = () => {
-    setSelectedStatusCodeItemId(null)
+    setSelectedItemId(null)
     setShowModal(false)
   }
 
@@ -167,27 +168,19 @@ const ManageSelectionFieldsCard = () => {
             tableData={tableData}
             setTableData={setTableData}
             selectionType={selectionType}
-            selectedStatusCodeItemId={selectedStatusCodeItemId} 
+            selectedStatusCodeItemId={selectedItemId} 
             queryType={queryType}
-            handleAfterSubmit={() => {}}
           /> : null
         }
-        {/* 
+        { selectionType === 'companies' && hasData ?
+          <EditCompanyForm 
+            tableData={tableData}
+            setTableData={setTableData}
+            selectionType={selectionType}
+            selectedId={selectedItemId} 
+            queryType={queryType}
+          /> : null
         }
-        { selectedClientId && 
-          <EditClientForm 
-            clientId={selectedClientId}
-            queryType='update'
-            handleAfterSubmit={() => {}}
-          />
-        }
-        { selectedInsTitleId && 
-          <EditINSForm 
-            insTitleId={selectedInsTitleId}
-            queryType='update'
-            handleAfterSubmit={() => {}}
-          />
-        } */}
       </Modal>
     </>
   )

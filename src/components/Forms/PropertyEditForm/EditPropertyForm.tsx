@@ -164,7 +164,7 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
     if(isDirtyAlt) return 
     
     if(queryType === 'insert') {
-      const response = await axios.post(`/api/properties/post-add-property`, data)
+      const response = await axios.post(`/api/properties/post-insert-property`, data)
       reset()
       handleAfterSubmit(response.data.newPropId)
       // @ts-ignore

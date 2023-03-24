@@ -11,7 +11,6 @@ import Spinner from "@/components/Spinner/Spinner";
 import FormInput from "../Common/FormInput/FormInput";
 
 import { FORM_BUTTON_TEXT } from "@/constants";
-import styles from './EditStatusCodeForm.module.scss'
 
 interface EditStatusCodeFormProps {
   tableData: any[];
@@ -19,7 +18,6 @@ interface EditStatusCodeFormProps {
   selectionType: TableRefs | '';
   selectedStatusCodeItemId: string | null;
   queryType: 'update' | 'insert';
-  handleAfterSubmit?: (propId: string) => void;
 }
 
 const EditStatusCodeForm:React.FC<EditStatusCodeFormProps> = ({
@@ -27,8 +25,7 @@ const EditStatusCodeForm:React.FC<EditStatusCodeFormProps> = ({
   setTableData,
   selectionType,
   selectedStatusCodeItemId,
-  queryType, 
-  handleAfterSubmit = () => {},
+  queryType
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [statusCodeId, setStatusCodeId] = useState<string>('')
@@ -113,6 +110,7 @@ const EditStatusCodeForm:React.FC<EditStatusCodeFormProps> = ({
 
       setTableData(updatedData)
 
+      console.log( response.data)
       reset(response.data.updatedRecord)
       // @ts-ignore
       toast[response.data.status](response.data.message)
@@ -139,7 +137,6 @@ const EditStatusCodeForm:React.FC<EditStatusCodeFormProps> = ({
               name="code"
               labelKey="code"
               labelText="Code"
-              customClass={styles.code}
               type="text" 
               isRequired={true}
               register={register} 

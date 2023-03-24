@@ -52,11 +52,17 @@ export default async function handler(
         
       } catch ( error ) {
         await conn.query('ROLLBACK')
-        console.log( error );
-        res.status(400).json({
-          message: 'Failed to update record',
-          status: 'error'
-        })
+        if((error as any).code === '23505') {
+          res.status(400).json({
+            message: 'Record with the same code already exists.',
+            status: 'error'
+          })
+        } else {
+          res.status(400).json({
+            message: 'Failed to insert record',
+            status: 'error'
+          })
+        }
       } 
     }
 }

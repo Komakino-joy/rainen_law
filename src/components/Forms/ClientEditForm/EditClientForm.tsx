@@ -119,7 +119,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
     if(!isDirty) return 
     
     if(queryType === 'insert') {
-      const response = await axios.post(`/api/clients/post-add-client`, data)
+      const response = await axios.post(`/api/clients/post-insert-client`, data)
       reset()
       handleAfterSubmit(response.data.newPropId)
       // @ts-ignore
