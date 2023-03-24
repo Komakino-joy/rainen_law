@@ -9,12 +9,10 @@ import Button from "@/components/Button/Button";
 import FormInput from "../Common/FormInput/FormInput";
 import styles from './EditCompanyForm.module.scss'
 import Spinner from "@/components/Spinner/Spinner";
-import { TableRefs } from "@/types/common";
 
 interface EditEditCompanyFormProps {
   tableData: any[];
   setTableData: any;
-  selectionType: TableRefs | '';
   selectedId: string | null;
   queryType: 'update' | 'insert';
 }
@@ -22,7 +20,6 @@ interface EditEditCompanyFormProps {
 const EditCompanyForm:React.FC<EditEditCompanyFormProps> = ({
   tableData, 
   setTableData,
-  selectionType,
   selectedId,
   queryType
 }) => {
@@ -222,40 +219,44 @@ const EditCompanyForm:React.FC<EditEditCompanyFormProps> = ({
                 name="percent"
                 labelKey="percent"
                 labelText="Percent"
-                type="text" 
+                type="number" 
                 isRequired={false}
                 register={register} 
                 errors={errors}
+                defaultValue={0}
               />
               
               <FormInput 
                 name="product1"
                 labelKey="product1"
                 labelText="Product 1"
-                type="text" 
+                type="number" 
                 isRequired={false}
                 register={register} 
                 errors={errors}
+                defaultValue={0}
               />
               
               <FormInput 
                 name="product2"
                 labelKey="product2"
                 labelText="Product 2"
-                type="text" 
+                type="number" 
                 isRequired={false}
                 register={register} 
                 errors={errors}
+                defaultValue={0}
               />
 
               <FormInput 
                 name="product3"
                 labelKey="product3"
                 labelText="Product 3"
-                type="text" 
+                type="number" 
                 isRequired={false}
                 register={register} 
                 errors={errors}
+                defaultValue={0}
               />
 
 
@@ -263,10 +264,11 @@ const EditCompanyForm:React.FC<EditEditCompanyFormProps> = ({
                 name="product4"
                 labelKey="product4"
                 labelText="Product 4"
-                type="text" 
+                type="number" 
                 isRequired={false}
                 register={register} 
                 errors={errors}
+                defaultValue={0}
               />
             </section>
 

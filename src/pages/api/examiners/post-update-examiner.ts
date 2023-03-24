@@ -8,19 +8,12 @@ export default async function handler(
 ) {
     if (req.method === "POST") { 
       const {
-        id,
-        companyName, 
-        companyAbbr,
-        address,
-        city,
-        state,
-        zipCode,
-        status,
-        percent,
-        product1,
-        product2,
-        product3,
-        product4
+        exName,
+        exCode,
+        exType,
+        exCompensate,
+        exIsActive,
+        id
       } = req.body
 
       try {
@@ -28,39 +21,25 @@ export default async function handler(
         await conn.query('BEGIN')
 
         const updateQuery = pgPromise.as.format(`
-            UPDATE public.companies
+            UPDATE public.examiners
             SET
-              tticoname=$1,
-              abbr=$2,
-              tadd1=$3,
-              tcity=$4,
-              tstate=$5,
-              tzip=$6,
-              tstat=$7,
-              tpercent=$8,
-              tproduct1=$9,
-              tproduct2=$10,
-              tproduct3=$11,
-              tproduct4=$12,
-              last_updated=$13
-            WHERE id = $14
+              name=$1,
+              code=$2,
+              type=$3,
+              compensate=$4,
+              is_active=$5,
+              last_updated=$6
+            WHERE id = $7
             RETURNING *
           ;
         `,[
-            companyName,
-            companyAbbr,
-            address,
-            city,
-            state,
-            zipCode,
-            status,
-            percent,
-            product1,
-            product2,
-            product3,
-            product4,
-            new Date(),
-            id
+          exName,
+          exCode,
+          exType,
+          exCompensate,
+          exIsActive,
+          new Date(),
+          id
           ]
         )
 

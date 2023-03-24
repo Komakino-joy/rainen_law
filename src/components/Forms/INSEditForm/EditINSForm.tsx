@@ -24,7 +24,7 @@ const EditINSForm:React.FC<EditINSFormProps> = ({
   handleAfterSubmit = () => {},
 }) => {
 
-  const {companiesList} = useCompaniesContext()
+  const {companiesDropDownOptions} = useCompaniesContext()
   const {clientSelectOptions} = useClientsContext()
   const { CNAME: clientNames } = clientSelectOptions
 
@@ -388,7 +388,7 @@ const EditINSForm:React.FC<EditINSFormProps> = ({
         <section className={`flex-y ${styles['mid-section']}`}>
         <div className={styles["section-divider"]}/>
           <div className={`flex-x ${styles['status-type-assigned-section']}`}>
-            { companiesList && companiesList.length > 0 &&
+            { companiesDropDownOptions && companiesDropDownOptions.length > 0 &&
               <Controller 
                 name={"titleCompany"}  
                 control={control} 
@@ -404,7 +404,7 @@ const EditINSForm:React.FC<EditINSFormProps> = ({
                       defaultValue={defaultSelectValues.company}
                       customClass={styles["title-company-select"]}
                       selectOnChange={onChange}
-                      options={companiesList}
+                      options={companiesDropDownOptions}
                       isRequired={false}
                       register={register} 
                       errors={errors}

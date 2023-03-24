@@ -1,5 +1,5 @@
 export type ModalType = 'property' | 'client' | 'ins-title'
-export type TableRefs = 'companies'| 'counties' | 'pType' | 'pStat' | 'PAssign' | 'clientStat' | 'insTitleStat' | 'insTitleAssign';
+export type TableRefs = 'companies'| 'counties' | 'pType' | 'pStat' | 'PAssign' | 'clientStat' | 'insTitleStat' | 'insTitleAssign' | 'examiners' |'users';
 export interface Property {
   PTDATE: string;
   CNAME: string;
@@ -257,30 +257,41 @@ export interface CompanyActivityReportYearlyTotalEntry {
 
 export interface ClientStatus {
   id: number;
-  'status_code': string;
-  'status_desc': string;
+  status_code: string;
+  status_desc: string;
 }
 
 export interface InsStatus {
   id: number;
-  'status_code': string;
-  'status_desc': string;
+  status_code: string;
+  status_desc: string;
 }
 
 export interface PropertyStatus {
   id: number;
-  'status_code': string;
-  'status_desc': string;
+  status_code: string;
+  status_desc: string;
 }
 
 export interface PropertyType {
   id: number;
-  'type_code': string;
-  'type_desc': string;
+  type_code: string;
+  type_desc: string;
 }
 
 export interface County {
   id: number;
   code: string;
   county:string;
+}
+
+export interface Examiner {
+  id: string;
+  name:string;
+  code:string;
+  type:string;
+  compensate:string;
+  last_updated:string;
+  created_at:string;
+  is_active: boolean;
 }

@@ -7,7 +7,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import toast from 'react-hot-toast';
 import { useTable, useFilters } from 'react-table';
 
-interface SelectOptionsTableProps {
+interface ExaminersTableProps {
   tableData: any[];
   selectionType: TableRefs | '';
   tableClassName: string;
@@ -29,69 +29,13 @@ interface SelectOptionsTableProps {
   ) => void;
 }
 
-type HiddenColumnsT = (
-  'Status Code' 
-  | 'Status Description' 
-  | 'Type Code' 
-  | 'Type Description'
-  // Company Specific Fields
-  | 'Number'
-  | 'Name'
-  | 'Abbr.'
-  | 'Address'
-  | 'City'
-  | 'State'
-  | 'Zip Code'
-  | 'Status'
-  | 'Pct.'
-  | 'Prod1'
-  | 'Prod2'
-  | 'Prod3'
-  | 'Prod4'
-  // County Specific Fields
-  | 'County Code'
-  | 'County Name'
-  )[];
-
-const SelectOptionsTable:React.FC<SelectOptionsTableProps> = ({
+const ExaminersTable:React.FC<ExaminersTableProps> = ({
   tableData,
   selectionType,
   tableClassName,
   setTableData,
   handleModalOpen
 }) => {
-
-  // Have not decided to make these editable here ('PAssign' || 'insTitleAssign')
-
-  let hiddenColumns:HiddenColumnsT = []
-
-  //  Conditionally hide unrelated columns when passing in table data
-  switch (selectionType) {
-    case 'companies':
-      hiddenColumns = ['Status Description', 'Status Code', 'Type Description', 'Type Code', 'County Code', 'County Name']
-      break;
-
-    case 'pStat':
-    case 'clientStat':
-    case 'insTitleStat':
-      hiddenColumns = ['Type Code','Type Description','Number','Name','Abbr.','Address','City','State',
-        'Zip Code','Status','Pct.','Prod1','Prod2','Prod3','Prod4','County Code','County Name']
-      break;
-
-    case 'pType':
-      hiddenColumns = ['Status Code','Status Description','Number','Name','Abbr.','Address','City','State',
-        'Zip Code','Status','Pct.','Prod1','Prod2','Prod3','Prod4','County Code','County Name']
-      break;
-
-
-    case 'counties':
-      hiddenColumns = ['Type Code','Type Description', 'Status Code','Status Description','Number','Name',
-      'Abbr.','Address','City','State', 'Zip Code','Status','Pct.','Prod1','Prod2','Prod3','Prod4']
-      break;
-
-    default:
-      break;
-  }
 
   const handleDelete = (e: React.SyntheticEvent, id: string) => {
     e.preventDefault()
@@ -142,82 +86,24 @@ const SelectOptionsTable:React.FC<SelectOptionsTableProps> = ({
         accessor: (d:any) => d.id,
       },
       {
-        Header: 'Status Code',
-        accessor: (d:any) => d.status_code,
-      },
-      {
-        Header: 'Status Description',
-        accessor: (d:any) => d.status_desc,
-      },
-      {
-        Header: 'Type Code',
-        accessor: (d:any) => d.type_code,
-      },
-      {
-        Header: 'Type Description',
-        accessor: (d:any) => d.type_desc,
-      },
-      //  Company specific columns, should be hidden if not viewing company
-      {
-        Header: 'Number',
-        accessor: (d:any) => d.tnmbr,
-      },
-      {
         Header: 'Name',
-        accessor: (d:any) => d.tticoname,
+        accessor: (d:any) => d.name,
       },
       {
-        Header: 'Abbr.',
-        accessor: (d:any) => d.abbr,
-      },
-      {
-        Header: 'Address',
-        accessor: (d:any) => d.tadd1,
-      },
-      {
-        Header: 'City',
-        accessor: (d:any) => d.tcity,
-      },
-      {
-        Header: 'State',
-        accessor: (d:any) => d.tstate,
-      },
-      {
-        Header: 'Zip Code',
-        accessor: (d:any) => d.tzip,
-      },
-      {
-        Header: 'Status',
-        accessor: (d:any) => d.tstat,
-      },
-      {
-        Header: 'Pct.',
-        accessor: (d:any) => d.tpercent,
-      },
-      {
-        Header: 'Prod1',
-        accessor: (d:any) => d.tproduct1,
-      },
-      {
-        Header: 'Prod2',
-        accessor: (d:any) => d.tproduct2,
-      },
-      {
-        Header: 'Prod3',
-        accessor: (d:any) => d.tproduct3,
-      },
-      {
-        Header: 'Prod4',
-        accessor: (d:any) => d.tproduct4,
-      },
-      //  County specific columns, should be hidden if not viewing County
-      {
-        Header: 'County Code',
+        Header: 'Code',
         accessor: (d:any) => d.code,
       },
       {
-        Header: 'County Name',
-        accessor: (d:any) => d.county,
+        Header: 'Type',
+        accessor: (d:any) => d.type,
+      },
+      {
+        Header: 'Compensation',
+        accessor: (d:any) => d.compensate,
+      },
+      {
+        Header: 'Is Active ?',
+        accessor: (d:any) => d.is_active,
       },
       {
         Header: 'View / Edit',
@@ -259,9 +145,7 @@ const SelectOptionsTable:React.FC<SelectOptionsTableProps> = ({
       //@ts-ignore
       columns,
       data,
-      initialState: {
-        hiddenColumns
-      }
+      initialState: {}
     },
     useFilters, // useFilters!
   )
@@ -303,4 +187,4 @@ const SelectOptionsTable:React.FC<SelectOptionsTableProps> = ({
   )
 }
 
-export default SelectOptionsTable
+export default ExaminersTable

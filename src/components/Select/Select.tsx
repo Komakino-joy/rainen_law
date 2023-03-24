@@ -29,8 +29,6 @@ import styles from './Select.module.scss'
     }),
     indicatorSeparator: (state: any) => ({
       display: 'none',
-      border: '1px solid red'
-
     }),
     indicatorsContainer: (provided: any, state: any) => ({
       display: "flex",

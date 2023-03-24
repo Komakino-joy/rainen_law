@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router';
 
 import Pagination from '@/components/Pagination/Pagination'
-import InsTitlesTable from '@/components/Tables/InsTitlesTable/InsTitlesTable';
+import InsTitlesTable from '@/components/Tables/InsTitles/InsTitlesTable';
 import conn from '../../lib/db'
 import InfoCard from '@/components/InfoCard/InfoCard';
 import EditInsTitleModal from '@/components/Modals/EditInsTitleModal';

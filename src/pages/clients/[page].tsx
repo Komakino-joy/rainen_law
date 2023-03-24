@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 
 import Modal from '@/components/Modal/Modal';
 import Pagination from '@/components/Pagination/Pagination'
-import ClientsTable from '@/components/Tables/ClientsTable/ClientsTable';
+import ClientsTable from '@/components/Tables/Clients/ClientsTable';
 import EditClientForm from '@/components/Forms/ClientEditForm/EditClientForm';
 import conn from '../../lib/db'
 import InfoCard from '@/components/InfoCard/InfoCard';

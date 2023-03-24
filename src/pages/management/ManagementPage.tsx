@@ -1,10 +1,10 @@
 import React from 'react'
-import ManageSelectionFieldsCard from '@/components/ManageSelectionFieldsCard/ManageSelectionFieldsCard'
+import ManagementCard from '@/components/ManagementCard/ManagementCard'
 
 const ManagementPage = () => {
   return (
     <>
-      <ManageSelectionFieldsCard />
+      <ManagementCard />
     </>
   )
 }

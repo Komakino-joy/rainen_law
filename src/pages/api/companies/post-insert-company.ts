@@ -26,9 +26,15 @@ export default async function handler(
 
         await conn.query('BEGIN')
 
+        // Need to get the latest Tnmbr + 1 so we can assign it to the new Company record
+        const newTnmbrQuery = 'SELECT MAX(id) FROM public.companies;'
+        const tnmbrResponse = await conn.query(newTnmbrQuery)
+        const newTnmbr = tnmbrResponse.rows[0].max + 1
+
         const insertQuery = pgPromise.as.format(`
             INSERT INTO public.companies
             (
+              tnmbr,
               tticoname,
               abbr,
               tadd1,
@@ -46,12 +52,13 @@ export default async function handler(
             )
             VALUES (
               $1, $2, $3, $4, $5, $6, $7, $8, 
-              $9, $10, $11, $12, $13, $14
+              $9, $10, $11, $12, $13, $14, $15
             )
 
             RETURNING *
           ;
         `,[
+            newTnmbr,
             companyName,
             companyAbbr,
             address,

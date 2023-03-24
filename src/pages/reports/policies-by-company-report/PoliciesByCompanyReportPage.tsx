@@ -14,7 +14,7 @@ import styles from './PoliciesByCompanyReport.module.scss'
 
 const PoliciesByCompanyReportPage = () => {
 
-  const { companiesList, companyIdMap } = useCompaniesContext()
+  const { companiesDropDownOptions, companyIdMap } = useCompaniesContext()
 
   const [reportData, setReportData] = useState<any>({})
   const [isLoading, setIsLoading] = useState(false)
@@ -78,7 +78,7 @@ const PoliciesByCompanyReportPage = () => {
     <>
       <div className='form-wrapper is-date-selection card-shadow light-border center-margin'>
         <form className="flex-y" onSubmit={handleSubmit(onSubmit)}>
-          { companiesList && companiesList.length > 0 &&
+          { companiesDropDownOptions && companiesDropDownOptions.length > 0 &&
             <Controller 
               name={"titleCompanyNumber"}  
               control={control} 
@@ -93,7 +93,7 @@ const PoliciesByCompanyReportPage = () => {
                     type="select" 
                     customClass="f-100"
                     selectOnChange={onChange}
-                    options={companiesList}
+                    options={companiesDropDownOptions}
                     isRequired={false}
                     register={register} 
                     errors={errors}

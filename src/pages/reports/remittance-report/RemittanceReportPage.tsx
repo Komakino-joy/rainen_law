@@ -19,7 +19,7 @@ import styles from './RemittanceReport.module.scss'
 
 const RemittanceReportPage = () => {
 
-  const {companiesList} = useCompaniesContext()
+  const {companiesDropDownOptions} = useCompaniesContext()
 
   const [reportData, setReportData] = useState<any>({})
   const [isLoading, setIsLoading] = useState(false)
@@ -86,7 +86,7 @@ const RemittanceReportPage = () => {
     <>
       <div className='form-wrapper card-shadow light-border center-margin'>
         <form className="flex-y" onSubmit={handleSubmit(onSubmit)}>
-          { companiesList && companiesList.length > 0 &&
+          { companiesDropDownOptions && companiesDropDownOptions.length > 0 &&
             <Controller 
               name={"companyTnmbr"}  
               control={control} 
@@ -105,7 +105,7 @@ const RemittanceReportPage = () => {
                         label: 'Select All *', 
                         value: '*'
                       }, 
-                      ...companiesList
+                      ...companiesDropDownOptions
                     ]}
                     isRequired={false}
                     register={register} 

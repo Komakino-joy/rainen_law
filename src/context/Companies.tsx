@@ -7,18 +7,21 @@ import { createContext, useContext, useEffect, useRef, useState } from "react";
 interface CompaniesContextProps {
   isLoadingCompaniescontext: boolean;
   companyIdMap: any;
+  companiesDropDownOptions: any[];
   companiesList: any[];
 }
 
 const CompaniesContext = createContext<CompaniesContextProps>({
   isLoadingCompaniescontext: false,
   companyIdMap: {},
+  companiesDropDownOptions: [],
   companiesList: []
 })
 
 export const CompaniesContextProvider = ({children}: {children:any}) => {
   const [isLoadingCompaniescontext, setIsLoading] = useState<boolean>(false)
-  const [companiesList, setCompaniesList] = useState([])
+  const [companiesDropDownOptions, setcompaniesDropDownOptions] = useState([])
+  const [companiesList, setcompaniesList] = useState([])
   const [companyIdMap, setCompanyIdMap] = useState({})
 
   const mounted = useRef(false);
@@ -32,7 +35,8 @@ export const CompaniesContextProvider = ({children}: {children:any}) => {
   
         const companies = response.data
 
-        setCompaniesList(companies.map((company:Company) => (
+        setcompaniesList(companies)
+        setcompaniesDropDownOptions(companies.map((company:Company) => (
           {
             label:company.tticoname, 
             value:company.tnmbr
@@ -58,10 +62,13 @@ export const CompaniesContextProvider = ({children}: {children:any}) => {
     } 
   },[])
 
+  
+
   return (
       <CompaniesContext.Provider 
         value={{ 
-          companiesList, 
+          companiesDropDownOptions, 
+          companiesList,
           companyIdMap,
           isLoadingCompaniescontext 
         }}

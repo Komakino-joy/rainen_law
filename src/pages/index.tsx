@@ -3,13 +3,13 @@ import { Client, INSTitle, ModalType, Property } from '@/types/common';
 import React, { useEffect, useRef, useState } from 'react'
 
 import Modal from '@/components/Modal/Modal';
-import ClientsTable from '@/components/Tables/ClientsTable/ClientsTable';
+import ClientsTable from '@/components/Tables/Clients/ClientsTable';
 import EditPropertyForm from '@/components/Forms/PropertyEditForm/EditPropertyForm';
 import EditClientForm from '@/components/Forms/ClientEditForm/EditClientForm';
 import EditINSForm from '@/components/Forms/INSEditForm/EditINSForm';
 import axios from 'axios';
-import PropertiesTable from '@/components/Tables/PropertiesTable/PropertiesTables';
-import InsTitlesTable from '@/components/Tables/InsTitlesTable/InsTitlesTable';
+import PropertiesTable from '@/components/Tables/Properties/PropertiesTables';
+import InsTitlesTable from '@/components/Tables/InsTitles/InsTitlesTable';
 import Spinner from '@/components/Spinner/Spinner';
 import HomeRecordPreviewCard from '@/components/HomeRecordPreviewCard/HomeRecordPreviewCard';
 

@@ -7,7 +7,7 @@ import Modal from '@/components/Modal/Modal';
 import PropertyForm from '@/components/Forms/PropertyEditForm/EditPropertyForm';
 import InfoCard from '@/components/InfoCard/InfoCard';
 import ClientSearchForm from '@/components/Forms/ClientSearchForm/ClientSearchForm';
-import ClientsTable from '@/components/Tables/ClientsTable/ClientsTable';
+import ClientsTable from '@/components/Tables/Clients/ClientsTable';
 import { useClientsContext } from '@/context/Clients';
 import Spinner from '@/components/Spinner/Spinner';
 import ClientForm from '@/components/Forms/ClientEditForm/EditClientForm';

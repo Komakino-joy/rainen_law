@@ -10,7 +10,7 @@
   background-color: rgba(0, 0, 0, 0.5);
 
   .modal-content {
-    position: relative;
+    // position: relative;
     background: white;
     width: fit-content;
     height: fit-content;
@@ -39,12 +39,12 @@
       font-size: 22px;
 
       .close-icon {
-        position: absolute;
-        top: -10px;
-        right: 5px;
+        // position: absolute;
+        // top: -10px;
+        // right: 5px;
+        // padding: 5px;
         color: red;
         font-weight: bold;
-        padding: 5px;
         border-radius: 100000px;
       }
     }
