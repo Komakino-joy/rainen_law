@@ -1,0 +1,53 @@
+.top-section,
+.mid-section {
+  gap: 10px;
+}
+
+.column-1 {
+  flex: 1;
+}
+
+.column-2,
+.column-3 {
+  flex: .25;
+}
+
+.city-state-zip-section,
+.lot-condo-unit-section,
+.status-type-assigned-section,
+.comp-ref-file-num-section,
+.client-id-file-section,
+.requestor-req-date-close-date-section {
+  gap: 10px;
+  width: 100%;
+  align-items: center;
+
+  .city,
+  .clientName  {
+    flex: 1;
+  }
+
+  .zip {
+    flex: .4;
+  }
+
+  .compRef,
+  .fileNumber,
+  .clientFileNumber {
+    flex: .5;
+  }
+}
+
+.status-type-assigned-section,
+.instructions-section {
+  margin-top: 5px;
+}
+
+.instructions-section {
+  textarea {
+    resize: none;
+    height: 50px;
+    padding: 5px;
+    width: 100%;
+  }
+}

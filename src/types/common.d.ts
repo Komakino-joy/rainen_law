@@ -1,4 +1,5 @@
 export type ModalType = 'property' | 'client' | 'ins-title'
+export type TableRefs = 'companies'| 'counties' | 'pType' | 'pStat' | 'PAssign' | 'clientStat' | 'insTitleStat' | 'insTitleAssign';
 export interface Property {
   PTDATE: string;
   CNAME: string;
@@ -276,4 +277,10 @@ export interface PropertyType {
   id: number;
   'type_code': string;
   'type_desc': string;
+}
+
+export interface County {
+  id: number;
+  code: string;
+  county:string;
 }

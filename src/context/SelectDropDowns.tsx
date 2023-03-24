@@ -1,6 +1,6 @@
 'use client';
 
-import { ClientStatus, InsStatus, PropertyStatus, PropertyType } from "@/types/common";
+import { ClientStatus, Company, County, InsStatus, PropertyStatus, PropertyType } from "@/types/common";
 import axios from "axios";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 
@@ -10,6 +10,8 @@ interface SelectDropDownsContextProps {
   insStatusOptions: InsStatus[];
   propertyStatusOptions: PropertyStatus[];
   propertyTypeOptions: PropertyType[];
+  companyOptions: County[];
+  countyOptions: Company[];
 }
 
 const SelectDropDownsContext = createContext<SelectDropDownsContextProps>({
@@ -17,7 +19,9 @@ const SelectDropDownsContext = createContext<SelectDropDownsContextProps>({
   clientStatusOptions: [],
   insStatusOptions: [],
   propertyStatusOptions: [],
-  propertyTypeOptions: []
+  propertyTypeOptions: [],
+  companyOptions: [],
+  countyOptions: []
 })
 
 export const SelectDropDownsContextProvider = ({children}: {children:any}) => {
@@ -26,6 +30,8 @@ export const SelectDropDownsContextProvider = ({children}: {children:any}) => {
   const [insStatusOptions, setInsStatusOptions] = useState([])
   const [propertyStatusOptions, setPropertyStatusOptions] = useState([])
   const [propertyTypeOptions, setPropertyTypeOptions] = useState([])
+  const [companyOptions, setCompanyOptions] = useState([])
+  const [countyOptions, setCountyOptions] = useState([])
 
   const mounted = useRef(false);
 
@@ -40,6 +46,9 @@ export const SelectDropDownsContextProvider = ({children}: {children:any}) => {
         setInsStatusOptions(response.data.insStatusOptions)
         setPropertyStatusOptions(response.data.propertyStatusOptions)
         setPropertyTypeOptions(response.data.propertyTypeOptions)
+        setCompanyOptions(response.data.companyOptions)
+        setCountyOptions(response.data.countyOptions)
+        setIsLoading(false)
       }
       
       if(mounted) {
@@ -59,7 +68,9 @@ export const SelectDropDownsContextProvider = ({children}: {children:any}) => {
           clientStatusOptions,
           insStatusOptions,
           propertyStatusOptions,
-          propertyTypeOptions
+          propertyTypeOptions,
+          companyOptions,
+          countyOptions
         }}
       >
           {children}

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { ChevronDown } from '../Icons/Icons'
 import styles from './NavBarFacet.module.scss'
 
@@ -16,7 +17,8 @@ const NavBarFacet:React.FC<NavBarFacetProps> = ({
   links
 }) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false)
-
+  const router = useRouter()
+  
   return (
     <div className={styles['nav-bar-facet']}>
       <span 
@@ -24,7 +26,9 @@ const NavBarFacet:React.FC<NavBarFacetProps> = ({
         onMouseEnter={() => setIsExpanded(true)}
         onMouseLeave={() => setIsExpanded(false)}
       >
-        <span>{name}</span>
+        <span className={router.pathname.split('/')[1] === name ? styles['selected'] : ''}>
+          {name}
+        </span>
         <ChevronDown />
       </span>
       <div 

@@ -54,7 +54,6 @@ export default async function handler(
         // We will use this as the INMBR field
         const clientIDQuery = 'SELECT cm."CNMBR" FROM public.clntmstr cm WHERE cm."CNAME" = ($1)'
         const clientIdResponse = await conn.query(clientIDQuery, [hasValue(clientName) ? clientName : 'NO_CLIENT_NAME_0'])
-        console.log({clientName})
 
         const updateInsTitleQuery = pgPromise.as.format(`
             UPDATE public.ins

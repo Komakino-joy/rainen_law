@@ -124,7 +124,7 @@ const SubTableProperties:React.FC<SubTablePropertiesProps> = ({
 
   return (
     <>
-      <table className='is-sub-report-table' {...getTableProps()}>
+      <table className='is-sub-table' {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup,idx) => (
           //@ts-ignore

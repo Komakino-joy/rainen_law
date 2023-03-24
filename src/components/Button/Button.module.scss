@@ -52,11 +52,11 @@
     }
 
     &:active {
-      transform: unset;
+      transform: none;
     }
 
     &:focus {
-      outline: 1px solid black;
+      outline: none;
       font-weight: unset;
     }
   }

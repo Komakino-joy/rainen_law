@@ -67,9 +67,9 @@ const links = {
       ctaText: 'Outstanding Ins. Titles Report'
     },
   ],
-  Management: [
+  management: [
     {
-      href: '/manage',
+      href: '/management',
       ctaText: 'Site Management'
     }
   ]

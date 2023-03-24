@@ -18,12 +18,20 @@ export default async function handler(
 
         const insStatusQuery = `SELECT * FROM ins_status;`
         const insStatusResult = await conn.query(insStatusQuery)
+
+        const companiesQuery = `SELECT * FROM companies ORDER BY tnmbr;`
+        const companiesResult = await conn.query(companiesQuery)
+
+        const countiesQuery = `SELECT * FROM counties;`
+        const countiesResult = await conn.query(countiesQuery)
   
         res.status(200).json({
           propertyTypeOptions: propertyTypesResult.rows,
           propertyStatusOptions: propertyStatusResult.rows,
           clientStatusOptions: clientStatusResult.rows,
           insStatusOptions: insStatusResult.rows,
+          companyOptions: companiesResult.rows,
+          countyOptions: countiesResult.rows
         })
       
       } catch ( error ) {

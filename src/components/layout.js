@@ -5,6 +5,7 @@ import { ClientsContextProvider } from "@/context/Clients";
 import { CompaniesContextProvider } from "@/context/Companies";
 import { INSTitlesContextProvider } from "@/context/INSTitles";
 import { SelectDropDownsContextProvider } from "@/context/SelectDropDowns";
+import { CountiesContextProvider } from "@/context/Counties";
 
 export default function Layout({ children }) {
   return (
@@ -13,11 +14,13 @@ export default function Layout({ children }) {
       <SelectDropDownsContextProvider>
         <INSTitlesContextProvider>
           <CompaniesContextProvider>
-            <ClientsContextProvider>
-              <PropertiesContextProvider>
-                <main>{children}</main>
-              </PropertiesContextProvider>
-            </ClientsContextProvider>
+            <CountiesContextProvider>
+              <ClientsContextProvider>
+                <PropertiesContextProvider>
+                  <main>{children}</main>
+                </PropertiesContextProvider>
+              </ClientsContextProvider>
+            </CountiesContextProvider>
           </CompaniesContextProvider>
         </INSTitlesContextProvider>
       </SelectDropDownsContextProvider>

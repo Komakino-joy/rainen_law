@@ -36,14 +36,14 @@ const InsTitlesTable:React.FC<InsTitlesTableProps> = ({
           label: 'Yes',
           onClick: async() => {
             const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/titles/post-delete-ins-title`, {insTitleId})
-            if(response.data.status = 'success') {
+            if(response.data.status === 'success') {
               toast.success(response.data.message, {id: 'delete-ins-title'})
 
               const filteredArray = tableData.filter((row: INSTitle) => row.id !== insTitleId);
               setTableData(filteredArray);
             }
 
-            if(response.data.status = 'error') {
+            if(response.data.status === 'error') {
               toast.error(response.data.message, {id: 'delete-ins-title'})
             }
           }

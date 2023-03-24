@@ -35,14 +35,14 @@ const ClientsTable:React.FC<ClientsTableProps> = ({
           label: 'Yes',
           onClick: async() => {
             const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/properties/post-delete-property`, {propId})
-            if(response.data.status = 'success') {
+            if(response.data.status === 'success') {
               toast.success(response.data.message, {id: 'delete-property'})
 
               const filteredArray = tableData.filter((row: Property) => row.id !== propId);
               setTableData(filteredArray);
             }
 
-            if(response.data.status = 'error') {
+            if(response.data.status=== 'error') {
               toast.error(response.data.message, {id: 'delete-property'})
             }
           }
