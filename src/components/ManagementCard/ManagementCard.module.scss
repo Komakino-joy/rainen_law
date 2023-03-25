@@ -44,30 +44,37 @@
       position: relative;
       min-width: 600px;
 
-      .add-new-button {
+      header {
         display: none;
       }
       
       &.has-data {
         flex: unset;
-        margin-top: 40px;
+        margin-top: 60px;
+
+        header {
+          position: absolute;
+          top: -65px;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 5px;
+          font-size: 18px;
+          font-weight: 600;
+        }
 
         .add-new-button {
-          display: unset;
-          position: absolute;
-          top: -45px;
-          padding: 8px 25px;
+          padding: 5px 12px 5px 5px;
           display: inline-block;
-          margin-bottom: 5px;
           border-radius: 100px;
-          background-color: #029202;
+          background-color: #0966f1;
           color: white;
           cursor: pointer;
           display: flex;
-          gap: 10px;
+          gap: 5px;
           width: fit-content;
           font-weight: 600;
-          font-size: 14px;
+          font-size: 12px;
           letter-spacing: 1px;
           text-transform: uppercase;
           align-items: center;

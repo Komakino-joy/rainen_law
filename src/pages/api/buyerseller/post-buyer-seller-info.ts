@@ -17,6 +17,9 @@ export default async function handler(
       
       } catch ( error ) {
           console.log( error )
+          res.status(400).json({
+            message: 'Unable to fetch buyer/seller data.'
+          })
       }
     }
 }

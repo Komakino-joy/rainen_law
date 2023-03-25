@@ -19,6 +19,8 @@ interface FormInput {
   name:string;
   disabled?:boolean;
   selectOnChange?: any;
+  validate?: any;
+  autoComplete?: 'off' | 'new-password' | 'on' | null;
 }
 
 const Required:React.FC = () => (
@@ -40,7 +42,9 @@ const FormInput:React.FC<FormInput> = ({
   max='',
   defaultValue='',
   disabled=false,
-  selectOnChange
+  selectOnChange,
+  validate=null,
+  autoComplete
 }) => {
 
   return(
@@ -65,7 +69,11 @@ const FormInput:React.FC<FormInput> = ({
             max={max}
             defaultValue={defaultValue}
             disabled={disabled}
-            {...register(labelKey, { required: isRequired })} 
+            autoComplete={autoComplete}
+            {...register(labelKey, { 
+              required: isRequired, 
+              validate: validate
+            })} 
           />
       }
     </div>

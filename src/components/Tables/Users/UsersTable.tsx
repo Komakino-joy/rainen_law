@@ -7,7 +7,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import toast from 'react-hot-toast';
 import { useTable, useFilters } from 'react-table';
 
-interface ExaminersTableProps {
+interface UsersTableProps {
   tableData: any[];
   selectionType: TableRefs | '';
   tableClassName: string;
@@ -29,7 +29,7 @@ interface ExaminersTableProps {
   ) => void;
 }
 
-const ExaminersTable:React.FC<ExaminersTableProps> = ({
+const UsersTable:React.FC<UsersTableProps> = ({
   tableData,
   selectionType,
   tableClassName,
@@ -48,25 +48,25 @@ const ExaminersTable:React.FC<ExaminersTableProps> = ({
           label: 'Yes',
           onClick: async() => {
             const response = await axios.post(`
-              ${process.env.NEXT_PUBLIC_BASE_URL}/api/examiners/post-delete-examiner`, 
+              ${process.env.NEXT_PUBLIC_BASE_URL}/api/users/post-delete-user`, 
               {id, selectionType}
             )
             if(response.data.status === 'success') {
-              toast.success(response.data.message, {id: 'delete-examiner'})
+              toast.success(response.data.message, {id: 'delete-user'})
 
               const filteredArray = tableData.filter((row) => row.id !== id);
               setTableData(filteredArray);
             }
 
             if(response.data.status === 'error') {
-              toast.error(response.data.message, {id: 'delete-examiner'})
+              toast.error(response.data.message, {id: 'delete-user'})
             }
           }
         },
         {
           label: 'No',
           onClick: () => toast.error('Operation Cancelled.', {
-            id: 'delete-examiner'
+            id: 'delete-user'
           })
         }
       ]
@@ -86,24 +86,16 @@ const ExaminersTable:React.FC<ExaminersTableProps> = ({
         accessor: (d:any) => d.id,
       },
       {
-        Header: 'Name',
-        accessor: (d:any) => d.name,
+        Header: 'Username',
+        accessor: (d:any) => d.username,
       },
       {
-        Header: 'Code',
-        accessor: (d:any) => d.code,
+        Header: 'First Name',
+        accessor: (d:any) => d.f_name,
       },
       {
-        Header: 'Type',
-        accessor: (d:any) => d.type,
-      },
-      {
-        Header: 'Compensation',
-        accessor: (d:any) => d.compensate,
-      },
-      {
-        Header: 'Is Active ?',
-        accessor: (d:any) => d.is_active,
+        Header: 'Last Name',
+        accessor: (d:any) => d.l_name,
       },
       {
         Header: 'View / Edit',
@@ -187,4 +179,4 @@ const ExaminersTable:React.FC<ExaminersTableProps> = ({
   )
 }
 
-export default ExaminersTable
+export default UsersTable

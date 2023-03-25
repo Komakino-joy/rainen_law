@@ -3,8 +3,12 @@ import React from 'react'
 import NavBarFacet from '../NavBarFacet/NavBarFacet'
 import links, { LinkType } from './links'
 import styles from './NavBar.module.scss'
+import { useAuth } from '@/context/AuthContext'
 
 const NavBar = () => {
+
+  const { logout } = useAuth()
+
   return (
     <div className={styles['nav-bar-wrapper']}>
       <Link 
@@ -21,6 +25,12 @@ const NavBar = () => {
           />
         ))
       }
+      <span 
+        className={styles['sign-out-button']}
+        onClick={() => logout()}
+      >
+        Sign out
+      </span>
     </div>
   )
 }

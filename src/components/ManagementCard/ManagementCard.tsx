@@ -1,33 +1,42 @@
 import { ClientStatus, Company, County, InsStatus, PropertyStatus, PropertyType, TableRefs } from '@/types/common'
 import React, { useState } from 'react'
+import { useUsersContext } from '@/context/Users'
 import { useCompaniesContext } from '@/context/Companies'
 import { useExaminersContext } from '@/context/Examiners'
 import { useSelectDropDownsContext } from '@/context/SelectDropDowns'
-import EditStatusCodeForm from '../Forms/StatusCodeEditForm/EditStatusCodeForm'
+import EditUserForm from '../Forms/UserEditForm/EditUserForm'
 import EditCompanyForm from '../Forms/CompanyEditForm/EditCompanyForm'
 import EditExaminerForm from '../Forms/ExaminerEditForm/EditExaminerForm'
+import EditStatusCodeForm from '../Forms/StatusCodeEditForm/EditStatusCodeForm'
+import DynamicTable from '../Tables/Dynamic/DynamicTable'
+import UsersTable from '../Tables/Users/UsersTable'
 import CompaniesTable from '../Tables/Companies/CompaniesTable'
 import ExaminersTable from '../Tables/Examiners/ExaminersTable'
 import Modal from '../Modal/Modal'
 import Spinner from '../Spinner/Spinner'
 import InfoCard from '../InfoCard/InfoCard'
-import DynamicTable from '../Tables/Dynamic/DynamicTable'
 import { PencilIcon, PlusCircleIcon } from '../Icons/Icons'
 import styles from './ManagementCard.module.scss'
 
 const ManageSelectionFieldsCard = () => {
 
-  const {companiesList} = useCompaniesContext()
-  const {examinersList} = useExaminersContext()
+  const {companiesList , isLoadingCompaniescontext} = useCompaniesContext()
+  const {examinersList, isLoadingExaminerscontext} = useExaminersContext()
+  const {usersList, isLoadingUserscontext} = useUsersContext()
   const {
     isLoadingSelectDropDownsContext,
     clientStatusList,
     insStatusList,
     propertyStatusList,
     propertyTypeList,
-    countyList,
+    countyList
   } = useSelectDropDownsContext()
 
+  const isLoading = 
+    isLoadingCompaniescontext 
+    || isLoadingExaminerscontext
+    || isLoadingUserscontext
+    || isLoadingSelectDropDownsContext
 
   const [showModal, setShowModal] = useState<boolean>(false);
   const [selectionType, setSelectionType] = useState<TableRefs | ''>('')
@@ -36,6 +45,7 @@ const ManageSelectionFieldsCard = () => {
   const [tableData, setTableData] = useState<Company[] | County[] | PropertyType[] | PropertyStatus[] | ClientStatus[] | InsStatus[]>([])
 
   const editableFields = [
+    {label: 'Users', tableRef: 'users'},
     {label: 'Examiners', tableRef: 'examiners'},
     {label: 'Companies', tableRef: 'companies'},
     {label: 'Counties', tableRef: 'counties'},
@@ -49,6 +59,14 @@ const ManageSelectionFieldsCard = () => {
   const handleEditButtonClick = (e:any, tableRef:TableRefs) => {
     e.preventDefault()
     switch (tableRef) {
+      case 'users':
+        setSelectionType('users')
+        setTableData(usersList)
+        break;
+      case 'examiners':
+        setSelectionType('examiners')
+        setTableData(examinersList)
+        break;
       case 'companies':
         setSelectionType('companies')
         setTableData(companiesList)
@@ -73,10 +91,6 @@ const ManageSelectionFieldsCard = () => {
         setSelectionType('insTitleStat')
         setTableData(insStatusList)
         break;
-      case 'examiners':
-        setSelectionType('examiners')
-        setTableData(examinersList)
-        break;
       default:
         break;
     }
@@ -89,6 +103,12 @@ const ManageSelectionFieldsCard = () => {
     setSelectedItemId(selectedRecordId)
 
     switch(tableRef) {
+      case 'users':
+        setSelectionType('users')
+        break;
+      case 'examiners':
+        setSelectionType('examiners')
+        break;
       case 'companies':
         setSelectionType('companies')
         break;
@@ -107,9 +127,6 @@ const ManageSelectionFieldsCard = () => {
       case 'insTitleStat':
         setSelectionType('insTitleStat')
         break;
-      case 'examiners':
-        setSelectionType('examiners')
-        break;
       default:
         break
     }
@@ -121,7 +138,7 @@ const ManageSelectionFieldsCard = () => {
     setShowModal(false)
   }
 
-  if(isLoadingSelectDropDownsContext) {
+  if(isLoading) {
     return <div className='page-spinner'><Spinner/></div>
   }
 
@@ -129,6 +146,7 @@ const ManageSelectionFieldsCard = () => {
 
   const isCompanyTable = selectionType === 'companies'
   const isExaminersTable = selectionType === 'examiners'
+  const isUsersTable = selectionType === 'users'
   const isDynamicTable = 
     selectionType ===  'counties' 
     || selectionType === 'pType' 
@@ -160,12 +178,15 @@ const ManageSelectionFieldsCard = () => {
             ${styles['table-section']}
             ${hasData ? styles['has-data'] : ''}
           `}>
-            <span 
-              onClick={(e) => handleModalOpen(e, '', selectionType, 'insert')}
-              className={styles['add-new-button']}
-            >
-              Add new <PlusCircleIcon/>
-            </span>
+            <header>
+              <span 
+                onClick={(e) => handleModalOpen(e, '', selectionType, 'insert')}
+                className={styles['add-new-button']}
+              >
+              <PlusCircleIcon/> Add New
+              </span>
+              <span className={styles['table-title']}>{editableFields.find(field => field.tableRef === selectionType)?.label}</span>
+            </header>
             { hasData && isDynamicTable ?
                 <div className={styles['table-container']}>
                   <DynamicTable 
@@ -177,25 +198,35 @@ const ManageSelectionFieldsCard = () => {
                   />
                 </div>
               : hasData && isCompanyTable ?
-              <div className={styles['table-container']}>
-                <CompaniesTable 
-                  tableData={tableData} 
-                  selectionType={selectionType}
-                  tableClassName={styles[selectionType]}
-                  setTableData={setTableData}
-                  handleModalOpen={handleModalOpen}
-                />
-              </div>
+                <div className={styles['table-container']}>
+                  <CompaniesTable 
+                    tableData={tableData} 
+                    selectionType={selectionType}
+                    tableClassName={styles[selectionType]}
+                    setTableData={setTableData}
+                    handleModalOpen={handleModalOpen}
+                  />
+                </div>
               : hasData && isExaminersTable ?
-              <div className={styles['table-container']}>
-                <ExaminersTable 
-                  tableData={tableData} 
-                  selectionType={selectionType}
-                  tableClassName={styles[selectionType]}
-                  setTableData={setTableData}
-                  handleModalOpen={handleModalOpen}
-                />
-              </div>
+                <div className={styles['table-container']}>
+                  <ExaminersTable 
+                    tableData={tableData} 
+                    selectionType={selectionType}
+                    tableClassName={styles[selectionType]}
+                    setTableData={setTableData}
+                    handleModalOpen={handleModalOpen}
+                  />
+                </div>
+              : hasData && isUsersTable ?
+                <div className={styles['table-container']}>
+                  <UsersTable 
+                    tableData={tableData} 
+                    selectionType={selectionType}
+                    tableClassName={styles[selectionType]}
+                    setTableData={setTableData}
+                    handleModalOpen={handleModalOpen}
+                  />
+                </div>
               : <InfoCard line1='Select a field to get started' />
             }
           </section>
@@ -225,6 +256,14 @@ const ManageSelectionFieldsCard = () => {
         }
         { isExaminersTable && hasData ?
           <EditExaminerForm 
+            tableData={tableData}
+            setTableData={setTableData}
+            selectedId={selectedItemId} 
+            queryType={queryType}
+          /> : null
+        }
+        { isUsersTable && hasData ?
+          <EditUserForm 
             tableData={tableData}
             setTableData={setTableData}
             selectedId={selectedItemId} 

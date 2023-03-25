@@ -107,8 +107,6 @@ export const SelectDropDownsContextProvider = ({children}: {children:any}) => {
     } 
   },[])
 
-  console.log({companyList})
-
   return (
       <SelectDropDownsContext.Provider 
         value={{

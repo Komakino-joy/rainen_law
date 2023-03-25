@@ -295,3 +295,10 @@ export interface Examiner {
   created_at:string;
   is_active: boolean;
 }
+
+export interface User {
+  id: string;
+  username: string;
+  f_name: string;
+  l_name: string;
+}

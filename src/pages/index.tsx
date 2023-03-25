@@ -14,8 +14,10 @@ import Spinner from '@/components/Spinner/Spinner';
 import HomeRecordPreviewCard from '@/components/HomeRecordPreviewCard/HomeRecordPreviewCard';
 
 import styles from '../styles/home.module.scss'
+import { useAuth } from '@/context/AuthContext';
 
 const HomePage:React.FC = () =>  {
+  const {user} = useAuth()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [propertyData, setPropertyData] = useState<Property[] | null>(null)
   const [clientData, setClientData] = useState<Client[] | null>(null)
@@ -87,7 +89,12 @@ const HomePage:React.FC = () =>  {
     }
   },[])
 
-  if(isLoading) {
+  const allDataLoaded = 
+    propertyData && propertyData.length > 0
+    && clientData && clientData.length > 0
+    && insTitleData && insTitleData.length > 0
+
+  if(isLoading || !allDataLoaded) {
     return <div className='page-spinner'><Spinner/></div>
   }
   
@@ -96,7 +103,7 @@ const HomePage:React.FC = () =>  {
         <div className={styles['homepage-content']}>
           <section>
             <div className={`light-border ${styles['welcome-header']}`}>
-              <h1>Welcome, John S.</h1>
+              <h1>{`Welcome, ${user.f_name} ${user.l_name[0]}.`}</h1>
               <h2>{new Date().toLocaleDateString('en-us', { weekday:"long", year:"numeric", month:"long", day:"numeric"})}</h2>
             </div>
           </section>
