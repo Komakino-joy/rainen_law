@@ -1,7 +1,6 @@
 import React, { useRef, useState } from 'react'
 import { useForm } from "react-hook-form";
 import { useReactToPrint } from 'react-to-print';
-import axios from 'axios';
 
 import { timestampToDate } from '@/utils';
 import Button from '@/components/Button/Button';
@@ -12,6 +11,7 @@ import FormInput from '@/components/Forms/Common/FormInput/FormInput';
 import styles from './CompanyActivityReport.module.scss'
 import { CompanyActivityReportTotDollarsEntry, CompanyActivityReportTotDollarsPctEntry, CompanyActivityReportYearlyTotalEntry } from '@/types/common';
 import formatNumber from '@/utils/formatNumber';
+import { httpPostCompanyActivityReport } from '@/services/http';
 
 export default function CompanyActivityReport() {
   
@@ -64,7 +64,7 @@ export default function CompanyActivityReport() {
       end: data.endDate
     })
 
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/reports/post-company-activity-report`, data)
+    const response = await httpPostCompanyActivityReport({data})
 
     const totalDollars = response.data.totalDollars.reduce((acc: any, record: CompanyActivityReportTotDollarsEntry) => {
       acc.rows.push(record)

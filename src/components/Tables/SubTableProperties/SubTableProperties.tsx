@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useTable, useFilters } from 'react-table';
-import axios from 'axios';
 
 import { timestampToDate } from '@/utils';
 import { PencilIcon } from '@/components/Icons/Icons';
 import EditPropertyModal from '@/components/Modals/EditPropertyModal';
 import { useRouter } from 'next/router';
+import { Property } from '@/types/common';
+import { httpPostPropertiesInfo } from '@/services/http';
 
 interface SubTablePropertiesProps {
   cnmbr: string
@@ -18,19 +19,19 @@ const SubTableProperties:React.FC<SubTablePropertiesProps> = ({
 
   const [tableData, setTableData] = useState([])
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [selectedPropId, setSelectedPropId] = useState<string|null>(null)
+  const [selectedId, setSelectedId] = useState<string|null>(null)
   const [shouldReload, setShouldReload] = useState(false)
   
   useEffect(() => {
     (async() => {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/clients/post-properties-info`, {CNMBR: cnmbr} )
-      setTableData(response.data)
+      const propertiesInfo = await httpPostPropertiesInfo({cnmbr})
+      setTableData(propertiesInfo)
     })();
   },[])
 
 
   const handleModalClose = () => {
-    setSelectedPropId(null)
+    setSelectedId(null)
     setShowModal(false)
 
     if(shouldReload) {
@@ -38,14 +39,14 @@ const SubTableProperties:React.FC<SubTablePropertiesProps> = ({
     }
   }
 
-  const handleAfterSubmit = (propId: string) => {
+  const handleAfterSubmit = (id: string) => {
     setShouldReload(true)
   }
 
 
-  const handleModalOpen =(e: React.SyntheticEvent, propId: string) => {
+  const handleModalOpen =(e: React.SyntheticEvent, id: string) => {
     e.preventDefault()
-    setSelectedPropId(propId)
+    setSelectedId(id)
     setShowModal(true)
   }
 
@@ -58,28 +59,28 @@ const SubTableProperties:React.FC<SubTablePropertiesProps> = ({
     () => [
       {
         Header: 'Date',
-        accessor: (d:any) => timestampToDate(d.PTDATE, 'mmDDyyyy').date,
+        accessor: (d:Property) => timestampToDate(d.PTDATE, 'mmDDyyyy').date,
       },
       {
         Header: 'City',
-        accessor: (d:any) => `${d.PCITY}`,
+        accessor: (d:Property) => d.PCITY  || 'N/A',
       },
       {
         Header: 'Street',
-        accessor: (d:any) => `${d.PSTRET}`,
+        accessor: (d:Property) => d.PSTRET || 'N/A',
       },
       {
         Header: 'Lot',
-        accessor: (d:any) => `${d.PLOT}`,
+        accessor: (d:Property) => d.PLOT || 'N/A',
       },
       {
         Header: 'Condo',
-        accessor: (d:any) => d.PCONDO !== 'null' ? d.PCONDO : '',
+        accessor: (d:Property) => d.PCONDO !== 'null' ? d.PCONDO : 'N/A',
       },
       {
         Header: 'View / Edit',
-        accessor: (d:any) => d.id,
-        Cell: ({value}:{value:any}) => (
+        accessor: (d:Property) => d.id,
+        Cell: ({value}:{value:string}) => (
           <span
             title={`Edit Property: ${value}`} 
             onClick={(e) => handleModalOpen(e, value)}
@@ -163,7 +164,7 @@ const SubTableProperties:React.FC<SubTablePropertiesProps> = ({
           handleModalClose={handleModalClose} 
           showModal={showModal} 
           title={''}
-          selectedPropId={selectedPropId} 
+          selectedId={selectedId} 
           handleAfterSubmit={handleAfterSubmit} 
         />
         :null  

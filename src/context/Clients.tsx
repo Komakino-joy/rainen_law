@@ -1,8 +1,8 @@
 'use client';
 
+import { httpGetAllClients } from "@/services/http";
 import { Client } from "@/types/common";
 import { hasValue, uniqueLabelValuePairs } from "@/utils/";
-import axios from "axios";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 
 interface ClientsContextProps {
@@ -57,9 +57,9 @@ export const ClientsContextProvider = ({children}: {children:any}) => {
           'CNAME', 'CNMBR', 'CSTAT', 'CCNTCT', 'CSTATTO',
           'CCITY', 'CSTATE', 'CZIP', 'CPHONE', 'CFAX', 'CEMAIL'
         ]
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/clients/get-all-clients`)
+        const clients = await httpGetAllClients()
 
-        const clientsObject = response.data.reduce((acc: any, row: Client) => {
+        const clientsObject = clients.reduce((acc: any, row: Client) => {
           // Iterate through our fields and see if we have assigned a value for each property in our accumulator
           // Assign empty array if no value is found
           for(let i=0; i<fields.length; i++) {

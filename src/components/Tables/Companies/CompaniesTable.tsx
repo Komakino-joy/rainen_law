@@ -1,6 +1,6 @@
 import { PencilIcon, TrashIcon } from '@/components/Icons/Icons';
+import { httpPostDeleteSelectDropDownOptions } from '@/services/http';
 import { ClientStatus, Company, County, InsStatus, PropertyStatus, PropertyType, TableRefs } from '@/types/common';
-import axios from 'axios';
 import { useMemo } from 'react';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
@@ -47,10 +47,8 @@ const CompaniesTable:React.FC<CompaniesTableProps> = ({
         {
           label: 'Yes',
           onClick: async() => {
-            const response = await axios.post(`
-              ${process.env.NEXT_PUBLIC_BASE_URL}/api/management/post-delete-select-drop-down-options`, 
-              {id, selectionType}
-            )
+            const response = await httpPostDeleteSelectDropDownOptions({id, selectionType})
+            
             if(response.data.status === 'success') {
               toast.success(response.data.message, {id: 'delete-select-drop-down-options'})
 
@@ -87,55 +85,55 @@ const CompaniesTable:React.FC<CompaniesTableProps> = ({
       },
       {
         Header: 'Number',
-        accessor: (d:any) => d.tnmbr,
+        accessor: (d:any) => d.tnmbr || 'N/A',
       },
       {
         Header: 'Name',
-        accessor: (d:any) => d.tticoname,
+        accessor: (d:any) => d.tticoname || 'N/A',
       },
       {
         Header: 'Abbr.',
-        accessor: (d:any) => d.abbr,
+        accessor: (d:any) => d.abbr || 'N/A',
       },
       {
         Header: 'Address',
-        accessor: (d:any) => d.tadd1,
+        accessor: (d:any) => d.tadd1 || 'N/A',
       },
       {
         Header: 'City',
-        accessor: (d:any) => d.tcity,
+        accessor: (d:any) => d.tcity || 'N/A',
       },
       {
         Header: 'State',
-        accessor: (d:any) => d.tstate,
+        accessor: (d:any) => d.tstate || 'N/A',
       },
       {
         Header: 'Zip Code',
-        accessor: (d:any) => d.tzip,
+        accessor: (d:any) => d.tzip || 'N/A',
       },
       {
         Header: 'Status',
-        accessor: (d:any) => d.tstat,
+        accessor: (d:any) => d.tstat || 'N/A',
       },
       {
         Header: 'Pct.',
-        accessor: (d:any) => d.tpercent,
+        accessor: (d:any) => d.tpercent || 'N/A',
       },
       {
         Header: 'Prod1',
-        accessor: (d:any) => d.tproduct1,
+        accessor: (d:any) => d.tproduct1 || 'N/A',
       },
       {
         Header: 'Prod2',
-        accessor: (d:any) => d.tproduct2,
+        accessor: (d:any) => d.tproduct2 || 'N/A',
       },
       {
         Header: 'Prod3',
-        accessor: (d:any) => d.tproduct3,
+        accessor: (d:any) => d.tproduct3 || 'N/A',
       },
       {
         Header: 'Prod4',
-        accessor: (d:any) => d.tproduct4,
+        accessor: (d:any) => d.tproduct4 || 'N/A',
       },
       {
         Header: 'View / Edit',

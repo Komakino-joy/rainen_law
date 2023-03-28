@@ -1,12 +1,12 @@
 import { useState } from "react";
 import {  useForm } from "react-hook-form";
 import toast from 'react-hot-toast'
-import axios from "axios";
 
 import { FORM_BUTTON_TEXT } from "@/constants";
 import Button from "@/components/Button/Button";
 import Spinner from "@/components/Spinner/Spinner";
 import FormInput from "../Common/FormInput/FormInput";
+import { httpPostInsertUser, httpPostSelectedUser, httpPostUpdateUser } from "@/services/http";
 
 interface EditEditUserFormProps {
   tableData: any[];
@@ -37,14 +37,14 @@ const EditUserForm:React.FC<EditEditUserFormProps> = ({
 
         setIsLoading(true)
         
-        const response = await axios.post('/api/users/post-selected-user', { id: selectedId })
+        const userInfo = await httpPostSelectedUser({ id: selectedId })
         
         const {
           id='', 
           username='', 
           l_name='', 
           f_name=''
-        } = response.data[0]
+        } = userInfo
 
         setUserId(id)
         setIsLoading(false)
@@ -62,26 +62,24 @@ const EditUserForm:React.FC<EditEditUserFormProps> = ({
     if(!isDirty) return 
     
     if(queryType === 'insert') {
-      const response = await axios.post(`/api/users/post-insert-user`, data)
+      const newRecord = await httpPostInsertUser({data})
       reset()
-      setTableData([...tableData, response.data.newRecord])
-      // @ts-ignore
-      toast[response.data.status](response.data.message)
+      setTableData([...tableData, newRecord])
     }
 
     if(queryType === 'update') {
-      const response = await axios.post(`/api/users/post-update-user`, {id: userId, ...data}) // Passing id to update correct record
-      reset(response.data.updatedRecord)
+      const updatedRecord = await httpPostUpdateUser({id: userId, data})
+
+      reset(updatedRecord)
+
       const updatedData = tableData.map(record => {
-        if(record.id === response.data.updatedRecord.id) {
-          record = response.data.updatedRecord
+        if(record.id === updatedRecord.id) {
+          record = updatedRecord
         }
         return record
       })
 
       setTableData(updatedData)
-      // @ts-ignore
-      toast[response.data.status](response.data.message)
     }
   };
 

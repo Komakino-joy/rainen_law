@@ -13,16 +13,16 @@ const AddNewPropertyPage = () => {
   const {isLoadingPropertyContext} = usePropertiesContext()
   const isLoading = isLoadingClientsContext || isLoadingPropertyContext
 
-  const [selectedPropId, setSelectedPropId] = useState<string|null>(null)
+  const [selectedId, setSelectedId] = useState<string|null>(null)
   const [showModal, setShowModal] = useState(false);
 
-  const handleAfterSubmit = (propId: string) => {
-    setSelectedPropId(propId)
+  const handleAfterSubmit = (id: string) => {
+    setSelectedId(id)
     setShowModal(true)
   }
 
   const handleModalClose = () => {
-    setSelectedPropId(null)
+    setSelectedId(null)
     setShowModal(false)
   }
 
@@ -46,9 +46,9 @@ const AddNewPropertyPage = () => {
           show={showModal}
           title={''}
       >
-        { selectedPropId && 
+        { selectedId && 
           <EditPropertyForm 
-            propertyId={selectedPropId} 
+            propertyId={selectedId} 
             queryType='update'
           />
         }

@@ -1,6 +1,6 @@
 import { PencilIcon, TrashIcon } from '@/components/Icons/Icons';
+import { httpPostDeleteSelectDropDownOptions } from '@/services/http';
 import { ClientStatus, Company, County, InsStatus, PropertyStatus, PropertyType, TableRefs } from '@/types/common';
-import axios from 'axios';
 import { useMemo } from 'react';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
@@ -82,10 +82,7 @@ const SelectOptionsTable:React.FC<DynamicTable> = ({
         {
           label: 'Yes',
           onClick: async() => {
-            const response = await axios.post(`
-              ${process.env.NEXT_PUBLIC_BASE_URL}/api/management/post-delete-select-drop-down-options`, 
-              {id, selectionType}
-            )
+            const response = await httpPostDeleteSelectDropDownOptions({id, selectionType})
             if(response.data.status === 'success') {
               toast.success(response.data.message, {id: 'delete-select-drop-down-options'})
 

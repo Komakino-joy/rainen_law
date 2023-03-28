@@ -71,17 +71,17 @@ const Properties:React.FC<PropertiesProps> = ({
 
   const [showModal, setShowModal] = useState<boolean>(false);
   const [tableData, setTableData] = useState<Property[] | null>(null)
-  const [selectedPropId, setSelectedPropId] = useState<string|null>(null)
+  const [selectedId, setSelectedId] = useState<string|null>(null)
   const [shouldReload, setShouldReload] = useState(false)
   
-  const handleModalOpen =(e: React.SyntheticEvent, propId: string) => {
+  const handleModalOpen =(e: React.SyntheticEvent, id: string) => {
     e.preventDefault()
-    setSelectedPropId(propId)
+    setSelectedId(id)
     setShowModal(true)
   }
 
   const handleModalClose = () => {
-    setSelectedPropId(null)
+    setSelectedId(null)
     setShowModal(false)
 
     if(shouldReload) {
@@ -89,7 +89,7 @@ const Properties:React.FC<PropertiesProps> = ({
     }
   }
 
-  const handleAfterSubmit = (propId: string) => {
+  const handleAfterSubmit = (id: string) => {
     setShouldReload(true)
   }
 
@@ -128,7 +128,7 @@ const Properties:React.FC<PropertiesProps> = ({
           handleModalClose={handleModalClose} 
           showModal={showModal} 
           title={''}
-          selectedPropId={selectedPropId} 
+          selectedId={selectedId} 
           handleAfterSubmit={handleAfterSubmit} 
         />
     </>  

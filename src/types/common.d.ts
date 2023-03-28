@@ -89,6 +89,16 @@ export interface Client {
   last_updated: string;
 }
 
+export interface ClientInfoSnippet {
+  id:string;
+  cnmbr: string | null;
+  clientName: string | null;
+  lastUpdated: {
+    date:string, 
+    time:string
+  } | null;
+}
+
 export interface INSTitle {
   id: string;
   tticoname: string;
@@ -184,6 +194,10 @@ export interface Policy {
   IREMIT: string;
   ISTATE: string;
   IZIP: string;
+  CNAME: string;
+  IPDATE: string;
+  INOTES: string;
+  ICDATE: string;
 }
 
 export interface RemittanceReportEntry {
@@ -301,4 +315,14 @@ export interface User {
   username: string;
   f_name: string;
   l_name: string;
+}
+
+export interface BuyerSeller {
+  id: string;
+  PSELR1: string;
+  PSELR2: string;
+  PSELR3: string;
+  PSELR4: string;
+  BUYR1: string;
+  BUYR2: string;
 }

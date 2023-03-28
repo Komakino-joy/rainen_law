@@ -3,10 +3,10 @@ import FormInput from '@/components/Forms/Common/FormInput/FormInput'
 import InfoCard from '@/components/InfoCard/InfoCard'
 import Spinner from '@/components/Spinner/Spinner'
 import { useCompaniesContext } from '@/context/Companies'
+import { httpPostPolicyByCompanyReport } from '@/services/http'
 import { INSTitle } from '@/types/common'
 import { timestampToDate } from '@/utils'
 import formatNumber from '@/utils/formatNumber'
-import axios from 'axios'
 import React, { useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useReactToPrint } from 'react-to-print'
@@ -47,7 +47,7 @@ const PoliciesByCompanyReportPage = () => {
     })
 
     setIsLoading(true)
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/reports/post-policy-by-company-report`, data)
+    const response = await httpPostPolicyByCompanyReport({data})
 
     const insTitleGroupedByCompany = response.data.reduce((acc: any, insTitle: INSTitle) => {
       type propKeyT = keyof typeof insTitle

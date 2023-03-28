@@ -18,7 +18,6 @@ export default async function handler(
       } = req.body
 
       if (password !== confirmPassword) {
-        console.log('PASSWORDS DID NOT MATCH')
         res.status(200).json({
           message: 'Passwords do not match',
           status: 'error'

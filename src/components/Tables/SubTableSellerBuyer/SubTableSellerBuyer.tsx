@@ -1,4 +1,5 @@
-import axios from 'axios';
+import { httpPostBuyerSellerInfo } from '@/services/http';
+import { BuyerSeller } from '@/types/common';
 
 import { useEffect, useMemo, useState } from 'react';
 import { useTable, useFilters } from 'react-table';
@@ -13,8 +14,8 @@ const SubTableSellerBuyer:React.FC<SubTableSellerBuyerProps> = ({compRef}) => {
 
   useEffect(() => {
     (async() => {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/buyerseller/post-buyer-seller-info`, {PCOMPREF: compRef} )
-      setTableData(response.data)
+      const buyerSellerInfo = await httpPostBuyerSellerInfo({compRef})
+      setTableData(buyerSellerInfo)
     })();
   },[])
 
@@ -27,27 +28,27 @@ const SubTableSellerBuyer:React.FC<SubTableSellerBuyerProps> = ({compRef}) => {
     () => [
       {
         Header: 'Seller 1',
-        accessor: (d:any) => d.PSELR1,
+        accessor: (d:BuyerSeller) => d.PSELR1 || 'N/A',
       },
       {
         Header: 'Seller 2',
-        accessor: (d:any) => d.SELR2,
+        accessor: (d:BuyerSeller) => d.PSELR2 || 'N/A',
       },
       {
         Header: 'Seller 3',
-        accessor: (d:any) => d.PSELR3,
+        accessor: (d:BuyerSeller) => d.PSELR3 || 'N/A',
       },
       {
         Header: 'Seller 4',
-        accessor: (d:any) => d.PSELR4,
+        accessor: (d:BuyerSeller) => d.PSELR4 || 'N/A',
       },
       {
         Header: 'Buyer 1',
-        accessor: (d:any) => d.BUYR1,
+        accessor: (d:BuyerSeller) => d.BUYR1 || 'N/A',
       },
       {
         Header: 'Buyer 2',
-        accessor: (d:any) => d.BUYR2,
+        accessor: (d:BuyerSeller) => d.BUYR2 || 'N/A',
       }
     ],
     [tableData]

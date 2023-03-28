@@ -3,7 +3,6 @@ import { INSTitle, RemittanceReportEntry } from '@/types/common'
 import React, { useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useReactToPrint } from 'react-to-print'
-import axios from 'axios'
 
 import { RAINEN_LAW } from '@/constants'
 import Button from '@/components/Button/Button'
@@ -16,6 +15,7 @@ import { timestampToDate } from '@/utils'
 import formatNumber from '@/utils/formatNumber'
 
 import styles from './RemittanceReport.module.scss'
+import { httpPostRemmittanceReport } from '@/services/http'
 
 const RemittanceReportPage = () => {
 
@@ -39,7 +39,7 @@ const RemittanceReportPage = () => {
 
   const onSubmit = async(data:any) => {
     setIsLoading(true)
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/reports/post-remittance-report`, data)
+    const response = await httpPostRemmittanceReport({data})
 
     const groupedByCompany = response.data.reduce((acc: any, record: RemittanceReportEntry) => {
       type propKeyT = keyof typeof record

@@ -2,21 +2,21 @@
 
 import { Property } from '@/types/common';
 import React, { useState } from 'react'
-import axios from 'axios';
 import Modal from '@/components/Modal/Modal';
-import PropertyForm from '@/components/Forms/PropertyEditForm/EditPropertyForm';
 import InfoCard from '@/components/InfoCard/InfoCard';
 import ClientSearchForm from '@/components/Forms/ClientSearchForm/ClientSearchForm';
 import ClientsTable from '@/components/Tables/Clients/ClientsTable';
 import { useClientsContext } from '@/context/Clients';
 import Spinner from '@/components/Spinner/Spinner';
 import ClientForm from '@/components/Forms/ClientEditForm/EditClientForm';
+import { httpPostSearchClient } from '@/services/http';
 
 const SearchClientsPage = () => {
   const {isLoadingClientsContext} = useClientsContext()
   const isLoading = isLoadingClientsContext
 
   const [showModal, setShowModal] = useState(false);
+  const [fetchingData, setFetchingData] = useState(false)
   const [selectedclientId, setSelectedclientId] = useState<string|null>(null)
   const [tableData, setTableData] = useState<Property[] | null>(null)
   const [noResults, setNoResults] = useState<boolean>(false)
@@ -36,9 +36,11 @@ const SearchClientsPage = () => {
     if(Object.keys(data).every(key => data[key] === '' || data[key] === undefined || data[key] === null)) {
       alert('No search parameters were provided.')
     } else {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/clients/post-search-client`, data)
-      
-      if(response.data.length === 0) {
+      setFetchingData(true)
+      const searchResults = await httpPostSearchClient({data})
+      setFetchingData(false)
+
+      if(searchResults.length === 0) {
         setNoResults(true)
         setTableData(null)
         return 
@@ -46,7 +48,7 @@ const SearchClientsPage = () => {
       
       setNoResults(false)
 
-      setTableData(response.data)
+      setTableData(searchResults)
     }
   }
 
@@ -58,7 +60,8 @@ const SearchClientsPage = () => {
           <>
             <ClientSearchForm onSubmit={onSubmit} />
           
-            { tableData && Object.keys(tableData).length > 0 ?
+            { fetchingData ? <div className='search-results-spinner'><Spinner /></div>
+              : tableData && Object.keys(tableData).length > 0 ?
 
                 <div className='search-results-table-wrapper is-client-table'>           
                   <ClientsTable 

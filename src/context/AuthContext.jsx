@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import axios from 'axios';
 import toast from 'react-hot-toast'
+import { httpPostLogin } from '@/services/http';
 
 // create the auth context
 export const AuthContext = createContext();
@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }) => {
 
   // log in the user
   const login = async(userData) => {
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/post-login`,userData)
+    const response = await httpPostLogin({data: userData})
     if (response.data?.user !== undefined) {
       setUser(response.data?.user);
       localStorage.setItem('user', JSON.stringify(response.data?.user));

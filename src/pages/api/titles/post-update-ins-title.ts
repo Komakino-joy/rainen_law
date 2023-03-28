@@ -36,7 +36,8 @@ export default async function handler(
         state= '',
         zip= '',
         notes= '',
-        id=''
+        id='',
+        last_updated_by,
       } = req.body
 
       if(!hasValue(id)) {
@@ -85,8 +86,9 @@ export default async function handler(
               "ISTATE" = $25,
               "IZIP" = $26,
               "INOTES" = $27,
-              last_updated = $28
-            WHERE ins.id = $29
+              last_updated_by = $28,
+              last_updated = $29
+            WHERE ins.id = $30
 
             RETURNING *
           ;
@@ -118,6 +120,7 @@ export default async function handler(
             state,
             zip,
             notes,
+            last_updated_by,
             new Date(),
             id
           ]

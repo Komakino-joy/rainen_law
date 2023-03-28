@@ -1,7 +1,7 @@
 'use client';
 
+import { httpGetCompanies } from "@/services/http";
 import { Company } from "@/types/common";
-import axios from "axios";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 
 interface CompaniesContextProps {
@@ -31,9 +31,7 @@ export const CompaniesContextProvider = ({children}: {children:any}) => {
       mounted.current = true;
       const httpFetchCompanyInfo = async() => {
         setIsLoading(true)
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/companies/get-companies`)
-  
-        const companies = response.data
+        const companies = await httpGetCompanies()
 
         setcompaniesList(companies)
         setcompaniesDropDownOptions(companies.map((company:Company) => (

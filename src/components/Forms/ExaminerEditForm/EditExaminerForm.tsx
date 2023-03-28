@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import toast from 'react-hot-toast'
-import axios from "axios";
 
 import { FORM_BUTTON_TEXT } from "@/constants";
 import Button from "@/components/Button/Button";
 import FormInput from "../Common/FormInput/FormInput";
 import styles from './EditExaminerForm.module.scss'
 import Spinner from "@/components/Spinner/Spinner";
+import { httpPostInsertExaminer, httpPostSelectedExaminer, httpPostUpdateExaminer } from "@/services/http";
 
 interface EditEditExaminerFormProps {
   tableData: any[];
@@ -40,8 +39,8 @@ const EditExaminerForm:React.FC<EditEditExaminerFormProps> = ({
       if (selectedId) {
 
         setIsLoading(true)
-        
-        const response = await axios.post('/api/examiners/post-selected-examiner', { id: selectedId })
+      
+        const examinerInfo = await httpPostSelectedExaminer({ id: selectedId })
         
         const {
           id='', 
@@ -50,7 +49,7 @@ const EditExaminerForm:React.FC<EditEditExaminerFormProps> = ({
           type='',
           compensate='',
           isActive=false  
-        } = response.data[0]
+        } = examinerInfo
 
         setExaminerId(id)
         setDefaultSelectValues((prevState) => ({
@@ -74,26 +73,22 @@ const EditExaminerForm:React.FC<EditEditExaminerFormProps> = ({
     if(!isDirty) return 
     
     if(queryType === 'insert') {
-      const response = await axios.post(`/api/examiners/post-insert-examiner`, data)
+      const newRecord = await httpPostInsertExaminer({data})
       reset()
-      setTableData([...tableData, response.data.newRecord])
-      // @ts-ignore
-      toast[response.data.status](response.data.message)
+      setTableData([...tableData, newRecord])
     }
 
     if(queryType === 'update') {
-      const response = await axios.post(`/api/examiners/post-update-examiner`, {id: examinerId, ...data}) // Passing id to update correct record
-      reset(response.data.updatedRecord)
+      const updatedRecord = await httpPostUpdateExaminer({id: examinerId, data})
+      reset(updatedRecord)
       const updatedData = tableData.map(record => {
-        if(record.id === response.data.updatedRecord.id) {
-          record = response.data.updatedRecord
+        if(record.id === updatedRecord.id) {
+          record = updatedRecord
         }
         return record
       })
 
       setTableData(updatedData)
-      // @ts-ignore
-      toast[response.data.status](response.data.message)
     }
   };
 

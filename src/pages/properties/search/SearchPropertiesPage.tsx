@@ -2,7 +2,6 @@
 
 import { Property } from '@/types/common';
 import React, { useState } from 'react'
-import axios from 'axios';
 import Modal from '@/components/Modal/Modal';
 import ClientCard from '@/components/ClientCard/ClientCard';
 import PropertyForm from '@/components/Forms/PropertyEditForm/EditPropertyForm';
@@ -11,6 +10,7 @@ import SearchPropertiesForm from '@/components/Forms/PropertySearchForm/SearchPr
 import { useClientsContext } from '@/context/Clients';
 import { usePropertiesContext } from '@/context/Properties';
 import Spinner from '@/components/Spinner/Spinner';
+import { httpPostSearchProperty } from '@/services/http';
 
 const SearchPropertiesPage = () => {
 
@@ -19,18 +19,19 @@ const SearchPropertiesPage = () => {
   const isLoading = isLoadingClientsContext || isLoadingPropertyContext
 
   const [showModal, setShowModal] = useState(false);
+  const [fetchingData, setFetchingData] = useState(false)
   const [clientProperties, setClientProperties] = useState(null)
-  const [selectedPropId, setSelectedPropId] = useState<string|null>(null)
+  const [selectedId, setSelectedId] = useState<string|null>(null)
   const [noResults, setNoResults] = useState<boolean>(false)
 
-  const handleCardClick =(e: React.SyntheticEvent, propId: string) => {
+  const handleCardClick =(e: React.SyntheticEvent, id: string) => {
     e.preventDefault()
-    setSelectedPropId(propId)
+    setSelectedId(id)
     setShowModal(true)
   }
 
   const handleModalClose = () => {
-    setSelectedPropId(null)
+    setSelectedId(null)
     setShowModal(false)
   }
 
@@ -38,8 +39,11 @@ const SearchPropertiesPage = () => {
     if(Object.keys(data).every(key => data[key] === '' || data[key] === undefined || data[key] === null)) {
       alert('No search parameters were provided.')
     } else {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/properties/post-search-property`, data)
-      if(response.data.rows.length === 0) {
+      setFetchingData(true)
+      const properties = await httpPostSearchProperty({data})
+      setFetchingData(false)
+
+      if(properties.length === 0) {
         setNoResults(true)
         setClientProperties(null)
         return 
@@ -47,7 +51,7 @@ const SearchPropertiesPage = () => {
       
       setNoResults(false)
 
-      const groupedByClient = response.data.rows.reduce((acc: any, property: Property) => {
+      const groupedByClient = properties.reduce((acc: any, property: Property) => {
         type propKeyT = keyof typeof property
         if (!acc[property.CNAME as propKeyT]) {
           acc[property.CNAME as propKeyT] = []
@@ -68,7 +72,8 @@ const SearchPropertiesPage = () => {
           <>
             <SearchPropertiesForm onSubmit={onSubmit} />
             
-            { clientProperties && Object.keys(clientProperties).length > 0 ?
+            { fetchingData ? <div className='search-results-spinner'><Spinner /></div>
+              : clientProperties && Object.keys(clientProperties).length > 0 ?
               <div className='search-results-container'>
                 <h1>Properties by Client <span className='italicized-record-count'>(Clients: {Object.keys(clientProperties).length})</span></h1>
       
@@ -98,9 +103,9 @@ const SearchPropertiesPage = () => {
         show={showModal}
         title={''}
       >
-        { selectedPropId && 
+        { selectedId && 
           <PropertyForm 
-            propertyId={selectedPropId}
+            propertyId={selectedId}
             queryType='update' 
           />
         }

@@ -31,7 +31,9 @@ export default async function handler(
         zip='',
         docNumber='',
         requestDate,
-        closedDate
+        closedDate,
+        created_by,
+        last_updated_by,
       } = req.body
 
       try {
@@ -71,11 +73,14 @@ export default async function handler(
             "PDOCNUM",
             "PRDATE",
             "PCDATE",
-            "last_updated"
+            created_by,
+            last_updated_by,
+            last_updated,
+            created_at
           )
           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11,
             $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, 
-            $22, $23, $24, $25, $26, $27)
+            $22, $23, $24, $25, $26, $27, $28, $29, $30)
 
             RETURNING *
           ;
@@ -106,6 +111,9 @@ export default async function handler(
             docNumber,
             requestDate === '' ? null : requestDate,
             closedDate === '' ? null : closedDate,
+            created_by,
+            last_updated_by,
+            new Date(),
             new Date(),
           ]
         )

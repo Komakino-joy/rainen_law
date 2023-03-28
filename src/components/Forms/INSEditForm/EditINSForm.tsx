@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import axios from "axios";
 import toast from "react-hot-toast";
 import { useCompaniesContext } from "@/context/Companies";
 import { timestampToDate } from "@/utils";
@@ -11,11 +10,14 @@ import Button from "@/components/Button/Button";
 import { FORM_BUTTON_TEXT } from "@/constants";
 import Spinner from "@/components/Spinner/Spinner";
 import { useClientsContext } from "@/context/Clients";
+import { useSelectDropDownsContext } from "@/context/SelectDropDowns";
+import { useAuth } from "@/context/AuthContext";
+import { httpPostInsertInsTitle, httpPostSelectedInsTitle, httpPostUpdateInsTitle } from "@/services/http";
 
 interface EditINSFormProps {
   insTitleId: string | null;
   queryType: 'update' | 'insert';
-  handleAfterSubmit?: (propId: string) => void;
+  handleAfterSubmit?: (id: string) => void;
 }
 
 const EditINSForm:React.FC<EditINSFormProps> = ({
@@ -23,9 +25,10 @@ const EditINSForm:React.FC<EditINSFormProps> = ({
   queryType,
   handleAfterSubmit = () => {},
 }) => {
-
+  const {user} = useAuth()
   const {companiesDropDownOptions} = useCompaniesContext()
   const {clientSelectOptions} = useClientsContext()
+  const {insStatusDropDownOptions} = useSelectDropDownsContext()
   const { CNAME: clientNames } = clientSelectOptions
 
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -40,7 +43,7 @@ const EditINSForm:React.FC<EditINSFormProps> = ({
   })
 
   const [insTitleInfoSnippet, setInsTitleInfoSnippet] = useState<{
-    id:string | null;
+    id:string;
     inmbr: string | null;
     city: string | null;
     fileNumber: string | null;
@@ -49,7 +52,7 @@ const EditINSForm:React.FC<EditINSFormProps> = ({
       time:string
     } | null;
   }>({
-    id: null, 
+    id: 'no_id_provided', 
     inmbr: null,
     city: null,
     fileNumber: null,
@@ -67,8 +70,8 @@ const EditINSForm:React.FC<EditINSFormProps> = ({
       if (insTitleId) {
 
         setIsLoading(true)
-        
-        const response = await axios.post('/api/titles/post-selected-ins-title', {insTitleId})
+      
+        const policyInfo = await httpPostSelectedInsTitle({id: insTitleId})
         
         const {
           id='', tticoname='', last_updated='', INMBR='', IFILE='', ICITY='', ISTATE='', IZIP='',
@@ -76,7 +79,7 @@ const EditINSForm:React.FC<EditINSFormProps> = ({
           ICDATE='', IPDATE='', IBILL='', IPOLDATE='', TITLECO='', ISTAT='', IREMIT='',
           P='', CNAME='', CFILE='', OPOLICYNUM='', OPOLICYAMT='', LPOLICYNUM='', LPOLICYAMT='', INOTES='',
           TICOFEE
-        } = response.data[0]
+        } = policyInfo
 
         setInsTitleInfoSnippet((prevState) => ({
           ...prevState,
@@ -137,20 +140,24 @@ const EditINSForm:React.FC<EditINSFormProps> = ({
     if(isDirtyAlt) return 
     
     if(queryType === 'insert') {
-      const response = await axios.post(`/api/titles/post-add-ins-title`, data)
+      const newPolicyId = await httpPostInsertInsTitle({
+        data,
+        username: user.username
+      })
       reset()
-      handleAfterSubmit(response.data.newInsTitleId)
-      // @ts-ignore
-      toast[response.data.status](response.data.message)
+      handleAfterSubmit(newPolicyId)
+
     }
 
     if(queryType === 'update') {
-      const response = await axios.post(`/api/titles/post-update-ins-title`, {id: insTitleInfoSnippet.id, ...data}) // Passing id to update correct record
-      if (insTitleInfoSnippet.id) {
-        handleAfterSubmit(insTitleInfoSnippet.id)
-        reset(response.data.updatedRecord)
-        // @ts-ignore
-        toast[response.data.status](response.data.message)
+      const updatedRecord = await httpPostUpdateInsTitle({
+        id: insTitleInfoSnippet.id, // Passing id to update correct record
+        data,
+        username: user.username
+      })
+      if (updatedRecord.id) {
+        handleAfterSubmit(updatedRecord.id)
+        reset(updatedRecord)
       }
     }
   };
@@ -414,28 +421,30 @@ const EditINSForm:React.FC<EditINSFormProps> = ({
               />
             }
 
-            <Controller 
-              name={"status"}  
-              control={control} 
-              render={({
-                field: {onChange},
-              }) => {
-                return (
-                  <FormInput 
-                    name="status"
-                    labelKey="status"
-                    labelText="Status"
-                    type="select" 
-                    selectOnChange={onChange}
-                    defaultValue={defaultSelectValues.status}
-                    options={[{label:'C', value:'C'}, {label:'O', value:'O'}]}
-                    isRequired={false}
-                    register={register} 
-                    errors={errors}
-                  />
-                ) 
-              }}
-            />
+            { insStatusDropDownOptions && insStatusDropDownOptions.length > 0 &&
+              <Controller 
+                name={"status"}  
+                control={control} 
+                render={({
+                  field: {onChange},
+                }) => {
+                  return (
+                    <FormInput 
+                      name="status"
+                      labelKey="status"
+                      labelText="Status"
+                      type="select" 
+                      selectOnChange={onChange}
+                      defaultValue={defaultSelectValues.status}
+                      options={insStatusDropDownOptions}
+                      isRequired={false}
+                      register={register} 
+                      errors={errors}
+                    />
+                  ) 
+                }}
+              />
+            }
             
             <Controller 
               name={"assigned"}  

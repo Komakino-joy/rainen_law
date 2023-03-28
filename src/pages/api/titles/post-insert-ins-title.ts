@@ -35,7 +35,9 @@ export default async function handler(
         clientFileNumber= '',
         state= '',
         zip= '',
-        notes= ''
+        notes= '',
+        created_by,
+        last_updated_by,
       } = req.body
 
       try {
@@ -76,13 +78,15 @@ export default async function handler(
             "ISTATE",
             "IZIP",
             "INOTES",
+            created_by,
+            last_updated_by,
             created_at,
             last_viewed,
             last_updated
           )
           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11,
             $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, 
-            $22, $23, $24, $25, $26, $27, $28, $29, $30)
+            $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32)
 
             RETURNING *
           ;
@@ -114,6 +118,8 @@ export default async function handler(
             state,
             zip,
             notes,
+            created_by,
+            last_updated_by,
             new Date(),
             new Date(),
             new Date()

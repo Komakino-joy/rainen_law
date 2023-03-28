@@ -23,6 +23,7 @@ export default async function handler(
         statementAddressee='',
         email='',
         notes='',
+        last_updated_by,
         id
       } = req.body
 
@@ -47,9 +48,10 @@ export default async function handler(
             "CSTATTO" = $12, 
             "CEMAIL" = $13,
             "CNOTES" = $14,
-            "last_updated" = $15
+            last_updated_by = $15,
+            last_updated = $16
           
-          WHERE cm.id = $16
+          WHERE cm.id = $17
           RETURNING *;
 
         `,[
@@ -67,6 +69,7 @@ export default async function handler(
             statementAddressee,
             email,
             notes,
+            last_updated_by,
             new Date(),
             id,
           ]

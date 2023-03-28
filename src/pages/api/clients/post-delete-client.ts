@@ -13,15 +13,15 @@ export default async function handler(
       
       try {
         await conn.query('BEGIN')
-        const deletePropertyQuery = pgPromise.as.format(`
-          DELETE FROM public."propmstr" pm WHERE pm.id = $1;
+        const deleteQuery = pgPromise.as.format(`
+          DELETE FROM public."clntmstr" cm WHERE cm.id = $1;
         `,[id]
         )
-        await conn.query(deletePropertyQuery)
+        await conn.query(deleteQuery)
         await conn.query('COMMIT')
         
         res.status(200).json({
-          message: `Property: ${id} successfully removed.`,
+          message: `Client: ${id} successfully removed.`,
           status: 'success'
         })
         

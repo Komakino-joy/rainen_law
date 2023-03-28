@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import toast from 'react-hot-toast'
-import axios from "axios";
+
+import { 
+  httpPostInsertCompany, 
+  httpPostSelectedCompany, 
+  httpPostUpdateCompany 
+} from "@/services/http";
 
 import { FORM_BUTTON_TEXT } from "@/constants";
 import { abbreviatedStatesLabelValuePair } from "@/utils/UnitedStates";
@@ -43,13 +47,13 @@ const EditCompanyForm:React.FC<EditEditCompanyFormProps> = ({
 
         setIsLoading(true)
         
-        const response = await axios.post('/api/companies/post-selected-company', { id: selectedId })
+        const companyInfo = await httpPostSelectedCompany({id: selectedId})
         
         const {
           id='', tticoname='', tcity='', tadd1='',
           tzip='', tpercent='', tproduct1='',tproduct2='' ,tproduct3='',
           tproduct4='', tstat='', abbr='', tstate=''  
-        } = response.data[0]
+        } = companyInfo
 
         setCompanyId(id)
   
@@ -81,26 +85,26 @@ const EditCompanyForm:React.FC<EditEditCompanyFormProps> = ({
     if(!isDirty) return 
     
     if(queryType === 'insert') {
-      const response = await axios.post(`/api/companies/post-insert-company`, data)
+      const newRecord = await httpPostInsertCompany({data})
+      
       reset()
-      setTableData([...tableData, response.data.newRecord])
-      // @ts-ignore
-      toast[response.data.status](response.data.message)
+      
+      setTableData([...tableData, newRecord])
     }
 
     if(queryType === 'update') {
-      const response = await axios.post(`/api/companies/post-update-company`, {id: companyId, ...data}) // Passing id to update correct record
-      reset(response.data.updatedRecord)
+      const updatedRecord = await httpPostUpdateCompany({id: companyId, ...data})
+      
+      reset(updatedRecord)
+
       const updatedData = tableData.map(record => {
-        if(record.id === response.data.updatedRecord.id) {
-          record = response.data.updatedRecord
+        if(record.id === updatedRecord.id) {
+          record = updatedRecord
         }
         return record
       })
 
       setTableData(updatedData)
-      // @ts-ignore
-      toast[response.data.status](response.data.message)
     }
   };
 

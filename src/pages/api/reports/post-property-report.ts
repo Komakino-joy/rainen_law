@@ -30,8 +30,8 @@ export default async function handler(
               pm."PASIGN2"
             FROM public.propmstr pm 
               LEFT JOIN public.clntmstr cm ON pm."PNMBR" = cm."CNMBR"
-              LEFT JOIN public.examiner e1 ON pm."PASIGN" = e1."CODE" 
-              LEFT JOIN public.examiner e2 ON pm."PASIGN2" = e2."CODE"
+              LEFT JOIN public.examiners e1 ON pm."PASIGN" = e1.code 
+              LEFT JOIN public.examiners e2 ON pm."PASIGN2" = e2.code
               LEFT JOIN public.city city ON pm."PCITY" = city."CITY"
               LEFT JOIN public.counties cnt ON cnt.code = city."COUNTY"
             WHERE pm."PTDATE" BETWEEN DATE($1) AND DATE($2);

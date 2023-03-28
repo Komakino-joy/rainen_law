@@ -21,6 +21,15 @@
   }
 }
 
+.search-results-spinner {
+  .spinner-container {
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+  }
+}
+
+
 .all-records-view-page {
   width: fit-content;
 }

@@ -6,7 +6,7 @@ import { timestampToDate } from '@/utils';
 import formatNumber from '@/utils/formatNumber';
 
 interface PoliciesByCompanyCardProps {
-  handleCardClick: (e: React.SyntheticEvent, propId: string) => void;
+  handleCardClick: (e: React.SyntheticEvent, id: string) => void;
   policiesByCompany: any;
   companyName: string;
   policyId: string;

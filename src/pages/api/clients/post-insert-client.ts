@@ -22,7 +22,9 @@ export default async function handler(
         status='', 
         statementAddressee='',
         email='',
-        notes=''
+        notes='',
+        created_by,
+        last_updated_by,
       } = req.body
 
       try {
@@ -52,10 +54,13 @@ export default async function handler(
             "CSTATTO", 
             "CEMAIL",
             "CNOTES",
-            "last_updated"
+            created_by,
+            last_updated_by,
+            last_updated,
+            created_at
           )
           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11,
-            $12, $13, $14, $15, $16)
+            $12, $13, $14, $15, $16, $17, $18, $19)
 
             RETURNING *
           ;
@@ -75,6 +80,9 @@ export default async function handler(
             statementAddressee,
             email,
             notes,
+            created_by,
+            last_updated_by,
+            new Date(),
             new Date(),
           ]
         )

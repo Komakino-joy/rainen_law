@@ -2,8 +2,6 @@ import { TableRefs } from "@/types/common";
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import axios from "axios";
-import toast from "react-hot-toast";
 import 'react-tabs/style/react-tabs.css';
 
 import Button from "@/components/Button/Button";
@@ -11,6 +9,7 @@ import Spinner from "@/components/Spinner/Spinner";
 import FormInput from "../Common/FormInput/FormInput";
 
 import { FORM_BUTTON_TEXT } from "@/constants";
+import { httpPostInsertDropDownOptions, httpPostSelectedDropDownOptions, httpPostUpdateSelectDropDownOptions } from "@/services/http";
 
 interface EditStatusCodeFormProps {
   tableData: any[];
@@ -41,14 +40,11 @@ const EditStatusCodeForm:React.FC<EditStatusCodeFormProps> = ({
 
           setIsLoading(true)
           
-          const response = await axios.post(
-            `${process.env.NEXT_PUBLIC_BASE_URL}/api/management/post-selected-drop-down-options`, 
-            {
-              id: selectedStatusCodeItemId,
-              selectionType
-            }
-          )
-          
+          const statusCodeInfo = await httpPostSelectedDropDownOptions({
+            id: selectedStatusCodeItemId,
+            selectionType
+          })
+
           const {
             id, 
             status_code=null, 
@@ -57,13 +53,11 @@ const EditStatusCodeForm:React.FC<EditStatusCodeFormProps> = ({
             type_desc=null, 
             code: county_code=null, 
             county: county_name=null
-          } = response.data[0]
+          } = statusCodeInfo
 
           setStatusCodeId(id)
     
           setIsLoading(false)
-
-          console.log( response.data[0])
 
           return {
             description: status_desc || type_desc || county_name  ,
@@ -80,40 +74,29 @@ const EditStatusCodeForm:React.FC<EditStatusCodeFormProps> = ({
     if(isDirtyAlt) return 
     
     if(queryType === 'insert') {
-      // Adding selection typep so we know which table to update in the endpoint.
-      const response = await axios.post(`
-        ${process.env.NEXT_PUBLIC_BASE_URL}/api/management/post-insert-select-drop-down-options`, 
-        {selectionType, ...data}
-      )
-      setTableData([...tableData, response.data.newRecord])
+      // Adding selection type so we know which table to update in the endpoint.
+      const newRecord = await httpPostInsertDropDownOptions({selectionType, ...data})
+      setTableData([...tableData, newRecord])
       reset()
-      // @ts-ignore
-      toast[response.data.status](response.data.message)
     }
 
     if(queryType === 'update') {
-      const response = await axios.post(`
-        ${process.env.NEXT_PUBLIC_BASE_URL}/api/management/post-update-select-drop-down-options`, 
-        {
-          id: statusCodeId, 
-          selectionType,
-          ...data
-        }
-      ) 
+      const updatedRecord = await httpPostUpdateSelectDropDownOptions({
+        id: statusCodeId, 
+        selectionType,
+        ...data
+      })
       
       const updatedData = tableData.map(record => {
-        if(record.id === response.data.updatedRecord.id) {
-          record = response.data.updatedRecord
+        if(record.id === updatedRecord.id) {
+          record = updatedRecord
         }
         return record
       })
 
       setTableData(updatedData)
 
-      console.log( response.data)
-      reset(response.data.updatedRecord)
-      // @ts-ignore
-      toast[response.data.status](response.data.message)
+      reset(updatedRecord)
     }
   }
 

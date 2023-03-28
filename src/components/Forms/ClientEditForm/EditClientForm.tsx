@@ -1,8 +1,13 @@
+import { Client, ClientInfoSnippet } from "@/types/common";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import toast from 'react-hot-toast'
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
-import axios from "axios";
+
+import { 
+  httpPostInsertClient, 
+  httpPostSelectedClient, 
+  httpPostUpdateClient 
+} from "@/services/http";
 
 import { FORM_BUTTON_TEXT } from "@/constants";
 import { timestampToDate } from "@/utils";
@@ -14,12 +19,13 @@ import SubTableProperties from "@/components/Tables/SubTableProperties/SubTableP
 import styles from './EditClientForm.module.scss'
 import Spinner from "@/components/Spinner/Spinner";
 import PrintClientLabel from "@/components/PrintClientLabel/PrintPropertyLabel";
-import { Client } from "@/types/common";
+import { useSelectDropDownsContext } from "@/context/SelectDropDowns";
+import { useAuth } from "@/context/AuthContext";
 
 interface EditClientFormProps {
   clientId: string | null;
   queryType: 'update' | 'insert';
-  handleAfterSubmit?: (propId: string) => void;
+  handleAfterSubmit?: (id: string) => void;
 }
 
 const ClientForm:React.FC<EditClientFormProps> = ({
@@ -27,7 +33,8 @@ const ClientForm:React.FC<EditClientFormProps> = ({
   queryType, 
   handleAfterSubmit = () => {},
 }) => {
-
+  const {user} = useAuth()
+  const {clientStatusDropDownOptions} = useSelectDropDownsContext()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [titlesCount, setTitlesCount] = useState(null)
   const[printLabelInfo, setPrintLabelInfo] = useState({})
@@ -35,15 +42,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
     status: '',
     state: ''
   })
-  const [clientInfoSnippet, setClientInfoSnippet] = useState<{
-    id:string;
-    cnmbr: string | null;
-    clientName: string | null;
-    lastUpdated: {
-      date:string, 
-      time:string
-    } | null;
-  }>({
+  const [clientInfoSnippet, setClientInfoSnippet] = useState<ClientInfoSnippet>({
     id: 'New', 
     cnmbr: null,
     clientName: 'New Client',
@@ -62,13 +61,13 @@ const ClientForm:React.FC<EditClientFormProps> = ({
 
         setIsLoading(true)
         
-        const response = await axios.post('/api/clients/post-selected-client', {clientId})
+        const clientInfo = await httpPostSelectedClient({id: clientId})
         
         const {
           id='', CNMBR='', CNAME='', last_updated=null, CSTAT='', CSEARCH='', CADD1='', 
           CADD2='', CCITY='', CSTATE='', CZIP='', CPHONE='',
           CFAX='', CEMAIL='', CCNTCT='', CSTATTO='', CNOTES=''
-        } = response.data[0]
+        } = clientInfo
 
         setPrintLabelInfo((prevState) => ({
           ...prevState,
@@ -119,19 +118,24 @@ const ClientForm:React.FC<EditClientFormProps> = ({
     if(!isDirty) return 
     
     if(queryType === 'insert') {
-      const response = await axios.post(`/api/clients/post-insert-client`, data)
+      const newClientId = await httpPostInsertClient({
+        data,
+        username: user.username
+      })
+
       reset()
-      handleAfterSubmit(response.data.newPropId)
-      // @ts-ignore
-      toast[response.data.status](response.data.message)
+      handleAfterSubmit(newClientId)
     }
 
     if(queryType === 'update') {
-      const response = await axios.post(`/api/clients/post-update-client`, {id: clientInfoSnippet.id, ...data}) // Passing id to update correct record
+      const updatedRecord = httpPostUpdateClient({
+        data,
+        id: clientInfoSnippet.id, // Passing id to update correct record
+        username: user.username,
+      })
+
       handleAfterSubmit(clientInfoSnippet.id)
-      reset(response.data.updatedRecord)
-      // @ts-ignore
-      toast[response.data.status](response.data.message)
+      reset(updatedRecord)
     }
   };
 
@@ -173,7 +177,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
                       defaultValue={defaultSelectValues.status}
                       customClass={styles.status}
                       selectOnChange={onChange}
-                      options={[{label:'C', value:'C'}, {label:'O', value:'O'}]}
+                      options={clientStatusDropDownOptions}
                       isRequired={true}
                       register={register} 
                       errors={errors}

@@ -1,7 +1,7 @@
 'use client';
 
+import { httpGetDistinctCityOptions, httpGetDistinctPropertyAssignOptions, httpGetDistinctPropertyStatusOptions, httpGetDistinctPropertyTypeOptions } from "@/services/http";
 import { LabelValuePair } from "@/types/common";
-import axios from "axios";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 
 interface PropertiesContextProps {
@@ -50,18 +50,18 @@ export const PropertiesContextProvider = ({children}: {children:any}) => {
         mounted.current = true;
         
         setIsLoading(true)
-        const cityResponse = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/properties/get-distinct-city-options`)
-        const typeResponse = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/properties/get-distinct-type-options`)
-        const statusResponse = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/properties/get-distinct-status-options`)
-        const assignResponse = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/properties/get-distinct-assign-options`)
+        const cities = await httpGetDistinctCityOptions()
+        const types = await httpGetDistinctPropertyTypeOptions()
+        const statuses = await httpGetDistinctPropertyStatusOptions()
+        const assignTypes = await httpGetDistinctPropertyAssignOptions()
 
         type propKey = keyof typeof propertiesResponseMap
 
         const propertiesResponseMap = {
-          PCITY: cityResponse.data,
-          PTYPE: typeResponse.data,
-          PSTAT: statusResponse.data,
-          PASIGN: assignResponse.data
+          PCITY: cities,
+          PTYPE: types,
+          PSTAT: statuses,
+          PASIGN: assignTypes
         }
 
         const propertiesSelectOptions = Object.keys(propertiesResponseMap).reduce((acc:any, fieldName:any) => {

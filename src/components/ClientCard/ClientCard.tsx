@@ -5,7 +5,7 @@ import styles from './ClientCard.module.scss'
 import { formatAddress } from '@/utils';
 
 interface ClientCardProps {
-  handleCardClick: (e: React.SyntheticEvent, propId: string) => void;
+  handleCardClick: (e: React.SyntheticEvent, id: string) => void;
   clientProperties: any;
   clientName: string;
   clientId: string;

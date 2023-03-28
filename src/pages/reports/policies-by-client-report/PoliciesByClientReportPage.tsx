@@ -1,7 +1,6 @@
 import React, { useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useReactToPrint } from 'react-to-print'
-import axios from 'axios'
 
 import Button from '@/components/Button/Button'
 import FormInput from '@/components/Forms/Common/FormInput/FormInput'
@@ -14,6 +13,7 @@ import { timestampToDate } from '@/utils'
 import formatNumber from '@/utils/formatNumber'
 
 import styles from './PoliciesByClientReport.module.scss'
+import { httpPostPolicyByClientReport } from '@/services/http'
 
 const PoliciesByClientReportPage = () => {
 
@@ -52,7 +52,7 @@ const PoliciesByClientReportPage = () => {
     })
 
     setIsLoading(true)
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/reports/post-policy-by-client-report`, data)
+    const response = await httpPostPolicyByClientReport({data})
 
     const insTitleGroupedByCompany = response.data.reduce((acc: any, insTitle: INSTitle) => {
       type propKeyT = keyof typeof insTitle

@@ -1,6 +1,6 @@
 import { PencilIcon, TrashIcon } from '@/components/Icons/Icons';
-import { ClientStatus, Company, County, InsStatus, PropertyStatus, PropertyType, TableRefs } from '@/types/common';
-import axios from 'axios';
+import { httpPostDeleteExaminer } from '@/services/http';
+import { ClientStatus, Company, County, Examiner, InsStatus, PropertyStatus, PropertyType, TableRefs } from '@/types/common';
 import { useMemo } from 'react';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
@@ -47,10 +47,7 @@ const ExaminersTable:React.FC<ExaminersTableProps> = ({
         {
           label: 'Yes',
           onClick: async() => {
-            const response = await axios.post(`
-              ${process.env.NEXT_PUBLIC_BASE_URL}/api/examiners/post-delete-examiner`, 
-              {id, selectionType}
-            )
+            const response = await httpPostDeleteExaminer({id, selectionType})
             if(response.data.status === 'success') {
               toast.success(response.data.message, {id: 'delete-examiner'})
 
@@ -83,31 +80,31 @@ const ExaminersTable:React.FC<ExaminersTableProps> = ({
     () => [
       {
         Header: 'ID',
-        accessor: (d:any) => d.id,
+        accessor: (d:Examiner) => d.id,
       },
       {
         Header: 'Name',
-        accessor: (d:any) => d.name,
+        accessor: (d:Examiner) => d.name || 'N/A',
       },
       {
         Header: 'Code',
-        accessor: (d:any) => d.code,
+        accessor: (d:Examiner) => d.code || 'N/A',
       },
       {
         Header: 'Type',
-        accessor: (d:any) => d.type,
+        accessor: (d:Examiner) => d.type || 'N/A',
       },
       {
         Header: 'Compensation',
-        accessor: (d:any) => d.compensate,
+        accessor: (d:Examiner) => d.compensate || 'N/A',
       },
       {
         Header: 'Is Active ?',
-        accessor: (d:any) => d.is_active,
+        accessor: (d:Examiner) => d.is_active || 'N/A',
       },
       {
         Header: 'View / Edit',
-        accessor: (d:any) => d.id,
+        accessor: (d:Examiner) => d.id,
         Cell: ({value}:{value:any}) => (
           <span
             title={`Edit ${selectionType}: ${value}`} 

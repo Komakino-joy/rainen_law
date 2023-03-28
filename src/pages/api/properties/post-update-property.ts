@@ -32,7 +32,8 @@ export default async function handler(
         docNumber='',
         requestDate,
         closedDate,
-        id
+        id,
+        last_updated_by,
       } = req.body
 
       try {
@@ -71,9 +72,10 @@ export default async function handler(
             "PDOCNUM" = $24,
             "PRDATE" = $25,
             "PCDATE" = $26,
-            "last_updated" = $27 
+            last_updated_by = $27,
+            "last_updated" = $28 
           
-          WHERE pm.id = $28
+          WHERE pm.id = $29
 
             RETURNING *
           ;
@@ -104,6 +106,7 @@ export default async function handler(
             docNumber,
             requestDate === '' ? null : requestDate,
             closedDate === '' ? null : closedDate,
+            last_updated_by,
             new Date(),
             id,
           ]

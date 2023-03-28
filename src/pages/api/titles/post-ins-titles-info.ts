@@ -9,6 +9,7 @@ export default async function handler(
       try {
         const getInsTitlesInfoQuery = `
             SELECT 
+              i.id,
               i."ISTRET",
               i."ICITY",
               i."ILOT",

@@ -1,9 +1,8 @@
-import { INSTitle, OutstandingInsTitleReportEntry } from '@/types/common'
+import { OutstandingInsTitleReportEntry } from '@/types/common'
 
 import React, { useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useReactToPrint } from 'react-to-print'
-import axios from 'axios'
 
 import { RAINEN_LAW } from '@/constants'
 import Button from '@/components/Button/Button'
@@ -16,6 +15,7 @@ import { timestampToDate } from '@/utils'
 import formatNumber from '@/utils/formatNumber'
 
 import styles from './OutStandingPremReport.module.scss'
+import { httpPostOutstandingInsTitlePremReport } from '@/services/http'
 
 const OutStandingPremReportPage = () => {
 
@@ -40,7 +40,7 @@ const OutStandingPremReportPage = () => {
 
   const onSubmit = async(data:any) => {
     setIsLoading(true)
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/reports/get-outstanding-ins-title-prem-report`, data)
+    const response = await httpPostOutstandingInsTitlePremReport({data})
     const goupedByCLient = response.data.reduce((acc: any, record: OutstandingInsTitleReportEntry) => {
       type recordKey = keyof typeof record
 

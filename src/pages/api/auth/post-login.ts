@@ -35,7 +35,12 @@ export default async function handler(
           
           if(result === true) {
             res.status(200).json({
-              user: queryResults.rows[0]
+              user: {
+                id: queryResults.rows[0].id,
+                username: queryResults.rows[0].username,
+                f_name: queryResults.rows[0].f_name,
+                l_name: queryResults.rows[0].l_name,
+              }
             })
           } else {
             res.status(200).json({

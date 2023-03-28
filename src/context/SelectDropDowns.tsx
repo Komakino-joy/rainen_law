@@ -1,7 +1,7 @@
 'use client';
 
+import { httpGetSelectDropDownOptions } from "@/services/http";
 import { ClientStatus, Company, County, InsStatus, LabelValuePair, PropertyStatus, PropertyType } from "@/types/common";
-import axios from "axios";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 
 interface SelectDropDownsContextProps {
@@ -61,11 +61,11 @@ export const SelectDropDownsContextProvider = ({children}: {children:any}) => {
       mounted.current = true;
       const httpFetchDropDownOptions = async() => {
         setIsLoading(true)
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/management/get-select-drop-down-options`)
+        const selectDropDownOptions = await httpGetSelectDropDownOptions()
         const {
           clientStatusList, insStatusList, propertyStatusList, 
           propertyTypeList, companyList, countyList
-        } = response.data
+        } = selectDropDownOptions
 
         setClientStatusList(clientStatusList)
         setInsStatusList(insStatusList)
@@ -89,10 +89,9 @@ export const SelectDropDownsContextProvider = ({children}: {children:any}) => {
         setCompanyDropDownOptions(companyList.map((company: Company) => (
           { label:company.tticoname, value:company.tnmbr }
         )))
-        setCompanyDropDownOptions(countyList.map((county: County) => (
+        setCountyDropDownOptions(countyList.map((county: County) => (
           { label:county.code, value:county.code }
         )))
-
 
         setIsLoading(false)
       }

@@ -7,7 +7,6 @@ import ClientsTable from '@/components/Tables/Clients/ClientsTable';
 import EditPropertyForm from '@/components/Forms/PropertyEditForm/EditPropertyForm';
 import EditClientForm from '@/components/Forms/ClientEditForm/EditClientForm';
 import EditINSForm from '@/components/Forms/INSEditForm/EditINSForm';
-import axios from 'axios';
 import PropertiesTable from '@/components/Tables/Properties/PropertiesTables';
 import InsTitlesTable from '@/components/Tables/InsTitles/InsTitlesTable';
 import Spinner from '@/components/Spinner/Spinner';
@@ -15,6 +14,7 @@ import HomeRecordPreviewCard from '@/components/HomeRecordPreviewCard/HomeRecord
 
 import styles from '../styles/home.module.scss'
 import { useAuth } from '@/context/AuthContext';
+import { httpGetLatestUpdatedClients, httpGetLatestUpdatedInsTitles, httpGetLatestUpdatedProperties } from '@/services/http';
 
 const HomePage:React.FC = () =>  {
   const {user} = useAuth()
@@ -63,18 +63,18 @@ const HomePage:React.FC = () =>  {
     setIsLoading(true)
 
     const httpFetchPropertyData = async() => {
-      const response =  await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/properties/get-latest-updated-properties`)
-      setPropertyData(response.data)
+      const properties =  await httpGetLatestUpdatedProperties()
+      setPropertyData(properties)
     } 
 
     const httpFetchClientData = async() => {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/clients/get-latest-updated-clients`)
-      setClientData(response.data)
+      const clients = await httpGetLatestUpdatedClients()
+      setClientData(clients)
     }
 
     const httpFetchInsTitleData = async() => {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/titles/get-latest-updated-ins-titles`)
-      setInsTitleData(response.data)
+      const insTitles = await httpGetLatestUpdatedInsTitles()
+      setInsTitleData(insTitles)
     }
 
     if(mounted) {

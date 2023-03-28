@@ -1,6 +1,6 @@
 import { PencilIcon, TrashIcon } from '@/components/Icons/Icons';
+import { httpPostDeleteUser } from '@/services/http';
 import { ClientStatus, Company, County, InsStatus, PropertyStatus, PropertyType, TableRefs } from '@/types/common';
-import axios from 'axios';
 import { useMemo } from 'react';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
@@ -47,10 +47,7 @@ const UsersTable:React.FC<UsersTableProps> = ({
         {
           label: 'Yes',
           onClick: async() => {
-            const response = await axios.post(`
-              ${process.env.NEXT_PUBLIC_BASE_URL}/api/users/post-delete-user`, 
-              {id, selectionType}
-            )
+            const response = await httpPostDeleteUser({id, selectionType})
             if(response.data.status === 'success') {
               toast.success(response.data.message, {id: 'delete-user'})
 

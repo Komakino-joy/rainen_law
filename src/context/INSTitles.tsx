@@ -1,8 +1,8 @@
 'use client';
 
+import { httpGetAllInsTitles } from "@/services/http";
 import { INSTitle, LabelValuePair } from "@/types/common";
 import { hasValue, uniqueLabelValuePairs } from "@/utils";
-import axios from "axios";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 
 interface INSTitlesContextProps {
@@ -62,7 +62,7 @@ export const INSTitlesContextProvider = ({children}: {children:any}) => {
       const httpFetchProperyInfo = async() => {
         setIsLoading(true)
 
-        const allTitlesResponse = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/titles/get-all-ins-titles`)
+        const insTitles = await httpGetAllInsTitles()
 
         // These are the only fields we care to make into Options for Select component
         const fields = [
@@ -75,7 +75,7 @@ export const INSTitlesContextProvider = ({children}: {children:any}) => {
           'ICITY'
         ]
 
-        const insTitlesObject = allTitlesResponse.data.reduce((acc: any, row: INSTitle) => {
+        const insTitlesObject = insTitles.reduce((acc: any, row: INSTitle) => {
           // Iterate through our fields and see if we have assigned a value for each property in our accumulator
           // Assign empty array if no value is found
           for(let i=0; i<fields.length; i++) {

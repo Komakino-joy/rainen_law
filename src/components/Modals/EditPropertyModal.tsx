@@ -5,16 +5,16 @@ import Modal from '../Modal/Modal'
 interface EditPropertyModal {
   handleModalClose: () => void;
   showModal: boolean;
-  selectedPropId: string | null;
+  selectedId: string | null;
   title: string;
-  handleAfterSubmit: (propId: string) => void;
+  handleAfterSubmit: (id: string) => void;
 }
 
 const EditPropertyModal:React.FC<EditPropertyModal> = ({
   handleModalClose,
   showModal,
   title='',
-  selectedPropId,
+  selectedId,
   handleAfterSubmit
 }) => {
   return (
@@ -23,9 +23,9 @@ const EditPropertyModal:React.FC<EditPropertyModal> = ({
       show={showModal}
       title={title}
     >
-      { selectedPropId && 
+      { selectedId && 
         <EditPropertyForm 
-          propertyId={selectedPropId}
+          propertyId={selectedId}
           queryType='update'
           handleAfterSubmit={handleAfterSubmit}
         />

@@ -1,5 +1,4 @@
-import axios from 'axios';
-
+import { httpPostInsTitlesInfo } from '@/services/http';
 import { useEffect, useMemo, useState } from 'react';
 import { useTable, useFilters } from 'react-table';
 
@@ -17,9 +16,9 @@ const SubTableINS:React.FC<SubTableINSProps> = ({
 
   useEffect(() => {
     (async() => {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/titles/post-ins-titles-info`, {inmbr} )
-      setTableData(response.data.titles)
-      setTitlesCount(response.data.count)
+      const {titles, count} = await httpPostInsTitlesInfo({inmbr} )
+      setTableData(titles)
+      setTitlesCount(count)
     })();
   },[])
 
@@ -31,24 +30,28 @@ const SubTableINS:React.FC<SubTableINSProps> = ({
   const columns = useMemo(
     () => [
       {
+        Header: 'ID',
+        accessor: (d:any) => d.id,
+      },
+      {
         Header: 'Street',
-        accessor: (d:any) => d.ISTRET,
+        accessor: (d:any) => d.ISTRET || 'N/A',
       },
       {
         Header: 'City',
-        accessor: (d:any) => d.ICITY,
+        accessor: (d:any) => d.ICITY || 'N/A',
       },
       {
         Header: 'Lot',
-        accessor: (d:any) => d.ILOT,
+        accessor: (d:any) => d.ILOT || 'N/A',
       },
       {
         Header: 'Condo',
-        accessor: (d:any) => d.ICONDO,
+        accessor: (d:any) => d.ICONDO || 'N/A',
       },
       {
         Header: 'Unit',
-        accessor: (d:any) => d.IUNIT,
+        accessor: (d:any) => d.IUNIT || 'N/A',
       }
     ],
     [tableData]

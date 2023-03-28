@@ -1,7 +1,7 @@
 'use client';
 
+import { httpGetExaminers } from "@/services/http";
 import { Examiner } from "@/types/common";
-import axios from "axios";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 
 interface ExaminersContextProps {
@@ -28,9 +28,7 @@ export const ExaminersContextProvider = ({children}: {children:any}) => {
       mounted.current = true;
       const httpFetchExaminerInfo = async() => {
         setIsLoading(true)
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/examiners/get-examiners`)
-  
-        const examiners = response.data
+        const examiners = await httpGetExaminers()
 
         setExaminersList(examiners)
 

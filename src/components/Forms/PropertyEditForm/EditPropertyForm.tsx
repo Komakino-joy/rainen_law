@@ -3,7 +3,6 @@ import { Property } from "@/types/common";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import axios from "axios";
 import toast from "react-hot-toast";
 import 'react-tabs/style/react-tabs.css';
 
@@ -14,9 +13,17 @@ import SubTableINS from "@/components/Tables/SubTableINS/SubTableINS";
 import PrintPropertyLabel from "@/components/PrintPropertyLabel/PrintPropertyLabel";
 import SubTableSellerBuyer from "@/components/Tables/SubTableSellerBuyer/SubTableSellerBuyer";
 
+import { 
+  httpGetPropertyCompRef, 
+  httpPostInsertProperty, 
+  httpPostSelectedProperty, 
+  httpPostUpdateProperty 
+} from "@/services/http";
+
 import { FORM_BUTTON_TEXT } from "@/constants";
+import { useAuth } from "@/context/AuthContext";
 import { useClientsContext } from "@/context/Clients";
-import { usePropertiesContext } from "@/context/Properties";
+import { useSelectDropDownsContext } from "@/context/SelectDropDowns";
 import { timestampToDate, abbreviatedStatesLabelValuePair } from "@/utils";
 
 import styles from './EditPropertyForm.module.scss'
@@ -24,7 +31,7 @@ import styles from './EditPropertyForm.module.scss'
 interface EditPropertyFormProps {
   propertyId: string | null;
   queryType: 'update' | 'insert';
-  handleAfterSubmit?: (propId: string) => void;
+  handleAfterSubmit?: (id: string) => void;
 }
 
 const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
@@ -32,15 +39,13 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
   queryType, 
   handleAfterSubmit = () => {},
 }) => {
+  const {user} = useAuth()
   const {clientSelectOptions} = useClientsContext()
-  const {propertiesSelectOptions} = usePropertiesContext()
-  const { CNAME: clientNames } = clientSelectOptions
-
   const {
-    PSTAT: statusOptions,
-    PTYPE: typeOptions,
-    PASIGN: assignOptions,
-  } = propertiesSelectOptions
+    propertyStatusDropDownOptions, 
+    propertyTypeDropDownOptions
+  } = useSelectDropDownsContext()
+  const { CNAME: clientNames } = clientSelectOptions
   
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [compRef, setCompRef] = useState(null)
@@ -73,8 +78,8 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
 
   useEffect(() => {
     if(queryType === 'insert') (async() => {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/properties/get-new-comp-ref`)
-        setCompRef(response.data.newCompRef)
+        const compRef = await httpGetPropertyCompRef()
+        setCompRef(compRef)
       })();
   },[])
 
@@ -82,7 +87,6 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
     register, 
     handleSubmit, 
     control,
-    getValues,
     formState: { errors, dirtyFields },
     reset,
   } = useForm({
@@ -91,7 +95,7 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
 
           setIsLoading(true)
           
-          const response = await axios.post('/api/properties/post-selected-property', {propertyId})
+          const propertyData = await httpPostSelectedProperty({id: propertyId})
           
           const {
             id='', PCITY='', PSTRET='', PSTATE='', PZIP='', 
@@ -100,7 +104,7 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
             PASIGN='', CNAME='', PCOMPREF='', PFILE='', CFILE='', 
             PREQ='', PRDATE='', PCDATE='', PINSTR='', last_updated='', PNMBR='',
             PTDATE='', PSELR1='', PSELR2='', PSELR3='', PSELR4='', PBUYR1='', PBUYR2=''
-          } = response.data[0]
+          } = propertyData
 
           setPrintLabelInfo((prevState) => ({
             ...prevState,
@@ -164,17 +168,25 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
     if(isDirtyAlt) return 
     
     if(queryType === 'insert') {
-      const response = await axios.post(`/api/properties/post-insert-property`, data)
+      const newPropId = await httpPostInsertProperty({
+        data,
+        username: user.username
+      })
+
       reset()
-      handleAfterSubmit(response.data.newPropId)
+      handleAfterSubmit(newPropId)
       // @ts-ignore
       toast[response.data.status](response.data.message)
     }
 
     if(queryType === 'update') {
-      const response = await axios.post(`/api/properties/post-update-property`, {id: propertyInfoSnippet.id, ...data}) // Passing id to update correct record
+      const updatedRecord = await httpPostUpdateProperty({
+        data,
+        id: propertyInfoSnippet.id, // Passing id to update correct record
+        username: user.username
+      })
       handleAfterSubmit(propertyInfoSnippet.id)
-      reset(response.data.updatedRecord)
+      reset(updatedRecord)
       // @ts-ignore
       toast[response.data.status](response.data.message)
     }
@@ -360,7 +372,7 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
 
           <section className={`flex-y ${styles['mid-section']}`}>
             <div className={`flex-x ${styles['status-type-assigned-section']}`}>                
-              { statusOptions && statusOptions.length > 0 &&
+              { propertyStatusDropDownOptions && propertyStatusDropDownOptions.length > 0 &&
                 <Controller 
                   name={"status"}  
                   control={control} 
@@ -375,7 +387,7 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
                         defaultValue={defaultSelectValues.status}
                         type="select" 
                         selectOnChange={onChange}
-                        options={statusOptions}
+                        options={propertyStatusDropDownOptions}
                         isRequired={true}
                         register={register} 
                         errors={errors}
@@ -384,7 +396,7 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
                   }}
                 />
               }
-              { typeOptions && typeOptions.length > 0 &&
+              { propertyTypeDropDownOptions && propertyTypeDropDownOptions.length > 0 &&
                 <Controller 
                   name={"type"}  
                   control={control} 
@@ -399,7 +411,7 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
                         defaultValue={defaultSelectValues.type}
                         type="select" 
                         selectOnChange={onChange}
-                        options={typeOptions}
+                        options={propertyTypeDropDownOptions}
                         isRequired={true}
                         register={register} 
                         errors={errors}
@@ -408,30 +420,15 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
                   }}
                 />
               }
-              { assignOptions && assignOptions.length > 0 &&
-                <Controller 
-                  name={"assigned"}  
-                  control={control} 
-                  render={({
-                    field: {onChange},
-                  }) => {
-                    return (
-                      <FormInput 
-                        name="assigned"
-                        labelKey="assigned"
-                        labelText="Assigned"
-                        defaultValue={defaultSelectValues.assigned}
-                        type="select" 
-                        selectOnChange={onChange}
-                        options={assignOptions}
-                        isRequired={true}
-                        register={register} 
-                        errors={errors}
-                      />
-                    ) 
-                  }}
-                />
-              }
+              <FormInput 
+                name="assigned"
+                labelKey="assigned"
+                labelText="Assigned"
+                type="text" 
+                isRequired={false}
+                register={register} 
+                errors={errors}
+              />
             </div>
 
             <div className={`flex-x ${styles['comp-ref-file-num-section']}`}>

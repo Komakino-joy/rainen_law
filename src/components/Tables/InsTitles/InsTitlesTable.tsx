@@ -1,15 +1,15 @@
-import { INSTitle, ModalType } from '@/types/common';
+import { INSTitle, ModalType, Policy } from '@/types/common';
 
 import { useMemo } from 'react';
 import { useTable, useFilters } from 'react-table';
 import { confirmAlert } from 'react-confirm-alert'; 
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import toast from 'react-hot-toast'
-import axios from 'axios';
 
 import { PencilIcon, TrashIcon } from '@/components/Icons/Icons';
 import { formatAddress, timestampToDate } from '@/utils';
 import formatNumber from '@/utils/formatNumber';
+import { httpPostDeleteInsTitle } from '@/services/http';
 
 interface InsTitlesTableProps {
   tableData: any;
@@ -35,7 +35,7 @@ const InsTitlesTable:React.FC<InsTitlesTableProps> = ({
         {
           label: 'Yes',
           onClick: async() => {
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/titles/post-delete-ins-title`, {insTitleId})
+            const response = await httpPostDeleteInsTitle({id: insTitleId})
             if(response.data.status === 'success') {
               toast.success(response.data.message, {id: 'delete-ins-title'})
 
@@ -67,19 +67,19 @@ const InsTitlesTable:React.FC<InsTitlesTableProps> = ({
     () => [
       {
         Header: 'ID',
-        accessor: (d:any) => d.id,
+        accessor: (d:Policy) => d.id,
       },
       {
         Header: 'File #',
-        accessor: (d:any) => d.IFILE,
+        accessor: (d:Policy) => d.IFILE || 'N/A',
       },
       {
         Header: 'Bill #',
-        accessor: (d:any) => d.IBILL,
+        accessor: (d:Policy) => d.IBILL || 'N/A',
       },
       {
         Header: 'Address',
-        accessor: (d:any) => formatAddress({
+        accessor: (d:Policy) => formatAddress({
           street: d.ISTRET,
           condo: d.ICONDO,
           unit: d.IUNIT,
@@ -88,52 +88,52 @@ const InsTitlesTable:React.FC<InsTitlesTableProps> = ({
       },
       {
         Header: 'Client',
-        accessor: (d:any) => d.CNAME,
+        accessor: (d:Policy) => d.CNAME || 'N/A',
       },
       {
         Header: 'Premium Due',
-        accessor: (d:any) => `$${ d.PREMDUE ? formatNumber(d.PREMDUE) : '0.00'}`,
+        accessor: (d:Policy) => `$${ d.PREMDUE ? formatNumber(d.PREMDUE) : '0.00'}`,
       },
       {
         Header: 'Premium Paid',
-        accessor: (d:any) => `$${ d.PREMPAID ?formatNumber(d.PREMPAID) : '0.00'}`,
+        accessor: (d:Policy) => `$${ d.PREMPAID ?formatNumber(d.PREMPAID) : '0.00'}`,
       },
       {
         Header: 'Date Billed',
-        accessor: (d:any) => d.ICDATE ? timestampToDate(d.ICDATE, 'mmDDyyyy').date : 'n/a',
+        accessor: (d:Policy) => d.ICDATE ? timestampToDate(d.ICDATE, 'mmDDyyyy').date : 'N/A',
       },
       {
         Header: 'Policy Date',
-        accessor: (d:any) => d.IPOLDATE ? timestampToDate(d.IPOLDATE, 'mmDDyyyy').date : 'n/a',
+        accessor: (d:Policy) => d.IPOLDATE ? timestampToDate(d.IPOLDATE, 'mmDDyyyy').date : 'N/A',
       },
       {
         Header: 'Notes',
-        accessor: (d:any) => d.INOTES,
+        accessor: (d:Policy) => d.INOTES,
       },
       {
         Header: 'Date Paid',
-        accessor: (d:any) => d.IPDATE ? timestampToDate(d.IPDATE, 'mmDDyyyy').date : 'n/a',
+        accessor: (d:Policy) => d.IPDATE ? timestampToDate(d.IPDATE, 'mmDDyyyy').date : 'N/A',
       },
       {
         Header: 'L Policy #',
-        accessor: (d:any) => d.LPOLICYNUM,
+        accessor: (d:Policy) => d.LPOLICYNUM  || 'N/A',
       },
       {
         Header: 'O Policy #',
-        accessor: (d:any) => d.OPOLICYNUM,
+        accessor: (d:Policy) => d.OPOLICYNUM || 'N/A',
       },
       {
         Header: 'L Policy Amt',
-        accessor: (d:any) => `$${ d.LPOLICYAMT ?formatNumber(d.LPOLICYAMT) : '0.00'}`,
+        accessor: (d:Policy) => `$${ d.LPOLICYAMT ?formatNumber(d.LPOLICYAMT) : '0.00'}`,
       },
       {
         Header: 'O Policy Amt',
-        accessor: (d:any) => `$${ d.OPOLICYAMT ?formatNumber(d.OPOLICYAMT) : '0.00'}`,
+        accessor: (d:Policy) => `$${ d.OPOLICYAMT ?formatNumber(d.OPOLICYAMT) : '0.00'}`,
       },
       {
         Header: 'View / Edit',
-        accessor: (d:any) => d.id,
-        Cell: ({value}:{value:any}) => (
+        accessor: (d:Policy) => d.id,
+        Cell: ({value}:{value:string}) => (
           <span
             title={`Edit Policy: ${value}`} 
             onClick={(e) => handleModalOpen(e, value, 'ins-title')}

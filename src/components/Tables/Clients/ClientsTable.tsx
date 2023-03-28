@@ -1,18 +1,18 @@
-import { ModalType, Property } from '@/types/common';
+import { Client, ModalType, Property } from '@/types/common';
 
 import { useMemo } from 'react';
 import { useTable, useFilters } from 'react-table';
 import { confirmAlert } from 'react-confirm-alert'; 
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import toast from 'react-hot-toast'
-import axios from 'axios';
 
+import { httpPostDeleteClient } from '@/services/http';
 import { PencilIcon, TrashIcon } from '@/components/Icons/Icons';
 import PrintClientLabel from '@/components/PrintClientLabel/PrintPropertyLabel';
 
 interface ClientsTableProps {
   tableData: any;
-  handleModalOpen: (e: React.SyntheticEvent, propId: string, type:ModalType) => void;
+  handleModalOpen: (e: React.SyntheticEvent, id: string, type:ModalType) => void;
   setTableData: (tableData: Property[]) => void;
   hiddenColumns?: string[];
 }
@@ -24,7 +24,7 @@ const ClientsTable:React.FC<ClientsTableProps> = ({
   hiddenColumns=['']
 }) => {
 
-  const handleDelete = (e: React.SyntheticEvent, propId: string) => {
+  const handleDelete = (e: React.SyntheticEvent, id: string) => {
     e.preventDefault()
 
     confirmAlert({
@@ -34,23 +34,24 @@ const ClientsTable:React.FC<ClientsTableProps> = ({
         {
           label: 'Yes',
           onClick: async() => {
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/properties/post-delete-property`, {propId})
+            const response = await httpPostDeleteClient({id})
+          
             if(response.data.status === 'success') {
-              toast.success(response.data.message, {id: 'delete-property'})
+              toast.success(response.data.message, {id: 'delete-client'})
 
-              const filteredArray = tableData.filter((row: Property) => row.id !== propId);
+              const filteredArray = tableData.filter((row: Client) => row.id.toString() !== id);
               setTableData(filteredArray);
             }
 
             if(response.data.status=== 'error') {
-              toast.error(response.data.message, {id: 'delete-property'})
+              toast.error(response.data.message, {id: 'delete-client'})
             }
           }
         },
         {
           label: 'No',
           onClick: () => toast.error('Operation Cancelled.', {
-            id: 'delete-property'
+            id: 'delete-client'
           })
         }
       ]
@@ -74,23 +75,23 @@ const ClientsTable:React.FC<ClientsTableProps> = ({
       },
       {
         Header: 'City',
-        accessor: (d:any) => d.CCITY,
+        accessor: (d:any) => d.CCITY || 'N/A',
       },
       {
         Header: 'State',
-        accessor: (d:any) => d.CSTATE,
+        accessor: (d:any) => d.CSTATE || 'N/A',
       },
       {
         Header: 'Zip',
-        accessor: (d:any) => d.CZIP,
+        accessor: (d:any) => d.CZIP || 'N/A',
       },
       {
         Header: 'Phone',
-        accessor: (d:any) => d.CPHONE,
+        accessor: (d:any) => d.CPHONE || 'N/A',
       },
       {
         Header: 'Fax',
-        accessor: (d:any) => d.CFAX,
+        accessor: (d:any) => d.CFAX || 'N/A',
       },
       {
         Header: 'Is Client?',
@@ -98,11 +99,11 @@ const ClientsTable:React.FC<ClientsTableProps> = ({
       },
       {
         Header: 'Properties',
-        accessor: (d:any) => d.PROPCOUNT,
+        accessor: (d:any) => d.PROPCOUNT || 'N/A',
       },
       {
         Header: 'Titles',
-        accessor: (d:any) => d.TITLESCOUNT,
+        accessor: (d:any) => d.TITLESCOUNT || 'N/A',
       },
       {
         Header: 'Print',

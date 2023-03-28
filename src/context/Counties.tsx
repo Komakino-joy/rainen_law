@@ -1,7 +1,7 @@
 'use client';
 
+import { httpGetCounties } from "@/services/http";
 import { County } from "@/types/common";
-import axios from "axios";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 
 interface CountiesContextProps {
@@ -28,9 +28,7 @@ export const CountiesContextProvider = ({children}: {children:any}) => {
       mounted.current = true;
       const httpFetchCountyInfo = async() => {
         setIsLoading(true)
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/counties/get-counties`)
-  
-        const counties = response.data
+        const counties = await httpGetCounties()
 
         setCountiesList(counties.map((county:County) => (
           {

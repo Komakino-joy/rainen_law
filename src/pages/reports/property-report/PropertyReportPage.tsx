@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form";
 import FormInput from '@/components/Forms/Common/FormInput/FormInput';
 import Button from '@/components/Button/Button';
 import styles from './PropertyReport.module.scss'
-import axios from 'axios';
 import { timestampToDate } from '@/utils';
 import { Property, ReportProperty } from '@/types/common';
 import ReportProperties from '@/components/Tables/ReportProperties/ReportProperties';
@@ -12,6 +11,7 @@ import RegistryOfDeedsBreakDown from '@/components/RegistryOfDeedsBreakDown/Regi
 import TitlesBreakDown from '@/components/TitleBreakDown/TitlesBreakDown';
 import { useReactToPrint } from 'react-to-print';
 import Spinner from '@/components/Spinner/Spinner';
+import { httpPostPropertyReport } from '@/services/http';
 
 export default function PropertyReport() {
   
@@ -44,7 +44,7 @@ export default function PropertyReport() {
       end: data.endDate
     })
 
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/reports/post-property-report`, data)
+    const response = await httpPostPropertyReport({data})
     setPropertiesData(response.data)
 
     setCountyCountMap(response.data.reduce((acc: any, propObj: ReportProperty) => {

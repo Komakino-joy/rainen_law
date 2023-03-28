@@ -1,6 +1,6 @@
 'use client';
 
-import axios from "axios";
+import { httpGetUsers } from "@/services/http";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 
 interface UsersContextProps {
@@ -24,10 +24,8 @@ export const UsersContextProvider = ({children}: {children:any}) => {
       mounted.current = true;
       const httpFetchExaminerInfo = async() => {
         setIsLoading(true)
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/users/get-users`)
-  
-        const users = response.data
-
+        const users = await httpGetUsers()
+        
         setUsersList(users)
         setIsLoading(false)
       }
