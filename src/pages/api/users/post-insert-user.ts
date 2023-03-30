@@ -65,7 +65,7 @@ export default async function handler(
               
               res.status(200).json({
                 newRecord: newRecord.rows[0],
-                message: 'New record inserted',
+                message: 'New user successfully created',
                 status: 'success'
               })
 

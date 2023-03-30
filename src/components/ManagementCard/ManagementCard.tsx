@@ -156,7 +156,7 @@ const ManageSelectionFieldsCard = () => {
 
   return (
     <>
-      <h3>Manage Selection Fields</h3>
+      <h3>Manage</h3>
       <div className={`light-border ${styles['card']}`}>
         <div className={styles['content']}>
           <section className={styles['edit-options-section']}>
