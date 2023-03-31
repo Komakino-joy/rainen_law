@@ -8,15 +8,17 @@ import Pagination from '@/components/Pagination/Pagination'
 import ClientsTable from '@/components/Tables/Clients/ClientsTable';
 import EditClientForm from '@/components/Forms/ClientEditForm/EditClientForm';
 import conn from '../../lib/db'
-import InfoCard from '@/components/InfoCard/InfoCard';
+import Spinner from '@/components/Spinner/Spinner';
 
 export async function getServerSideProps(context:any) {
     const { page } = context.query
-    const pageSize = 50
+    const pageSize = 100
     const pageOffset = pageSize * (page - 1)
 
     const totalRecordsQuery = `select COUNT(*) from public.clntmstr`
     const totalRecordsResult = (await conn.query(totalRecordsQuery)).rows[0].count;
+
+    console.log({page})
 
     const allClients = `
         SELECT 
@@ -48,7 +50,7 @@ export async function getServerSideProps(context:any) {
             FROM public.ins i
             GROUP BY i."INMBR"
         ) i ON i."INMBR" = cm."CNMBR"
-      ORDER BY cm."CNAME"
+      ORDER BY cm."CNMBR", cm."CNAME"
       OFFSET $1 LIMIT ${pageSize};
     `
     const clientsResults = JSON.parse(JSON.stringify((await conn.query(allClients, [pageOffset])).rows));
@@ -103,18 +105,20 @@ const Clients:React.FC<ClientsProps> = ({
 
   useEffect(() => {
     setTableData(clients)
-  },[])
+  },[clients])
 
-  
+  const totalPages = Math.floor(totalRecords/pageSize)
   return (
     <>
       { tableData ? 
         <div className='all-records-view-page'>
           <h1>
             All Clients 
-            <span className='italicized-record-count'>
-              page ({currentPage}/{Math.floor(totalRecords/pageSize)})
-            </span>
+            { totalPages > 0 &&
+              <span className='italicized-record-count'>
+                page ({currentPage}/{totalPages})
+              </span>
+            }
           </h1>
 
           <ClientsTable 
@@ -123,14 +127,16 @@ const Clients:React.FC<ClientsProps> = ({
             setTableData={setTableData}
           />
 
-          <Pagination 
-            href={'clients'} 
-            totalRecords={totalRecords} 
-            pageSize={pageSize} 
-            currentPage={currentPage} 
-          />
+          { totalPages > 0 &&
+            <Pagination 
+              href={'clients'} 
+              totalRecords={totalRecords} 
+              pageSize={pageSize} 
+              currentPage={currentPage} 
+            />
+          }
         </div>
-        : <InfoCard customStyles={{marginTop: '100px', border: 'none'}}  line1='No Data to Show'/>
+        : <div className='page-spinner'><Spinner/></div> 
       }
 
       <Modal

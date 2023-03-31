@@ -1,7 +1,7 @@
 import { ModalType, Property } from '@/types/common';
 
 import { useMemo } from 'react';
-import { useTable, useFilters } from 'react-table';
+import { useTable, useFilters, useSortBy } from 'react-table';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 import { PencilIcon } from '@/components/Icons/Icons';
@@ -27,6 +27,10 @@ const ClientsTable:React.FC<ClientsTableProps> = ({
 
   const columns = useMemo(
     () => [
+      {
+        Header: 'Client#',
+        accessor: (d:any) => d.CNMBR,
+      },
       {
         Header: 'Client Name',
         accessor: (d:any) => d.CNAME,
@@ -127,6 +131,7 @@ const ClientsTable:React.FC<ClientsTableProps> = ({
       }
     },
     useFilters, // useFilters!
+    useSortBy,
   )
 
   return (
@@ -137,7 +142,16 @@ const ClientsTable:React.FC<ClientsTableProps> = ({
         <tr {...headerGroup.getHeaderGroupProps()}>
           {headerGroup.headers.map((column, idx) => (
             //@ts-ignore
-            <th {...column.getHeaderProps()} >
+            <th 
+              {...column.getHeaderProps(column.getSortByToggleProps())} 
+              className={
+                column.isSorted
+                  ? column.isSortedDesc
+                    ? "desc"
+                    : "asc"
+                  : ""
+                }
+            >
               {column.render('Header')}
             </th>
           ))}
