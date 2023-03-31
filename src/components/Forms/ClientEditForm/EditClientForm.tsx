@@ -18,7 +18,7 @@ import SubTableINS from "@/components/Tables/SubTableINS/SubTableINS";
 import SubTableProperties from "@/components/Tables/SubTableProperties/SubTableProperties";
 import styles from './EditClientForm.module.scss'
 import Spinner from "@/components/Spinner/Spinner";
-import PrintClientLabel from "@/components/PrintClientLabel/PrintPropertyLabel";
+import PrintClientLabel from "@/components/PrintClientLabel/PrintClientLabel";
 import { useSelectDropDownsContext } from "@/context/SelectDropDowns";
 import { useAuth } from "@/context/AuthContext";
 
@@ -40,7 +40,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
   const[printLabelInfo, setPrintLabelInfo] = useState({})
   const [defaultSelectValues , setDefaultSelectValues] = useState({
     status: '',
-    state: ''
+    state: 'MA'
   })
   const [clientInfoSnippet, setClientInfoSnippet] = useState<ClientInfoSnippet>({
     id: 'New', 
@@ -90,8 +90,8 @@ const ClientForm:React.FC<EditClientFormProps> = ({
         setIsLoading(false)
 
         setDefaultSelectValues({
-          status: CSTAT,
-          state: CSTATE
+          status: CSTAT || '',
+          state: CSTATE || ''
         })
 
         return {
@@ -116,7 +116,6 @@ const ClientForm:React.FC<EditClientFormProps> = ({
 
   const onSubmit = async(data:any) => {
     if(!isDirty) return 
-    
     if(queryType === 'insert') {
       const newClientId = await httpPostInsertClient({
         data,
@@ -157,7 +156,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
                 labelKey="clientName"
                 labelText="Client/Firm Name"
                 type="text"
-                isRequired={true}
+                isRequired={false}
                 register={register} 
                 errors={errors}
               />
@@ -178,7 +177,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
                       customClass={styles.status}
                       selectOnChange={onChange}
                       options={clientStatusDropDownOptions}
-                      isRequired={true}
+                      isRequired={false}
                       register={register} 
                       errors={errors}
                     />
@@ -192,7 +191,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
               labelKey="searchName"
               labelText="Search Name"
               type="text"
-              isRequired={true}
+              isRequired={false}
               register={register} 
               errors={errors}
             />
@@ -202,7 +201,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
               labelKey="addressLine1"
               labelText="Address Line 1"
               type="text" 
-              isRequired={true}
+              isRequired={false}
               register={register} 
               errors={errors}
             />
@@ -224,7 +223,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
                 labelText="City"
                 customClass={styles.city}
                 type="text" 
-                isRequired={true}
+                isRequired={false}
                 register={register} 
                 errors={errors}
               />
@@ -232,6 +231,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
               <Controller 
                   name={"state"}  
                   control={control} 
+                  defaultValue={defaultSelectValues.state}
                   render={({
                     field: {onChange},
                   }) => {
@@ -245,7 +245,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
                         customClass={styles.state}
                         selectOnChange={onChange}
                         options={abbreviatedStatesLabelValuePair}
-                        isRequired={true}
+                        isRequired={false}
                         register={register} 
                         errors={errors}
                       />
@@ -259,7 +259,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
                 labelText="Zip Code"
                 customClass={styles.zip}
                 type="text" 
-                isRequired={true}
+                isRequired={false}
                 register={register} 
                 errors={errors}
               />
@@ -272,7 +272,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
                 labelText="Phone Number"
                 customClass={styles.phone}
                 type="tel" 
-                isRequired={true}
+                isRequired={false}
                 register={register} 
                 errors={errors}
               />

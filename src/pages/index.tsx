@@ -1,4 +1,4 @@
-import { Client, INSTitle, ModalType, Property } from '@/types/common';
+import { Client, ModalType, Property } from '@/types/common';
 
 import React, { useEffect, useRef, useState } from 'react'
 
@@ -6,28 +6,26 @@ import Modal from '@/components/Modal/Modal';
 import ClientsTable from '@/components/Tables/Clients/ClientsTable';
 import EditPropertyForm from '@/components/Forms/PropertyEditForm/EditPropertyForm';
 import EditClientForm from '@/components/Forms/ClientEditForm/EditClientForm';
-import EditINSForm from '@/components/Forms/INSEditForm/EditINSForm';
 import PropertiesTable from '@/components/Tables/Properties/PropertiesTables';
-import InsTitlesTable from '@/components/Tables/InsTitles/InsTitlesTable';
 import Spinner from '@/components/Spinner/Spinner';
 import HomeRecordPreviewCard from '@/components/HomeRecordPreviewCard/HomeRecordPreviewCard';
 
 import styles from '../styles/home.module.scss'
 import { useAuth } from '@/context/AuthContext';
-import { httpGetLatestUpdatedClients, httpGetLatestUpdatedInsTitles, httpGetLatestUpdatedProperties } from '@/services/http';
+import { 
+  httpGetLatestUpdatedClients,
+  httpGetLatestUpdatedProperties 
+} from '@/services/http';
 
 const HomePage:React.FC = () =>  {
   const {user} = useAuth()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [propertyData, setPropertyData] = useState<Property[] | null>(null)
   const [clientData, setClientData] = useState<Client[] | null>(null)
-  const [insTitleData, setInsTitleData] = useState<INSTitle[] | null>(null)
 
   const [showModal, setShowModal] = useState<boolean>(false);
   const [selectedPropertyId, setSelectedPropertyId] = useState<string|null>(null)
   const [selectedClientId, setSelectedClientId] = useState<string|null>(null)
-  const [selectedInsTitleId, setSelectedInsTitleId] = useState<string|null>(null)
-  
   
   const handleModalOpen =(e: React.SyntheticEvent, selectedRecordId: string, type: ModalType) => {
     e.preventDefault()
@@ -39,9 +37,6 @@ const HomePage:React.FC = () =>  {
       case 'client':
         setSelectedClientId(selectedRecordId)
         break
-      case 'ins-title': 
-        setSelectedInsTitleId(selectedRecordId)
-        break
       default:
         break
     }
@@ -52,7 +47,6 @@ const HomePage:React.FC = () =>  {
   const handleModalClose = () => {
     setSelectedPropertyId(null)
     setSelectedClientId(null)
-    setSelectedInsTitleId(null)
     setShowModal(false)
   }
 
@@ -72,15 +66,9 @@ const HomePage:React.FC = () =>  {
       setClientData(clients)
     }
 
-    const httpFetchInsTitleData = async() => {
-      const insTitles = await httpGetLatestUpdatedInsTitles()
-      setInsTitleData(insTitles)
-    }
-
     if(mounted) {
       httpFetchPropertyData()
       httpFetchClientData()
-      httpFetchInsTitleData()
       setIsLoading(false)
     }
     
@@ -92,7 +80,6 @@ const HomePage:React.FC = () =>  {
   const allDataLoaded = 
     propertyData && propertyData.length > 0
     && clientData && clientData.length > 0
-    && insTitleData && insTitleData.length > 0
 
   if(isLoading || !allDataLoaded) {
     return <div className='page-spinner'><Spinner/></div>
@@ -137,27 +124,6 @@ const HomePage:React.FC = () =>  {
               </HomeRecordPreviewCard>
               : null
             }
-
-            { insTitleData && insTitleData.length > 0 ?
-              <HomeRecordPreviewCard title='Insurance Titles' href='/ins-titles/1'>
-                <InsTitlesTable 
-                  tableData={insTitleData} 
-                  handleModalOpen={handleModalOpen} 
-                  setTableData={() => {}}    
-                  hiddenColumns={[
-                    'Client', 
-                    'Premium Due', 
-                    'Premium Paid', 
-                    'Date Billed', 
-                    'Notes', 
-                    'Date Paid',
-                    'L Policy Amt',
-                    'O Policy Amt'
-                  ]}      
-                />
-              </HomeRecordPreviewCard>
-              : null
-            }
           </section>
         </div>
 
@@ -176,13 +142,6 @@ const HomePage:React.FC = () =>  {
         { selectedClientId && 
           <EditClientForm 
             clientId={selectedClientId}
-            queryType='update'
-            handleAfterSubmit={() => {}}
-          />
-        }
-        { selectedInsTitleId && 
-          <EditINSForm 
-            insTitleId={selectedInsTitleId}
             queryType='update'
             handleAfterSubmit={() => {}}
           />

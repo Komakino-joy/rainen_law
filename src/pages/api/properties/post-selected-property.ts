@@ -15,10 +15,18 @@ export default async function handler(
           SELECT 
             pm.*, 
             cm."CNAME",  
-            cm."CNMBR"
+            cm."CNMBR",
+            bs."PSELR1",
+            bs."PSELR2",
+            bs."PSELR3",
+            bs."PSELR4",
+            bs."PBUYR1",
+            bs."PBUYR2"
           FROM public.propmstr pm
           LEFT JOIN public.clntmstr cm
-          ON cm."CNMBR" = pm."PNMBR"
+            ON cm."CNMBR" = pm."PNMBR"
+          LEFT JOIN buysell bs 
+            ON bs."PCOMPREF" = pm."PCOMPREF"
           WHERE pm.id = $1
           ;
         `,[propertyId]

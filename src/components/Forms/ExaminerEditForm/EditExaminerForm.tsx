@@ -54,7 +54,7 @@ const EditExaminerForm:React.FC<EditEditExaminerFormProps> = ({
         setExaminerId(id)
         setDefaultSelectValues((prevState) => ({
           ...prevState,
-          type: type
+          type: type || ''
         }))
         
         setIsLoading(false)

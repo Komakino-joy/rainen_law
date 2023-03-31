@@ -27,45 +27,11 @@ const links = {
       ctaText: 'View All Clients'
     }
   ],
-  ['title insurance']: [
-    {
-      href: '/ins-titles/add-new',
-      ctaText: 'Create Insurance title'
-    },
-    {
-      href: '/ins-titles/search',
-      ctaText: 'Search for Insurance title'
-    },
-    {
-      href: '/ins-titles/1',
-      ctaText: 'View All Insurance titles'
-    }
-  ],
   reports: [
     {
       href: '/reports/property-report',
       ctaText: 'Property Report'
-    },
-    {
-      href: '/reports/remittance-report',
-      ctaText: 'Remittance Report'
-    },
-    {
-      href: '/reports/policies-by-client-report',
-      ctaText: 'Policies By Client Report'
-    },
-    {
-      href: '/reports/policies-by-company-report',
-      ctaText: 'Policies By Company Report'
-    },
-    {
-      href: '/reports/company-activity-report',
-      ctaText: 'Company Activity Report'
-    },
-    {
-      href: '/reports/title-ins-prem-outstanding-report',
-      ctaText: 'Outstanding Ins. Titles Report'
-    },
+    }
   ],
   management: [
     {

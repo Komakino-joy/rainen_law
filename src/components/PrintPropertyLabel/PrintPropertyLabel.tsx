@@ -39,7 +39,6 @@ const PropertyLabel = ({
     PTDATE
   } = propertyInfo
 
-
   const componentRef = useRef(null);
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,

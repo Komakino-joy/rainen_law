@@ -107,16 +107,6 @@
             border-radius: 5px;
             overflow: hidden;
             
-            &.companies {
-              td, th {
-                line-height: 18px;
-                padding: 5px 8px;
-                &:nth-child(3),
-                &:nth-child(5) {
-                  text-align: left;
-                }
-              }
-            }
           }
         }
   

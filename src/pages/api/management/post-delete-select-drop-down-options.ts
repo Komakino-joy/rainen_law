@@ -25,9 +25,6 @@ export default async function handler(
           case 'clientStat':
             query= 'DELETE FROM client_status WHERE id = $1;'
             break;
-          case 'insTitleStat':
-            query= 'DELETE FROM ins_status WHERE id = $1;'
-            break;
           case 'pStat':
             query= 'DELETE FROM prop_status WHERE id = $1;'
             break;

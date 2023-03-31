@@ -44,11 +44,11 @@ const SubTableSellerBuyer:React.FC<SubTableSellerBuyerProps> = ({compRef}) => {
       },
       {
         Header: 'Buyer 1',
-        accessor: (d:BuyerSeller) => d.BUYR1 || 'N/A',
+        accessor: (d:BuyerSeller) => d.PBUYR1 || 'N/A',
       },
       {
         Header: 'Buyer 2',
-        accessor: (d:BuyerSeller) => d.BUYR2 || 'N/A',
+        accessor: (d:BuyerSeller) => d.PBUYR2 || 'N/A',
       }
     ],
     [tableData]

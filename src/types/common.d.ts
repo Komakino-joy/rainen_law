@@ -1,5 +1,5 @@
-export type ModalType = 'property' | 'client' | 'ins-title'
-export type TableRefs = 'companies'| 'counties' | 'pType' | 'pStat' | 'PAssign' | 'clientStat' | 'insTitleStat' | 'insTitleAssign' | 'examiners' |'users';
+export type ModalType = 'property' | 'client' 
+export type TableRefs = 'counties' | 'pType' | 'pStat' | 'PAssign' | 'clientStat' | 'examiners' |'users';
 export interface Property {
   PTDATE: string;
   CNAME: string;
@@ -151,20 +151,6 @@ export interface LabelValuePair {
   value: string;
 }
 
-export interface Company {
-  tnmbr: number;
-  tticoname: string;
-  tcity: string;
-  tadd1: string;
-  tzip: string;
-  tpercent: number;
-  tproduct1: number;
-  tproduct2: number;
-  tproduct3: number;
-  tproduct4: number;
-  tstat: string;
-}
-
 export interface Policy {
   id: string;
   tticoname: string,
@@ -229,46 +215,6 @@ export interface RemittanceReportEntry {
   AGENTFEE: number;
 }
 
-export interface CompanyActivityReportTotDollarsEntry {
-  tnmbr: string;
-  tticoname: string;
-  avg_prem: number;
-  selected_period: number;
-  qtr_1: number;
-  qtr_2: number;
-  qtr_3: number;
-  qtr_4: number;
-  qtr_1_af: number;
-  qtr_2_af: number;
-  qtr_3_af: number;
-  qtr_4_af: number;
-}
-
-
-export interface CompanyActivityReportTotDollarsPctEntry  {
-  tnmbr: string;
-  tticoname: string;
-  avg_pct_all: number;
-  selected_period: number;
-  qtr_1: number;
-  qtr_2: number;
-  qtr_3: number;
-  qtr_4: number;
-}
-
-export interface CompanyActivityReportYearlyTotalEntry {
-  tnmbr: string;
-  tticoname: string;
-  total_prem_ytd: number;
-  total_agent_fee_ytd: number;
-  total_prem_past_12_months: number;
-  average_prem: number;
-  total_prem_ytd_af: number;
-  total_prem_past_12_months_af: number;
-  average_prem_af: number;
-}
-
-
 export interface ClientStatus {
   id: number;
   status_code: string;
@@ -323,6 +269,6 @@ export interface BuyerSeller {
   PSELR2: string;
   PSELR3: string;
   PSELR4: string;
-  BUYR1: string;
-  BUYR2: string;
+  PBUYR1: string;
+  PBUYR2: string;
 }

@@ -1,6 +1,6 @@
 import { PencilIcon, TrashIcon } from '@/components/Icons/Icons';
 import { httpPostDeleteUser } from '@/services/http';
-import { ClientStatus, Company, County, InsStatus, PropertyStatus, PropertyType, TableRefs } from '@/types/common';
+import { TableRefs, User } from '@/types/common';
 import { useMemo } from 'react';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
@@ -13,12 +13,7 @@ interface UsersTableProps {
   tableClassName: string;
 
   setTableData: (
-    tableData: Company[] 
-    | County[] 
-    | PropertyType[] 
-    | PropertyStatus[] 
-    | ClientStatus[] 
-    | InsStatus[]
+    tableData: User[]
   ) => void;
 
   handleModalOpen: (

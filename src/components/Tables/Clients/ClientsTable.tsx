@@ -1,14 +1,11 @@
-import { Client, ModalType, Property } from '@/types/common';
+import { ModalType, Property } from '@/types/common';
 
 import { useMemo } from 'react';
 import { useTable, useFilters } from 'react-table';
-import { confirmAlert } from 'react-confirm-alert'; 
 import 'react-confirm-alert/src/react-confirm-alert.css';
-import toast from 'react-hot-toast'
 
-import { httpPostDeleteClient } from '@/services/http';
-import { PencilIcon, TrashIcon } from '@/components/Icons/Icons';
-import PrintClientLabel from '@/components/PrintClientLabel/PrintPropertyLabel';
+import { PencilIcon } from '@/components/Icons/Icons';
+import PrintClientLabel from '@/components/PrintClientLabel/PrintClientLabel';
 
 interface ClientsTableProps {
   tableData: any;
@@ -20,43 +17,8 @@ interface ClientsTableProps {
 const ClientsTable:React.FC<ClientsTableProps> = ({
   tableData,
   handleModalOpen,
-  setTableData,
   hiddenColumns=['']
 }) => {
-
-  const handleDelete = (e: React.SyntheticEvent, id: string) => {
-    e.preventDefault()
-
-    confirmAlert({
-      title: 'Confirm to Delete',
-      message: 'Are you sure to delete this record?',
-      buttons: [
-        {
-          label: 'Yes',
-          onClick: async() => {
-            const response = await httpPostDeleteClient({id})
-          
-            if(response.data.status === 'success') {
-              toast.success(response.data.message, {id: 'delete-client'})
-
-              const filteredArray = tableData.filter((row: Client) => row.id.toString() !== id);
-              setTableData(filteredArray);
-            }
-
-            if(response.data.status=== 'error') {
-              toast.error(response.data.message, {id: 'delete-client'})
-            }
-          }
-        },
-        {
-          label: 'No',
-          onClick: () => toast.error('Operation Cancelled.', {
-            id: 'delete-client'
-          })
-        }
-      ]
-    });
-  } 
 
   const data = useMemo(() => (
     tableData
@@ -130,19 +92,7 @@ const ClientsTable:React.FC<ClientsTableProps> = ({
             <PencilIcon />
           </span>
         )
-      },
-      {
-        Header: 'Delete',
-        accessor: (d:any) => d.id,
-        Cell: ({value}:{value:any}) => (
-          <span 
-            title={`Delete Client: ${value}`} 
-            onClick={(e) => handleDelete(e, value)}
-          >
-            <TrashIcon />
-          </span>
-        )
-      },
+      }
     ],
     [tableData]
   )

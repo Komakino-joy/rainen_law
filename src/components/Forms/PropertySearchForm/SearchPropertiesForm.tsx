@@ -45,66 +45,64 @@ const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
         </header>
       <form className="flex-y">
         <section className="flex-x gap-sm">
-        { propertiesSelectOptions.PCITY && propertiesSelectOptions.PCITY.length > 0 &&
-            <Controller 
-              name={"city"}  
-              control={control} 
-              render={({
-                field: {onChange},
-              }) => {
-                return (
-                  <FormInput 
-                    key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
-                    name="city"
-                    labelKey="city"
-                    labelText="City"
-                    type="select" 
-                    customClass="f-100"
-                    selectOnChange={onChange}
-                    options={propertiesSelectOptions.PCITY}
-                    isRequired={false}
-                    register={register} 
-                    errors={errors}
-                  />
-                ) 
-              }}
-            />
-          }
-
           <FormInput 
-            name="street"
-            labelKey="street"
-            labelText="Street"
-            customClass='f-100'
+            name="compRef"
+            labelKey="compRef"
+            labelText="CompRef"
             type="text" 
-            isRequired={false}
+            isRequired={true}
+            register={register} 
+            errors={errors}
+          />
+          <FormInput 
+            name="fileNumber"
+            labelKey="fileNumber"
+            labelText="FileNumber"
+            type="text" 
+            isRequired={true}
+            register={register} 
+            errors={errors}
+          />
+          <FormInput 
+            name="inputStartDate"
+            labelKey="inputStartDate"
+            labelText="Input Start Date"
+            type="date"
+            isRequired={true}
             register={register} 
             errors={errors}
           />
 
           <FormInput 
-            name="condo"
-            labelKey="condo"
-            labelText="Condo"
-            customClass='f-50'
-            type="text" 
-            isRequired={false}
+            name="inputEndDate"
+            labelKey="inputEndDate"
+            labelText="Input End Date"
+            type="date"
+            isRequired={true}
+            register={register} 
+            errors={errors}
+          />
+          
+          <FormInput 
+            name="requestStartDate"
+            labelKey="requestStartDate"
+            labelText="Request Start Date"
+            type="date"
+            isRequired={true}
             register={register} 
             errors={errors}
           />
 
           <FormInput 
-            name="lot"
-            labelKey="lot"
-            labelText="Lot"
-            customClass='f-25'
-            type="text" 
-            isRequired={false}
+            name="requestEndDate"
+            labelKey="requestEndDate"
+            labelText="Request End Date"
+            type="date"
+            isRequired={true}
             register={register} 
             errors={errors}
           />
         </section>
-
         <section className="flex-x gap-sm">
           { clientSelectOptions.CNAME && clientSelectOptions.CNAME.length > 0 &&
             <Controller 
@@ -183,6 +181,66 @@ const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
             />
           }
 
+        </section>
+        <section className="flex-x gap-sm">
+        { propertiesSelectOptions.PCITY && propertiesSelectOptions.PCITY.length > 0 &&
+            <Controller 
+              name={"city"}  
+              control={control} 
+              render={({
+                field: {onChange},
+              }) => {
+                return (
+                  <FormInput 
+                    key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
+                    name="city"
+                    labelKey="city"
+                    labelText="City"
+                    type="select" 
+                    customClass="f-100"
+                    selectOnChange={onChange}
+                    options={propertiesSelectOptions.PCITY}
+                    isRequired={false}
+                    register={register} 
+                    errors={errors}
+                  />
+                ) 
+              }}
+            />
+          }
+
+          <FormInput 
+            name="street"
+            labelKey="street"
+            labelText="Street"
+            customClass='f-100'
+            type="text" 
+            isRequired={false}
+            register={register} 
+            errors={errors}
+          />
+
+          <FormInput 
+            name="condo"
+            labelKey="condo"
+            labelText="Condo"
+            customClass='f-50'
+            type="text" 
+            isRequired={false}
+            register={register} 
+            errors={errors}
+          />
+
+          <FormInput 
+            name="lot"
+            labelKey="lot"
+            labelText="Lot"
+            customClass='f-25'
+            type="text" 
+            isRequired={false}
+            register={register} 
+            errors={errors}
+          />
         </section>
 
         <FormInput 

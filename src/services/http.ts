@@ -1,4 +1,4 @@
-import {Client, Company, Examiner, INSTitle, Property} from '../types/common'
+import {Client, Examiner, INSTitle, Property} from '../types/common'
 import axios from "axios"
 import toast from "react-hot-toast"
 
@@ -132,31 +132,6 @@ export const httpPostUpdateExaminer = async({id, data}: {id:string; data: Examin
   return response.data.updatedRecord
 }
 
-
-// ---------------- Company http requests
-export const httpGetCompanies = async() => {
-  const response = await axios.get(`${BASE_URL}/api/companies/get-companies`)
-  return response.data
-}
-
-export const httpPostSelectedCompany = async({id}:{id:string}) => {
-  const response = await axios.post(`${BASE_URL}/api/companies/post-selected-company`, { id })
-  return response.data[0]
-}
-
-export const httpPostInsertCompany = async({data}: {data: Company}) => {
-  const response = await axios.post(`${BASE_URL}/api/companies/post-insert-company`, data)
-  // @ts-ignore
-  toast[response.data.status](response.data.message)
-  return response.data.newRecord
-}
-
-export const httpPostUpdateCompany = async({id, data}: {id:string; data: Company;}) => {
-  const response = await axios.post(`${BASE_URL}/api/companies/post-update-company`, {...data, id }) 
-  // @ts-ignore
-  toast[response.data.status](response.data.message)
-  return response.data.updatedRecord
-}
 
 // ---------------- County http requests
 export const httpGetCounties = async() => {
@@ -322,37 +297,7 @@ export const httpPostSearchClient = async({data}:{data:{}}) => {
   return response.data
 }
 
-export const httpPostSearchInsTitle = async({data}:{data:{}}) => {
-  const response = await axios.post(`${BASE_URL}/api/titles/post-search-ins-title`, data)
-  return response.data
-}
-
 export const httpPostPropertyReport = async({data}:{data:{}}) => {
   const response = await axios.post(`${BASE_URL}/api/reports/post-property-report`, data)
-  return response
-}
-
-export const httpPostCompanyActivityReport = async({data}:{data:{}}) => {
-  const response = await axios.post(`${BASE_URL}/api/reports/post-company-activity-report`, data)
-  return response
-}
-
-export const httpPostPolicyByClientReport = async({data}:{data:{}}) => {
-  const response = await axios.post(`${BASE_URL}/api/reports/post-policy-by-client-report`, data)
-  return response
-}
-
-export const httpPostPolicyByCompanyReport = async({data}:{data:{}}) => {
-  const response = await axios.post(`${BASE_URL}/api/reports/post-policy-by-company-report`, data)
-  return response
-}
-
-export const httpPostRemmittanceReport = async({data}:{data:{}}) => {
-  const response = await axios.post(`${BASE_URL}/api/reports/post-remittance-report`, data)
-  return response
-}
-
-export const httpPostOutstandingInsTitlePremReport = async({data}:{data:{}}) => {
-  const response = await axios.post(`${BASE_URL}/api/reports/post-outstanding-ins-title-prem-report`, data)
   return response
 }

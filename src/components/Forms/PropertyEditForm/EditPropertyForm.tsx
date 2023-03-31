@@ -9,7 +9,6 @@ import 'react-tabs/style/react-tabs.css';
 import Button from "@/components/Button/Button";
 import Spinner from "@/components/Spinner/Spinner";
 import FormInput from "../Common/FormInput/FormInput";
-import SubTableINS from "@/components/Tables/SubTableINS/SubTableINS";
 import PrintPropertyLabel from "@/components/PrintPropertyLabel/PrintPropertyLabel";
 import SubTableSellerBuyer from "@/components/Tables/SubTableSellerBuyer/SubTableSellerBuyer";
 
@@ -49,10 +48,9 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
   
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [compRef, setCompRef] = useState(null)
-  const [titlesCount, setTitlesCount] = useState(null)
   const [printLabelInfo, setPrintLabelInfo] = useState({})
   const [defaultSelectValues, setDefaultSelectValues] = useState({
-    state: '',
+    state: 'MA',
     status: '',
     type:'',
     assigned: '',
@@ -124,16 +122,15 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
           setIsLoading(false)
 
           setDefaultSelectValues({
-            state: PSTATE,
-            status: PSTAT,
-            type:PTYPE,
-            assigned: PASIGN,
-            clientName: CNAME
+            state: PSTATE || '',
+            status: PSTAT || '',
+            type:PTYPE || '',
+            assigned: PASIGN || '',
+            clientName: CNAME || ''
           })
 
           return {
             city: PCITY ,
-            state: PSTATE ,
             zip: PZIP ,
             book1: PBOOK1 ,
             book2: PBOOK2 ,
@@ -221,6 +218,7 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
                 <Controller 
                   name={"state"}  
                   control={control} 
+                  defaultValue={defaultSelectValues.state}
                   render={({
                     field: {onChange},
                   }) => {
@@ -565,18 +563,11 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
         <Tabs>
           <TabList>
             <Tab>Seller / Buyer</Tab>
-            <Tab>Titles{titlesCount ? <span className="italicized-record-count">({titlesCount})</span>  : ''}</Tab>
           </TabList>
 
           <TabPanel>
             <SubTableSellerBuyer 
               compRef={propertyInfoSnippet.compRef} 
-            />
-          </TabPanel>
-          <TabPanel>
-            <SubTableINS 
-              inmbr={propertyInfoSnippet.pnmbr} 
-              setTitlesCount={setTitlesCount}
             />
           </TabPanel>
         </Tabs>

@@ -26,9 +26,6 @@ export default async function handler(
           case 'clientStat':
             query= 'INSERT INTO client_status (status_code, status_desc) VALUES ($1, $2) RETURNING *;'
             break;
-          case 'insTitleStat':
-            query= 'INSERT INTO ins_status (status_code, status_desc) VALUES ($1, $2) RETURNING *;'
-            break;
           case 'pStat':
             query= 'INSERT INTO prop_status (status_code, status_desc) VALUES ($1, $2) RETURNING *;'
             break;

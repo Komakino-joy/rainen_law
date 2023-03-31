@@ -2,14 +2,11 @@ import { ModalType, Property } from '@/types/common';
 
 import { useMemo } from 'react';
 import { useTable, useFilters } from 'react-table';
-import { confirmAlert } from 'react-confirm-alert'; 
 import 'react-confirm-alert/src/react-confirm-alert.css';
-import toast from 'react-hot-toast'
 
-import { PencilIcon, TrashIcon } from '@/components/Icons/Icons';
+import { PencilIcon } from '@/components/Icons/Icons';
 import { timestampToDate } from '@/utils';
 import PrintPropertyLabel from '@/components/PrintPropertyLabel/PrintPropertyLabel';
-import { httpPostDeleteProperty } from '@/services/http';
 
 interface PropertiesTableProps {
   tableData: any;
@@ -21,42 +18,8 @@ interface PropertiesTableProps {
 const PropertiesTable:React.FC<PropertiesTableProps> = ({
   tableData,
   handleModalOpen,
-  setTableData,
   hiddenColumns=['']
 }) => {
-
-  const handleDelete = (e: React.SyntheticEvent, id: string) => {
-    e.preventDefault()
-
-    confirmAlert({
-      title: 'Confirm to Delete',
-      message: 'Are you sure to delete this record?',
-      buttons: [
-        {
-          label: 'Yes',
-          onClick: async() => {
-            const response = await httpPostDeleteProperty({id})
-            if(response.data.status === 'success') {
-              toast.success(response.data.message, {id: 'delete-property'})
-
-              const filteredArray = tableData.filter((row: Property) => row.id !== id);
-              setTableData(filteredArray);
-            }
-
-            if(response.data.status === 'error') {
-              toast.error(response.data.message, {id: 'delete-property'})
-            }
-          }
-        },
-        {
-          label: 'No',
-          onClick: () => toast.error('Operation Cancelled.', {
-            id: 'delete-property'
-          })
-        }
-      ]
-    });
-  } 
 
   const data = useMemo(() => (
     tableData
@@ -110,19 +73,7 @@ const PropertiesTable:React.FC<PropertiesTableProps> = ({
             <PencilIcon />
           </span>
         )
-      },
-      {
-        Header: 'Delete',
-        accessor: (d:any) => d.id,
-        Cell: ({value}:{value:any}) => (
-          <span 
-            title={`Delete Property: ${value}`} 
-            onClick={(e) => handleDelete(e, value)}
-          >
-            <TrashIcon />
-          </span>
-        )
-      },
+      }
     ],
     [tableData]
   )

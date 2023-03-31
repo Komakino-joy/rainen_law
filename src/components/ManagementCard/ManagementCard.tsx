@@ -1,16 +1,13 @@
-import { ClientStatus, Company, County, InsStatus, PropertyStatus, PropertyType, TableRefs } from '@/types/common'
+import { ClientStatus, County, Examiner, InsStatus, PropertyStatus, PropertyType, TableRefs, User } from '@/types/common'
 import React, { useState } from 'react'
 import { useUsersContext } from '@/context/Users'
-import { useCompaniesContext } from '@/context/Companies'
 import { useExaminersContext } from '@/context/Examiners'
 import { useSelectDropDownsContext } from '@/context/SelectDropDowns'
 import EditUserForm from '../Forms/UserEditForm/EditUserForm'
-import EditCompanyForm from '../Forms/CompanyEditForm/EditCompanyForm'
 import EditExaminerForm from '../Forms/ExaminerEditForm/EditExaminerForm'
 import EditStatusCodeForm from '../Forms/StatusCodeEditForm/EditStatusCodeForm'
 import DynamicTable from '../Tables/Dynamic/DynamicTable'
 import UsersTable from '../Tables/Users/UsersTable'
-import CompaniesTable from '../Tables/Companies/CompaniesTable'
 import ExaminersTable from '../Tables/Examiners/ExaminersTable'
 import Modal from '../Modal/Modal'
 import Spinner from '../Spinner/Spinner'
@@ -20,21 +17,18 @@ import styles from './ManagementCard.module.scss'
 
 const ManageSelectionFieldsCard = () => {
 
-  const {companiesList , isLoadingCompaniescontext} = useCompaniesContext()
   const {examinersList, isLoadingExaminerscontext} = useExaminersContext()
   const {usersList, isLoadingUserscontext} = useUsersContext()
   const {
     isLoadingSelectDropDownsContext,
     clientStatusList,
-    insStatusList,
     propertyStatusList,
     propertyTypeList,
     countyList
   } = useSelectDropDownsContext()
 
   const isLoading = 
-    isLoadingCompaniescontext 
-    || isLoadingExaminerscontext
+       isLoadingExaminerscontext
     || isLoadingUserscontext
     || isLoadingSelectDropDownsContext
 
@@ -42,17 +36,15 @@ const ManageSelectionFieldsCard = () => {
   const [selectionType, setSelectionType] = useState<TableRefs | ''>('')
   const [queryType, setQueryType] = useState<'insert' | 'update'>('insert')
   const [selectedItemId, setSelectedItemId] = useState<string|null>(null)
-  const [tableData, setTableData] = useState<Company[] | County[] | PropertyType[] | PropertyStatus[] | ClientStatus[] | InsStatus[]>([])
+  const [tableData, setTableData] = useState<User[] |County[] | PropertyType[] | PropertyStatus[] | ClientStatus[] | Examiner[]>([])
 
   const editableFields = [
     {label: 'Users', tableRef: 'users'},
     {label: 'Examiners', tableRef: 'examiners'},
-    {label: 'Companies', tableRef: 'companies'},
     {label: 'Counties', tableRef: 'counties'},
     {label: 'Property Type', tableRef: 'pType'},
     {label: 'Property Status', tableRef: 'pStat'},
     {label: 'Client Status', tableRef: 'clientStat'},
-    {label: 'Ins. Title Status', tableRef: 'insTitleStat'},
   ]
 
   
@@ -66,10 +58,6 @@ const ManageSelectionFieldsCard = () => {
       case 'examiners':
         setSelectionType('examiners')
         setTableData(examinersList)
-        break;
-      case 'companies':
-        setSelectionType('companies')
-        setTableData(companiesList)
         break;
       case 'counties':
         setSelectionType('counties')
@@ -86,10 +74,6 @@ const ManageSelectionFieldsCard = () => {
       case 'clientStat':
         setSelectionType('clientStat')
         setTableData(clientStatusList)
-        break;
-      case 'insTitleStat':
-        setSelectionType('insTitleStat')
-        setTableData(insStatusList)
         break;
       default:
         break;
@@ -109,9 +93,6 @@ const ManageSelectionFieldsCard = () => {
       case 'examiners':
         setSelectionType('examiners')
         break;
-      case 'companies':
-        setSelectionType('companies')
-        break;
       case 'counties':
         setSelectionType('counties')
         break;
@@ -123,9 +104,6 @@ const ManageSelectionFieldsCard = () => {
         break;
       case 'clientStat':
         setSelectionType('clientStat')
-        break;
-      case 'insTitleStat':
-        setSelectionType('insTitleStat')
         break;
       default:
         break
@@ -144,7 +122,6 @@ const ManageSelectionFieldsCard = () => {
 
   const hasData = tableData.length > 0
 
-  const isCompanyTable = selectionType === 'companies'
   const isExaminersTable = selectionType === 'examiners'
   const isUsersTable = selectionType === 'users'
   const isDynamicTable = 
@@ -152,7 +129,6 @@ const ManageSelectionFieldsCard = () => {
     || selectionType === 'pType' 
     || selectionType === 'pStat' 
     || selectionType === 'clientStat' 
-    || selectionType === 'insTitleStat' 
 
   return (
     <>
@@ -197,16 +173,6 @@ const ManageSelectionFieldsCard = () => {
                     handleModalOpen={handleModalOpen}
                   />
                 </div>
-              : hasData && isCompanyTable ?
-                <div className={styles['table-container']}>
-                  <CompaniesTable 
-                    tableData={tableData} 
-                    selectionType={selectionType}
-                    tableClassName={styles[selectionType]}
-                    setTableData={setTableData}
-                    handleModalOpen={handleModalOpen}
-                  />
-                </div>
               : hasData && isExaminersTable ?
                 <div className={styles['table-container']}>
                   <ExaminersTable 
@@ -243,14 +209,6 @@ const ManageSelectionFieldsCard = () => {
             setTableData={setTableData}
             selectionType={selectionType}
             selectedStatusCodeItemId={selectedItemId} 
-            queryType={queryType}
-          /> : null
-        }
-        { isCompanyTable && hasData ?
-          <EditCompanyForm 
-            tableData={tableData}
-            setTableData={setTableData}
-            selectedId={selectedItemId} 
             queryType={queryType}
           /> : null
         }

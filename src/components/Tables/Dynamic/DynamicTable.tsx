@@ -1,6 +1,6 @@
 import { PencilIcon, TrashIcon } from '@/components/Icons/Icons';
 import { httpPostDeleteSelectDropDownOptions } from '@/services/http';
-import { ClientStatus, Company, County, InsStatus, PropertyStatus, PropertyType, TableRefs } from '@/types/common';
+import { ClientStatus, County, Examiner, PropertyStatus, PropertyType, TableRefs } from '@/types/common';
 import { useMemo } from 'react';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
@@ -13,12 +13,12 @@ interface DynamicTable {
   tableClassName: string;
 
   setTableData: (
-    tableData: Company[] 
-    | County[] 
+    tableData: 
+      County[] 
     | PropertyType[] 
     | PropertyStatus[] 
     | ClientStatus[] 
-    | InsStatus[]
+    | Examiner[]
   ) => void;
 
   handleModalOpen: (
@@ -47,15 +47,12 @@ const SelectOptionsTable:React.FC<DynamicTable> = ({
   handleModalOpen
 }) => {
 
-  // Have not decided to make these editable here ('PAssign' || 'insTitleAssign')
-
   let hiddenColumns:HiddenColumnsT = []
 
   //  Conditionally hide unrelated columns when passing in table data
   switch (selectionType) {
     case 'pStat':
     case 'clientStat':
-    case 'insTitleStat':
       hiddenColumns = ['Type Code','Type Description','County Code','County Name']
       break;
 

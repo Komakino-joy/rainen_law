@@ -1,10 +1,7 @@
-import { PencilIcon, TrashIcon } from '@/components/Icons/Icons';
-import { httpPostDeleteExaminer } from '@/services/http';
-import { ClientStatus, Company, County, Examiner, InsStatus, PropertyStatus, PropertyType, TableRefs } from '@/types/common';
+import { PencilIcon } from '@/components/Icons/Icons';
+import { Examiner, TableRefs } from '@/types/common';
 import { useMemo } from 'react';
-import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
-import toast from 'react-hot-toast';
 import { useTable, useFilters } from 'react-table';
 
 interface ExaminersTableProps {
@@ -13,12 +10,7 @@ interface ExaminersTableProps {
   tableClassName: string;
 
   setTableData: (
-    tableData: Company[] 
-    | County[] 
-    | PropertyType[] 
-    | PropertyStatus[] 
-    | ClientStatus[] 
-    | InsStatus[]
+    tableData: Examiner[]
   ) => void;
 
   handleModalOpen: (
@@ -33,43 +25,8 @@ const ExaminersTable:React.FC<ExaminersTableProps> = ({
   tableData,
   selectionType,
   tableClassName,
-  setTableData,
   handleModalOpen
 }) => {
-
-  const handleDelete = (e: React.SyntheticEvent, id: string) => {
-    e.preventDefault()
-
-    confirmAlert({
-      title: 'Confirm to Delete',
-      message: 'Are you sure to delete this record?',
-      buttons: [
-        {
-          label: 'Yes',
-          onClick: async() => {
-            const response = await httpPostDeleteExaminer({id, selectionType})
-            if(response.data.status === 'success') {
-              toast.success(response.data.message, {id: 'delete-examiner'})
-
-              const filteredArray = tableData.filter((row) => row.id !== id);
-              setTableData(filteredArray);
-            }
-
-            if(response.data.status === 'error') {
-              toast.error(response.data.message, {id: 'delete-examiner'})
-            }
-          }
-        },
-        {
-          label: 'No',
-          onClick: () => toast.error('Operation Cancelled.', {
-            id: 'delete-examiner'
-          })
-        }
-      ]
-    });
-  }
-
   
   const data = useMemo(() => (
     tableData
@@ -113,19 +70,7 @@ const ExaminersTable:React.FC<ExaminersTableProps> = ({
             <PencilIcon />
           </span>
         )
-      },
-      {
-        Header: 'Delete',
-        accessor: (d:any) => d.id,
-        Cell: ({value}:{value:any}) => (
-          <span 
-            title={`Delete  ${selectionType}: ${value}`} 
-            onClick={(e) => handleDelete(e, value)}
-          >
-            <TrashIcon />
-          </span>
-        )
-      },
+      }
 
     ],
     [tableData]

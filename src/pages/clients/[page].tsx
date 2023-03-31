@@ -15,7 +15,7 @@ export async function getServerSideProps(context:any) {
     const pageSize = 50
     const pageOffset = pageSize * (page - 1)
 
-    const totalRecordsQuery = `select COUNT(*) from public."propmstr"`
+    const totalRecordsQuery = `select COUNT(*) from public.clntmstr`
     const totalRecordsResult = (await conn.query(totalRecordsQuery)).rows[0].count;
 
     const allClients = `

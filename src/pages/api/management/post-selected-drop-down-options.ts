@@ -25,9 +25,6 @@ export default async function handler(
           case 'clientStat':
             query= 'SELECT * FROM client_status WHERE id = $1'
             break;
-          case 'insTitleStat':
-            query= 'SELECT * FROM ins_status WHERE id = $1'
-            break;
           case 'pStat':
             query= 'SELECT * FROM prop_status WHERE id = $1'
             break;

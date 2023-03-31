@@ -27,9 +27,6 @@ export default async function handler(
           case 'clientStat':
             query= 'UPDATE client_status SET status_code=$1, status_desc=$2 WHERE id = $3 RETURNING *;'
             break;
-          case 'insTitleStat':
-            query= 'UPDATE ins_status SET status_code=$1, status_desc=$2 WHERE id = $3 RETURNING *;'
-            break;
           case 'pStat':
             query= 'UPDATE prop_status SET status_code=$1, status_desc=$2 WHERE id = $3 RETURNING *;'
             break;
