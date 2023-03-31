@@ -9,6 +9,8 @@ import ClientsTable from '@/components/Tables/Clients/ClientsTable';
 import EditClientForm from '@/components/Forms/ClientEditForm/EditClientForm';
 import conn from '../../lib/db'
 import Spinner from '@/components/Spinner/Spinner';
+import { confirmAlert } from 'react-confirm-alert';
+import toast from 'react-hot-toast';
 
 export async function getServerSideProps(context:any) {
     const { page } = context.query
@@ -17,9 +19,7 @@ export async function getServerSideProps(context:any) {
 
     const totalRecordsQuery = `select COUNT(*) from public.clntmstr`
     const totalRecordsResult = (await conn.query(totalRecordsQuery)).rows[0].count;
-
-    console.log({page})
-
+    
     const allClients = `
         SELECT 
             cm.id,
@@ -86,8 +86,24 @@ const Clients:React.FC<ClientsProps> = ({
   
   const handleModalOpen =(e: React.SyntheticEvent, clientId: string) => {
     e.preventDefault()
-    setSelectedClientId(clientId)
-    setShowModal(true)
+    confirmAlert({
+      message: 'Are you sure to edit this record?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => {
+            setSelectedClientId(clientId)
+            setShowModal(true)
+          }
+        },
+        {
+          label: 'No',
+          onClick: () => toast.error('Operation Cancelled.', {
+            id: 'edit-client'
+          })
+        }
+      ]
+    })
   }
 
   const handleModalClose = () => {
@@ -108,6 +124,7 @@ const Clients:React.FC<ClientsProps> = ({
   },[clients])
 
   const totalPages = Math.floor(totalRecords/pageSize)
+
   return (
     <>
       { tableData ? 

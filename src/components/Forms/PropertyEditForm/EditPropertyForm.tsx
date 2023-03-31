@@ -19,13 +19,14 @@ import {
   httpPostUpdateProperty 
 } from "@/services/http";
 
-import { FORM_BUTTON_TEXT } from "@/constants";
+import { FORM_BUTTON_TEXT, PropertyStatusCodeMapType, PROPERTY_STATUS_CODES_MAP } from "@/constants";
 import { useAuth } from "@/context/AuthContext";
 import { useClientsContext } from "@/context/Clients";
 import { useSelectDropDownsContext } from "@/context/SelectDropDowns";
 import { timestampToDate, abbreviatedStatesLabelValuePair } from "@/utils";
 
 import styles from './EditPropertyForm.module.scss'
+import { useExaminersContext } from "@/context/Examiners";
 
 interface EditPropertyFormProps {
   propertyId: string | null;
@@ -39,6 +40,7 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
   handleAfterSubmit = () => {},
 }) => {
   const {user} = useAuth()
+  const {examinersDropDownOptions} = useExaminersContext()
   const {clientSelectOptions} = useClientsContext()
   const {
     propertyStatusDropDownOptions, 
@@ -123,8 +125,8 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
 
           setDefaultSelectValues({
             state: PSTATE || '',
-            status: PSTAT || '',
-            type:PTYPE || '',
+            status: PROPERTY_STATUS_CODES_MAP[PSTAT as PropertyStatusCodeMapType] || '',
+            type: PTYPE || '',
             assigned: PASIGN || '',
             clientName: CNAME || ''
           })
@@ -418,15 +420,6 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
                   }}
                 />
               }
-              <FormInput 
-                name="assigned"
-                labelKey="assigned"
-                labelText="Assigned"
-                type="text" 
-                isRequired={false}
-                register={register} 
-                errors={errors}
-              />
             </div>
 
             <div className={`flex-x ${styles['comp-ref-file-num-section']}`}>
@@ -493,6 +486,32 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
             </div>
 
             <div className={`flex-x ${styles['requestor-req-date-close-date-section']}`}>
+              { examinersDropDownOptions && examinersDropDownOptions.length > 0 &&
+                <Controller 
+                  name={"assigned"}  
+                  control={control} 
+                  render={({
+                    field: {onChange},
+                  }) => {
+                    return (
+                      <FormInput 
+                        name="assigned"
+                        labelKey="assigned"
+                        labelText="Assigned"
+                        type="select" 
+                        defaultValue={defaultSelectValues.assigned}
+                        customClass={styles.assigned}
+                        selectOnChange={onChange}
+                        options={examinersDropDownOptions}
+                        isRequired={false}
+                        register={register} 
+                        errors={errors}
+                      />
+                    ) 
+                  }}
+                />
+              }
+
               <FormInput 
                 name="requester"
                 labelKey="requester"

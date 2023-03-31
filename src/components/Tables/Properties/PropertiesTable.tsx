@@ -1,27 +1,29 @@
-import { Client, ModalType } from '@/types/common';
+import { ModalType, Property } from '@/types/common';
 
 import { useMemo, useState } from 'react';
-import { useTable, useFilters, useSortBy } from 'react-table';
+import { useTable, useFilters } from 'react-table';
 
 import { PencilIcon } from '@/components/Icons/Icons';
+import { timestampToDate } from '@/utils';
 import PrintPropertyMultiple from '@/components/PrintPropertyMultiple/PrintPropertyMultiple';
-import styles from './ClientsTable.module.scss'
-import PrintClientLabelMultiple from '@/components/PrintClientLabelMultiple/PrintClientLabelMultiple';
 
-interface ClientsTableProps {
+import styles from './PropertiesTable.module.scss'
+
+interface PropertiesTableProps {
   tableData: any;
-  handleModalOpen: (e: React.SyntheticEvent, id: string, type:ModalType) => void;
-  setTableData: (tableData: Client[]) => void;
+  handleModalOpen: (e: React.SyntheticEvent, id: string, type: ModalType) => void;
+  setTableData: (tableData: Property[]) => void;
   hiddenColumns?: string[];
 }
 
-const ClientsTable:React.FC<ClientsTableProps> = ({
+
+const PropertiesTable:React.FC<PropertiesTableProps> = ({
   tableData,
   handleModalOpen,
   hiddenColumns=['']
 }) => {
-
-  const [labelsToPrint, setLabelsToPrint] = useState<Client[]>([])
+  
+  const [labelsToPrint, setLabelsToPrint] = useState<Property[]>([])
 
   const data = useMemo(() => (
     tableData
@@ -31,55 +33,31 @@ const ClientsTable:React.FC<ClientsTableProps> = ({
   const columns = useMemo(
     () => [
       {
-        Header: 'Client#',
-        accessor: (d:any) => d.CNMBR,
-      },
-      {
-        Header: 'Client Name',
-        accessor: (d:any) => d.CNAME,
-      },
-      {
-        Header: 'Address',
-        accessor: (d:any) => `${d.CADD1} ${d.CADD2 ? d.CADD2 : ''}`,
+        Header: 'PT Date',
+        accessor: (d:Property) => timestampToDate(d.PTDATE, 'mmDDyyyy').date,
       },
       {
         Header: 'City',
-        accessor: (d:any) => d.CCITY || 'N/A',
+        accessor: (d:Property) => `${d.PCITY}` || 'N/A',
       },
       {
-        Header: 'State',
-        accessor: (d:any) => d.CSTATE || 'N/A',
+        Header: 'Street',
+        accessor: (d:Property) => `${d.PSTRET}` || 'N/A',
       },
       {
-        Header: 'Zip',
-        accessor: (d:any) => d.CZIP || 'N/A',
+        Header: 'Lot',
+        accessor: (d:Property) => `${d.PLOT}` || 'N/A',
       },
       {
-        Header: 'Phone',
-        accessor: (d:any) => d.CPHONE || 'N/A',
-      },
-      {
-        Header: 'Fax',
-        accessor: (d:any) => d.CFAX || 'N/A',
-      },
-      {
-        Header: 'Is Client?',
-        accessor: (d:any) => d.ISCLIENT ? 'Yes' : "No",
-      },
-      {
-        Header: 'Properties',
-        accessor: (d:any) => d.PROPCOUNT || 'N/A',
-      },
-      {
-        Header: 'Titles',
-        accessor: (d:any) => d.TITLESCOUNT || 'N/A',
+        Header: 'Condo',
+        accessor: (d:Property) => d.PCONDO !== 'null' ? d.PCONDO : 'N/A',
       },
       {
         Header: 'Print',
-        accessor: (d:Client) => d,
+        accessor: (d:Property) => d,
         Cell: ({value}:{value:any}) => (
           <input
-            name={`client-${value.id}`}
+            name={`property-${value.id}`}
             type='checkbox'
             onClick={(e) => {
               const ischecked = (e.target as HTMLInputElement).checked
@@ -90,8 +68,8 @@ const ClientsTable:React.FC<ClientsTableProps> = ({
                 })
               } else {
                 setLabelsToPrint((prevState) => {
-                  const filteredArray = prevState.filter(client => (
-                    client.id !== value.id
+                  const filteredArray = prevState.filter(property => (
+                    property.id !== value.id
                   ))
                   return filteredArray
                 })
@@ -105,8 +83,8 @@ const ClientsTable:React.FC<ClientsTableProps> = ({
         accessor: (d:any) => d.id,
         Cell: ({value}:{value:any}) => (
           <span
-            title={`Edit Client: ${value}`} 
-            onClick={(e) => handleModalOpen(e, value, 'client')}
+            title={`Edit Property: ${value}`} 
+            onClick={(e) => handleModalOpen(e, value, 'property')}
           >
             <PencilIcon />
           </span>
@@ -135,8 +113,7 @@ const ClientsTable:React.FC<ClientsTableProps> = ({
     headerGroups,
     rows,
     prepareRow,
-  } = useTable(
-    {
+  } = useTable({
       //@ts-ignore
       columns,
       data,
@@ -146,35 +123,25 @@ const ClientsTable:React.FC<ClientsTableProps> = ({
       }
     },
     useFilters, // useFilters!
-    useSortBy,
   )
 
   return (
     <div className={styles.container}>
-    { labelsToPrint.length > 0 &&
-      <div className={styles['button-container']}>
-        <PrintClientLabelMultiple clients={labelsToPrint}>
-          {`Print ${labelsToPrint.length} ${labelsToPrint.length === 1 ? 'Label' : 'Labels'}`}
-        </PrintClientLabelMultiple>
-      </div>
-    }
-      <table className='is-all-clients-table' {...getTableProps()}>
+      { labelsToPrint.length > 0 &&
+        <div className={styles['button-container']}>
+          <PrintPropertyMultiple properties={labelsToPrint}>
+            {`Print ${labelsToPrint.length} ${labelsToPrint.length === 1 ? 'Label' : 'Labels'}`}
+          </PrintPropertyMultiple>
+        </div>
+      }
+      <table {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup,idx) => (
           //@ts-ignore
           <tr {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map((column, idx) => (
               //@ts-ignore
-              <th 
-                {...column.getHeaderProps(column.getSortByToggleProps())} 
-                className={
-                  column.isSorted
-                    ? column.isSortedDesc
-                      ? "desc"
-                      : "asc"
-                    : ""
-                  }
-              >
+              <th {...column.getHeaderProps()} >
                 {column.render('Header')}
               </th>
             ))}
@@ -205,4 +172,4 @@ const ClientsTable:React.FC<ClientsTableProps> = ({
   )
 }
 
-export default ClientsTable
+export default PropertiesTable

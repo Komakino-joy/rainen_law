@@ -1,12 +1,15 @@
 .client-status-section,
 .city-state-zip-section,
 .phone-fax-email-section,
-.contact-statement-section {
+.contact-statement-section,
+.address-section {
+  display: flex;
   gap: 20px;
   width: 100%;
   align-items: center;
-
-  .client {
+  
+  .client,
+  .address {
     flex: 1;
   }
 

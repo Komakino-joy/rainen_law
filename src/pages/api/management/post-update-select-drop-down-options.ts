@@ -15,6 +15,7 @@ export default async function handler(
         selectionType
       } = req.body
 
+      console.log(req.body)
       try {
         await conn.query('BEGIN')
 

@@ -16,12 +16,6 @@ export default async function handler(
         const clientStatusQuery = `SELECT * FROM client_status;`
         const clientStatusResult = await conn.query(clientStatusQuery)
 
-        const insStatusQuery = `SELECT * FROM ins_status;`
-        const insStatusResult = await conn.query(insStatusQuery)
-
-        const companiesQuery = `SELECT * FROM companies ORDER BY tnmbr;`
-        const companiesResult = await conn.query(companiesQuery)
-
         const countiesQuery = `SELECT * FROM counties;`
         const countiesResult = await conn.query(countiesQuery)
   
@@ -29,8 +23,6 @@ export default async function handler(
           propertyTypeList: propertyTypesResult.rows,
           propertyStatusList: propertyStatusResult.rows,
           clientStatusList: clientStatusResult.rows,
-          insStatusList: insStatusResult.rows,
-          companyList: companiesResult.rows,
           countyList: countiesResult.rows
         })
       

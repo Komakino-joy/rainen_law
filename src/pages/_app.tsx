@@ -9,6 +9,8 @@ import '../styles/tables.scss'
 import '../styles/forms.scss'
 import '../styles/layout.scss'
 import '../styles/pages.scss'
+import '../styles/confirm-alert.scss'
+import 'react-confirm-alert/src/react-confirm-alert.css';
 import { Roboto } from '@next/font/google'
 import { Toaster } from 'react-hot-toast';
 

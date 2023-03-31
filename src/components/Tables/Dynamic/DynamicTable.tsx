@@ -3,7 +3,6 @@ import { httpPostDeleteSelectDropDownOptions } from '@/services/http';
 import { ClientStatus, County, Examiner, PropertyStatus, PropertyType, TableRefs } from '@/types/common';
 import { useMemo } from 'react';
 import { confirmAlert } from 'react-confirm-alert';
-import 'react-confirm-alert/src/react-confirm-alert.css';
 import toast from 'react-hot-toast';
 import { useTable, useFilters } from 'react-table';
 

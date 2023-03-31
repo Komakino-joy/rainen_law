@@ -46,6 +46,10 @@ const ReportProperties:React.FC<ReportPropertiesProps> = ({
         Header: 'Type',
         accessor: (d:any) => d.PTYPE
       },
+      {
+        Header: 'Status',
+        accessor: (d:any) => d.PSTAT
+      },
     ],
     [tableData]
   )

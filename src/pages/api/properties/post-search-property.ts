@@ -26,6 +26,8 @@ export default async function handler(
         requestEndDate=''
       } = req.body
 
+      console.log(req.body)
+
       if(inputStartDate !== '' && inputEndDate === '') {
         inputEndDate = timestampToDate(Date(), 'mmDDyyyy').date 
       }
@@ -108,8 +110,9 @@ export default async function handler(
           ${param.fileNumber}
           ${param.inputDateRange}
           ${param.requestDateRange}
-          ORDER BY cm."CNMBR"
-          ;
+          ORDER BY 
+            pm."PSTRET",
+            pm."PLOT";
         `,[
             city,
             street.toLowerCase(),

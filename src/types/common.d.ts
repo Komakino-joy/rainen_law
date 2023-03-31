@@ -91,7 +91,7 @@ export interface Client {
 
 export interface ClientInfoSnippet {
   id:string;
-  cnmbr: string | null;
+  cnmbr: number | null;
   clientName: string | null;
   lastUpdated: {
     date:string, 
@@ -148,7 +148,7 @@ export interface OutstandingInsTitleReportEntry {
 
 export interface LabelValuePair {
   label: string;
-  value: string;
+  value: any;
 }
 
 export interface Policy {

@@ -6,7 +6,7 @@ import Modal from '@/components/Modal/Modal';
 import ClientsTable from '@/components/Tables/Clients/ClientsTable';
 import EditPropertyForm from '@/components/Forms/PropertyEditForm/EditPropertyForm';
 import EditClientForm from '@/components/Forms/ClientEditForm/EditClientForm';
-import PropertiesTable from '@/components/Tables/Properties/PropertiesTables';
+import PropertiesTable from '@/components/Tables/Properties/PropertiesTable';
 import Spinner from '@/components/Spinner/Spinner';
 import HomeRecordPreviewCard from '@/components/HomeRecordPreviewCard/HomeRecordPreviewCard';
 

@@ -19,3 +19,16 @@ export const RAINEN_LAW = {
     phone: 'TELEPHONE (617) 367-8284',
   }
 }
+
+export const CLIENT_STATUS_CODES_MAP = {
+  O:'Open',
+  C: 'Closed',
+}
+export type ClientStatusCodeMapType = keyof typeof CLIENT_STATUS_CODES_MAP
+
+export const PROPERTY_STATUS_CODES_MAP = {
+  N:'Open',
+  P: 'Pending',
+  C: 'Closed',
+}
+export type PropertyStatusCodeMapType = keyof typeof PROPERTY_STATUS_CODES_MAP

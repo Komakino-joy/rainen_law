@@ -1,7 +1,7 @@
 'use client';
 
 import { httpGetAllClients } from "@/services/http";
-import { Client } from "@/types/common";
+import { Client, LabelValuePair } from "@/types/common";
 import { hasValue, uniqueLabelValuePairs } from "@/utils/";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 
@@ -87,6 +87,10 @@ export const ClientsContextProvider = ({children}: {children:any}) => {
         Object.keys(clientsObject).map(key => (
           clientsObject[key] = uniqueLabelValuePairs(clientsObject[key])
         ))
+
+        clientsObject.CNMBR.sort(function(a: LabelValuePair, b:LabelValuePair) {
+          return a.value - b.value;
+        })
 
         setclientSelectOptions(clientsObject)
         setIsLoading(false)

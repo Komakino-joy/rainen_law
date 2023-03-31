@@ -9,7 +9,7 @@ import {
   httpPostUpdateClient 
 } from "@/services/http";
 
-import { FORM_BUTTON_TEXT } from "@/constants";
+import { ClientStatusCodeMapType, CLIENT_STATUS_CODES_MAP, FORM_BUTTON_TEXT } from "@/constants";
 import { timestampToDate } from "@/utils";
 import { abbreviatedStatesLabelValuePair } from "@/utils/UnitedStates";
 import Button from "@/components/Button/Button";
@@ -37,7 +37,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
   const {clientStatusDropDownOptions} = useSelectDropDownsContext()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [titlesCount, setTitlesCount] = useState(null)
-  const[printLabelInfo, setPrintLabelInfo] = useState({})
+  const [printLabelInfo, setPrintLabelInfo] = useState({})
   const [defaultSelectValues , setDefaultSelectValues] = useState({
     status: '',
     state: 'MA'
@@ -82,7 +82,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
         setClientInfoSnippet((prevState) => ({
           ...prevState,
           id: id,
-          cnmbr: CNMBR,
+          cnmbr: CNMBR.toString(),
           clientName: CNAME,
           lastUpdated: last_updated ? timestampToDate(last_updated, 'mmDDyyyy') : null
         }))
@@ -90,7 +90,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
         setIsLoading(false)
 
         setDefaultSelectValues({
-          status: CSTAT || '',
+          status: CLIENT_STATUS_CODES_MAP[CSTAT as ClientStatusCodeMapType] || '',
           state: CSTATE || ''
         })
 
@@ -185,36 +185,29 @@ const ClientForm:React.FC<EditClientFormProps> = ({
                 }}
               />
             </section>
+            <section className={styles['address-section']}>
+              <FormInput 
+                name="addressLine1"
+                labelKey="addressLine1"
+                labelText="Address Line 1"
+                type="text" 
+                customClass={styles.address}
+                isRequired={false}
+                register={register} 
+                errors={errors}
+              />
 
-            <FormInput 
-              name="searchName"
-              labelKey="searchName"
-              labelText="Search Name"
-              type="text"
-              isRequired={false}
-              register={register} 
-              errors={errors}
-            />
-
-            <FormInput 
-              name="addressLine1"
-              labelKey="addressLine1"
-              labelText="Address Line 1"
-              type="text" 
-              isRequired={false}
-              register={register} 
-              errors={errors}
-            />
-
-            <FormInput
-              name="addressLine2" 
-              labelKey="addressLine2"
-              labelText="Address Line 2"
-              type="text" 
-              isRequired={false}
-              register={register} 
-              errors={errors}
-            />
+              <FormInput
+                name="addressLine2" 
+                labelKey="addressLine2"
+                labelText="Address Line 2"
+                type="text" 
+                customClass={styles.address}
+                isRequired={false}
+                register={register} 
+                errors={errors}
+              />
+            </section>
 
             <section className={`flex-x ${styles['city-state-zip-section']}`}>
               <FormInput 
@@ -369,12 +362,12 @@ const ClientForm:React.FC<EditClientFormProps> = ({
           </TabList>
 
           <TabPanel>
-            <SubTableProperties cnmbr={clientInfoSnippet.cnmbr} />
+            <SubTableProperties cnmbr={clientInfoSnippet.cnmbr.toString()} />
           </TabPanel>
 
           <TabPanel>
             <SubTableINS 
-              inmbr={clientInfoSnippet.cnmbr} 
+              inmbr={clientInfoSnippet.cnmbr.toString()} 
               setTitlesCount={setTitlesCount}
             />
           </TabPanel>

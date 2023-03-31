@@ -1,6 +1,6 @@
 import { httpPostInsTitlesInfo } from '@/services/http';
 import { useEffect, useMemo, useState } from 'react';
-import { useTable, useFilters } from 'react-table';
+import { useTable, useFilters, useSortBy } from 'react-table';
 
 interface SubTableINSProps {
   inmbr: string;
@@ -71,6 +71,7 @@ const SubTableINS:React.FC<SubTableINSProps> = ({
       initialState: {}
     },
     useFilters, // useFilters!
+    useSortBy
   )
 
   return (
@@ -81,7 +82,16 @@ const SubTableINS:React.FC<SubTableINSProps> = ({
         <tr {...headerGroup.getHeaderGroupProps()}>
           {headerGroup.headers.map((column, idx) => (
             //@ts-ignore
-            <th {...column.getHeaderProps()} >
+            <th 
+              {...column.getHeaderProps(column.getSortByToggleProps())} 
+              className={
+                column.isSorted
+                  ? column.isSortedDesc
+                    ? "desc"
+                    : "asc"
+                  : ""
+                }
+            >
               {column.render('Header')}
             </th>
           ))}

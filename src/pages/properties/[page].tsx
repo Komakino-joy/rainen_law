@@ -4,10 +4,12 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router';
 
 import Pagination from '@/components/Pagination/Pagination'
-import PropertiesTable from '@/components/Tables/Properties/PropertiesTables'
+import PropertiesTable from '@/components/Tables/Properties/PropertiesTable'
 import conn from '../../lib/db'
 import InfoCard from '@/components/InfoCard/InfoCard';
 import EditPropertyModal from '@/components/Modals/EditPropertyModal';
+import { confirmAlert } from 'react-confirm-alert';
+import toast from 'react-hot-toast';
 
 export async function getServerSideProps(context:any) {
     const { page } = context.query
@@ -76,8 +78,24 @@ const Properties:React.FC<PropertiesProps> = ({
   
   const handleModalOpen =(e: React.SyntheticEvent, id: string) => {
     e.preventDefault()
-    setSelectedId(id)
-    setShowModal(true)
+    confirmAlert({
+      message: 'Are you sure to edit this record?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => {
+            setSelectedId(id)
+            setShowModal(true)
+          }
+        },
+        {
+          label: 'No',
+          onClick: () => toast.error('Operation Cancelled.', {
+            id: 'edit-property'
+          })
+        }
+      ]
+    })
   }
 
   const handleModalClose = () => {

@@ -1,7 +1,6 @@
 import { PencilIcon } from '@/components/Icons/Icons';
 import { Examiner, TableRefs } from '@/types/common';
 import { useMemo } from 'react';
-import 'react-confirm-alert/src/react-confirm-alert.css';
 import { useTable, useFilters } from 'react-table';
 
 interface ExaminersTableProps {

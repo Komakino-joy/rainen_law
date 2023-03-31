@@ -7,15 +7,13 @@ import { formatAddress } from '@/utils';
 interface ClientCardProps {
   handleCardClick: (e: React.SyntheticEvent, id: string) => void;
   clientProperties: any;
-  clientName: string;
-  clientId: string;
+  propertyStreet: string;
 }
 
 const ClientCard:React.FC<ClientCardProps> = ({
   handleCardClick,
   clientProperties: cProps,
-  clientId, 
-  clientName
+  propertyStreet
 }) => {
 
   const [isExpanded, setIsExpanded] = useState<boolean>(false)
@@ -25,7 +23,7 @@ const ClientCard:React.FC<ClientCardProps> = ({
       { cProps && cProps.length > 0 &&
         <div className={`flex-y ${styles['client-card-wrapper']}`}>
           <header className='flex-x'>
-            <h4>{clientId} | {clientName} </h4>
+            <h4>{propertyStreet}</h4>
             
             <div onClick={() => setIsExpanded(!isExpanded)}>
               <span className='italicized-record-count'>(Properties: {cProps.length})</span>

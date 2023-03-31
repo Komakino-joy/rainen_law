@@ -16,7 +16,11 @@ export default async function handler(
               i."ICONDO",
               i."IUNIT"
             FROM public.ins i 
-            WHERE i."INMBR" = $1;
+            WHERE i."INMBR" = $1
+            ORDER BY 
+              i."ICITY",
+              i."ISTRET",
+              i."ILOT";
           `
         const result = await conn.query(getInsTitlesInfoQuery, [req.body.inmbr])
 

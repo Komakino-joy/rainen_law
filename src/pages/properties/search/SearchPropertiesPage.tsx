@@ -11,6 +11,8 @@ import { useClientsContext } from '@/context/Clients';
 import { usePropertiesContext } from '@/context/Properties';
 import Spinner from '@/components/Spinner/Spinner';
 import { httpPostSearchProperty } from '@/services/http';
+import { confirmAlert } from 'react-confirm-alert';
+import toast from 'react-hot-toast';
 
 const SearchPropertiesPage = () => {
 
@@ -26,8 +28,24 @@ const SearchPropertiesPage = () => {
 
   const handleCardClick =(e: React.SyntheticEvent, id: string) => {
     e.preventDefault()
-    setSelectedId(id)
-    setShowModal(true)
+    confirmAlert({
+      message: 'Are you sure to edit this record?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => {
+            setSelectedId(id)
+            setShowModal(true)
+          }
+        },
+        {
+          label: 'No',
+          onClick: () => toast.error('Operation Cancelled.', {
+            id: 'edit-property'
+          })
+        }
+      ]
+    });
   }
 
   const handleModalClose = () => {
@@ -51,16 +69,16 @@ const SearchPropertiesPage = () => {
       
       setNoResults(false)
 
-      const groupedByClient = properties.reduce((acc: any, property: Property) => {
+      const groupedByStreetandLot = properties.reduce((acc: any, property: Property) => {
         type propKeyT = keyof typeof property
-        if (!acc[property.CNAME as propKeyT]) {
-          acc[property.CNAME as propKeyT] = []
+        if (!acc[property.PSTRET as propKeyT]) {
+          acc[property.PSTRET as propKeyT] = []
         } 
-        acc[property.CNAME as keyof typeof property].push(property)
+        acc[property.PSTRET as keyof typeof property].push(property)
         return acc
       },{})
 
-      setClientProperties(groupedByClient)
+      setClientProperties(groupedByStreetandLot)
     }
   }
 
@@ -75,16 +93,14 @@ const SearchPropertiesPage = () => {
             { fetchingData ? <div className='search-results-spinner'><Spinner /></div>
               : clientProperties && Object.keys(clientProperties).length > 0 ?
               <div className='search-results-container'>
-                <h1>Properties by Client <span className='italicized-record-count'>(Clients: {Object.keys(clientProperties).length})</span></h1>
+                <h1>Properties by Street <span className='italicized-record-count'>(Streetsmycar: {Object.keys(clientProperties).length})</span></h1>
       
                   {Object.keys(clientProperties).map((key:string) =>  (
                       <ClientCard 
                         key={key}
                         handleCardClick={handleCardClick}
                         // @ts-ignore
-                        clientId={clientProperties[key][0].CNMBR} 
-                        // @ts-ignore
-                        clientName={clientProperties[key][0].CNAME} 
+                        propertyStreet={clientProperties[key][0].PSTRET} 
                         // @ts-ignore
                         clientProperties={clientProperties[key]} 
                       />

@@ -75,7 +75,7 @@ const EditStatusCodeForm:React.FC<EditStatusCodeFormProps> = ({
     
     if(queryType === 'insert') {
       // Adding selection type so we know which table to update in the endpoint.
-      const newRecord = await httpPostInsertDropDownOptions({selectionType, ...data})
+      const newRecord = await httpPostInsertDropDownOptions({selectionType, data})
       setTableData([...tableData, newRecord])
       reset()
     }
@@ -84,7 +84,7 @@ const EditStatusCodeForm:React.FC<EditStatusCodeFormProps> = ({
       const updatedRecord = await httpPostUpdateSelectDropDownOptions({
         id: statusCodeId, 
         selectionType,
-        ...data
+        data
       })
       
       const updatedData = tableData.map(record => {

@@ -10,6 +10,8 @@ import { useClientsContext } from '@/context/Clients';
 import Spinner from '@/components/Spinner/Spinner';
 import ClientForm from '@/components/Forms/ClientEditForm/EditClientForm';
 import { httpPostSearchClient } from '@/services/http';
+import { confirmAlert } from 'react-confirm-alert';
+import toast from 'react-hot-toast';
 
 const SearchClientsPage = () => {
   const {isLoadingClientsContext} = useClientsContext()
@@ -23,8 +25,24 @@ const SearchClientsPage = () => {
 
   const handleOpenModal =(e: React.SyntheticEvent, clientId: string) => {
     e.preventDefault()
-    setSelectedclientId(clientId)
-    setShowModal(true)
+    confirmAlert({
+      message: 'Are you sure to edit this record?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => {
+            setSelectedclientId(clientId)
+            setShowModal(true)
+          }
+        },
+        {
+          label: 'No',
+          onClick: () => toast.error('Operation Cancelled.', {
+            id: 'edit-client'
+          })
+        }
+      ]
+    });
   }
 
   const handleModalClose = () => {

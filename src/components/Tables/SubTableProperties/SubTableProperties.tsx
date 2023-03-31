@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useTable, useFilters } from 'react-table';
+import { useTable, useFilters, useSortBy } from 'react-table';
 
 import { timestampToDate } from '@/utils';
 import { PencilIcon } from '@/components/Icons/Icons';
@@ -121,6 +121,7 @@ const SubTableProperties:React.FC<SubTablePropertiesProps> = ({
       initialState: {}
     },
     useFilters, // useFilters!
+    useSortBy,
   )
 
   return (
@@ -132,7 +133,16 @@ const SubTableProperties:React.FC<SubTablePropertiesProps> = ({
           <tr {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map((column, idx) => (
               //@ts-ignore
-              <th {...column.getHeaderProps()} >
+              <th 
+                {...column.getHeaderProps(column.getSortByToggleProps())} 
+                className={
+                  column.isSorted
+                    ? column.isSortedDesc
+                      ? "desc"
+                      : "asc"
+                    : ""
+                  }
+              >
                 {column.render('Header')}
               </th>
             ))}
