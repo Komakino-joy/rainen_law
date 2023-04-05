@@ -9,10 +9,10 @@ export default async function handler(
     if (req.method === "GET") { 
       try {
         const getDistinctTypes = `
-            SELECT DISTINCT pm."PSTAT" 
-            FROM public.propmstr pm 
-            WHERE pm."PSTAT" IS NOT NULL
-            ORDER BY pm."PSTAT" ASC;
+            SELECT DISTINCT pm.p_status 
+            FROM public.properties pm 
+            WHERE pm.p_status IS NOT NULL
+            ORDER BY pm.p_status ASC;
           `
         const result = await conn.query(getDistinctTypes)
         

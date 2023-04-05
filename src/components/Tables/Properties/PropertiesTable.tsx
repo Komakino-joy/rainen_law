@@ -34,23 +34,23 @@ const PropertiesTable:React.FC<PropertiesTableProps> = ({
     () => [
       {
         Header: 'PT Date',
-        accessor: (d:Property) => timestampToDate(d.PTDATE, 'mmDDyyyy').date,
+        accessor: (d:Property) => timestampToDate(d.p_input_date, 'mmDDyyyy').date,
       },
       {
         Header: 'City',
-        accessor: (d:Property) => `${d.PCITY}` || 'N/A',
+        accessor: (d:Property) => `${d.p_city}` || 'N/A',
       },
       {
         Header: 'Street',
-        accessor: (d:Property) => `${d.PSTRET}` || 'N/A',
+        accessor: (d:Property) => `${d.p_street}` || 'N/A',
       },
       {
         Header: 'Lot',
-        accessor: (d:Property) => `${d.PLOT}` || 'N/A',
+        accessor: (d:Property) => `${d.p_lot}` || 'N/A',
       },
       {
         Header: 'Condo',
-        accessor: (d:Property) => d.PCONDO !== 'null' ? d.PCONDO : 'N/A',
+        accessor: (d:Property) => d.p_condo !== 'null' ? d.p_condo : 'N/A',
       },
       {
         Header: 'Print',

@@ -16,31 +16,31 @@ export async function getServerSideProps(context:any) {
     const pageSize = 50
     const pageOffset = pageSize * (page - 1)
 
-    const totalRecordsQuery = `select COUNT(*) from public.propmstr`
+    const totalRecordsQuery = `select COUNT(*) from public.properties`
     const totalRecordsResult = (await conn.query(totalRecordsQuery)).rows[0].count;
 
     const allProperties = `
       SELECT 
         cm."CNAME",
-        pm."PTDATE",
-        pm."PCITY",
-        pm."PSTRET",
-        pm."PLOT",
-        pm."PCONDO",
-        pm."PUNIT",
-        pm."PNMBR",
-        pm."PREQ",
-        pm."PTYPE",
-        pm."PSTAT",
-        pm."PCOMPREF",
-        pm."PINSTR",
+        pm.p_input_date,
+        pm.p_city,
+        pm.p_street,
+        pm.p_lot,
+        pm.p_condo,
+        pm.p_unit,
+        pm.p_number,
+        pm.p_requester,
+        pm.p_type,
+        pm.p_status,
+        pm.p_comp_ref,
+        pm.p_instructions,
         pm.id
-      FROM public.propmstr pm
+      FROM public.properties pm
       LEFT JOIN public.clntmstr cm 
-      ON cm."CNMBR" = pm."PNMBR"
+      ON cm."CNMBR" = pm.p_number
       ORDER BY 
         pm.last_updated DESC,
-        pm."PTDATE" DESC,
+        pm.p_input_date DESC,
         pm.id DESC
       OFFSET $1 LIMIT ${pageSize}
     `

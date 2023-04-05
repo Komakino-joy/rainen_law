@@ -130,7 +130,7 @@ const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
             />
           }
 
-          { propertiesSelectOptions.PTYPE && propertiesSelectOptions.PTYPE.length > 0 &&
+          { propertiesSelectOptions.p_type && propertiesSelectOptions.p_type.length > 0 &&
             <Controller 
               name={"type"}  
               control={control} 
@@ -146,7 +146,7 @@ const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
                     type="select" 
                     customClass="f-25"
                     selectOnChange={onChange}
-                    options={propertiesSelectOptions.PTYPE}
+                    options={propertiesSelectOptions.p_type}
                     isRequired={false}
                     register={register} 
                     errors={errors}
@@ -156,7 +156,7 @@ const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
             />
           }
           
-          { propertiesSelectOptions.PSTAT && propertiesSelectOptions.PSTAT.length > 0 &&
+          { propertiesSelectOptions.p_status && propertiesSelectOptions.p_status.length > 0 &&
             <Controller 
               name={"status"}  
               control={control} 
@@ -171,7 +171,7 @@ const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
                     type="select" 
                     customClass="f-25"
                     selectOnChange={onChange}
-                    options={propertiesSelectOptions.PSTAT}
+                    options={propertiesSelectOptions.p_status}
                     isRequired={false}
                     register={register} 
                     errors={errors}
@@ -183,7 +183,7 @@ const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
 
         </section>
         <section className="flex-x gap-sm">
-        { propertiesSelectOptions.PCITY && propertiesSelectOptions.PCITY.length > 0 &&
+        { propertiesSelectOptions.p_city && propertiesSelectOptions.p_city.length > 0 &&
             <Controller 
               name={"city"}  
               control={control} 
@@ -199,7 +199,7 @@ const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
                     type="select" 
                     customClass="f-100"
                     selectOnChange={onChange}
-                    options={propertiesSelectOptions.PCITY}
+                    options={propertiesSelectOptions.p_city}
                     isRequired={false}
                     register={register} 
                     errors={errors}

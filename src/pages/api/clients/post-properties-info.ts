@@ -9,12 +9,12 @@ export default async function handler(
       try {
         const getClientPropertyInfoQuery = `
             SELECT * 
-            FROM public.propmstr pm 
-            WHERE pm."PNMBR" = $1
+            FROM public.properties pm 
+            WHERE pm.p_number = $1
             ORDER BY 
-              pm."PTDATE" DESC,
-              pm."PCITY",
-              pm."PSTRET";
+              pm.p_input_date DESC,
+              pm.p_city,
+              pm.p_street;
           `
         const result = await conn.query(getClientPropertyInfoQuery, [req.body.CNMBR])
         res.status(200).json(result.rows)

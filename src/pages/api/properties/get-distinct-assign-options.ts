@@ -10,10 +10,10 @@ export default async function handler(
       try {
         const getDistinctAssign = `
             SELECT 
-            DISTINCT pm."PASIGN" 
-            FROM public."propmstr" pm 
-            WHERE pm."PASIGN" IS NOT NULL 
-            ORDER BY pm."PASIGN";
+            DISTINCT pm.p_assign 
+            FROM public."properties" pm 
+            WHERE pm.p_assign IS NOT NULL 
+            ORDER BY pm.p_assign;
           `
         const result = await conn.query(getDistinctAssign)
         

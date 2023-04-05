@@ -57,10 +57,10 @@ export default function PropertyReport() {
     }, {}))
 
     setTitleTypeMap(response.data.reduce((acc: any, propObj: ReportProperty) => {
-      if(!acc[propObj.PTYPE]) {
-        acc[propObj.PTYPE] = 1
+      if(!acc[propObj.p_type]) {
+        acc[propObj.p_type] = 1
       } else {
-        acc[propObj.PTYPE] = acc[propObj.PTYPE] + 1
+        acc[propObj.p_type] = acc[propObj.p_type] + 1
       }
       return acc
     }, {}))

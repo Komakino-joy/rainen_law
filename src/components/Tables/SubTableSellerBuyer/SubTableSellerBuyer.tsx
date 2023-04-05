@@ -28,27 +28,27 @@ const SubTableSellerBuyer:React.FC<SubTableSellerBuyerProps> = ({compRef}) => {
     () => [
       {
         Header: 'Seller 1',
-        accessor: (d:BuyerSeller) => d.PSELR1 || 'N/A',
+        accessor: (d:BuyerSeller) => d.seller_1 || 'N/A',
       },
       {
         Header: 'Seller 2',
-        accessor: (d:BuyerSeller) => d.PSELR2 || 'N/A',
+        accessor: (d:BuyerSeller) => d.seller_2 || 'N/A',
       },
       {
         Header: 'Seller 3',
-        accessor: (d:BuyerSeller) => d.PSELR3 || 'N/A',
+        accessor: (d:BuyerSeller) => d.seller_3 || 'N/A',
       },
       {
         Header: 'Seller 4',
-        accessor: (d:BuyerSeller) => d.PSELR4 || 'N/A',
+        accessor: (d:BuyerSeller) => d.seller_4 || 'N/A',
       },
       {
         Header: 'Buyer 1',
-        accessor: (d:BuyerSeller) => d.PBUYR1 || 'N/A',
+        accessor: (d:BuyerSeller) => d.buyer_1 || 'N/A',
       },
       {
         Header: 'Buyer 2',
-        accessor: (d:BuyerSeller) => d.PBUYR2 || 'N/A',
+        accessor: (d:BuyerSeller) => d.buyer_2 || 'N/A',
       }
     ],
     [tableData]

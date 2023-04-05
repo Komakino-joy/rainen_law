@@ -9,9 +9,9 @@ export default async function handler(
     if (req.method === "GET") { 
       try {
         const getDistinctCities = `
-            SELECT DISTINCT pm."PCITY" 
-            FROM public.propmstr pm 
-            ORDER BY pm."PCITY";
+            SELECT DISTINCT pm.p_city 
+            FROM public.properties pm 
+            ORDER BY pm.p_city;
           `
         const result = await conn.query(getDistinctCities)
         

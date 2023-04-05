@@ -71,10 +71,10 @@ const SearchPropertiesPage = () => {
 
       const groupedByStreetandLot = properties.reduce((acc: any, property: Property) => {
         type propKeyT = keyof typeof property
-        if (!acc[property.PSTRET as propKeyT]) {
-          acc[property.PSTRET as propKeyT] = []
+        if (!acc[property.p_street as propKeyT]) {
+          acc[property.p_street as propKeyT] = []
         } 
-        acc[property.PSTRET as keyof typeof property].push(property)
+        acc[property.p_street as keyof typeof property].push(property)
         return acc
       },{})
 
@@ -100,7 +100,7 @@ const SearchPropertiesPage = () => {
                         key={key}
                         handleCardClick={handleCardClick}
                         // @ts-ignore
-                        propertyStreet={clientProperties[key][0].PSTRET} 
+                        propertyStreet={clientProperties[key][0].p_street} 
                         // @ts-ignore
                         clientProperties={clientProperties[key]} 
                       />

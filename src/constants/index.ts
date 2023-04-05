@@ -1,4 +1,4 @@
-export const PTYPE_MAP = {
+export const p_type_MAP = {
   FT: 'Full Titles',
   RD: 'Rundowns',
   FC: 'Foreclosures',

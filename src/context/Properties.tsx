@@ -7,38 +7,38 @@ import { createContext, useContext, useEffect, useRef, useState } from "react";
 interface PropertiesContextProps {
   isLoadingPropertyContext: boolean;
   propertiesSelectOptions: {
-    PCITY: LabelValuePair[]; 
-    PTYPE: LabelValuePair[]; 
-    PSTAT: LabelValuePair[]; 
-    PASIGN:LabelValuePair[];
+    p_city: LabelValuePair[]; 
+    p_type: LabelValuePair[]; 
+    p_status: LabelValuePair[]; 
+    p_assign:LabelValuePair[];
   };
 }
 
 interface propertiesSelectOptions {
-  PCITY: []; 
-  PTYPE: []; 
-  PSTAT: []; 
-  PASIGN:[];
+  p_city: []; 
+  p_type: []; 
+  p_status: []; 
+  p_assign:[];
 }
 
 
 const PropertiesContext = createContext<PropertiesContextProps>({
   isLoadingPropertyContext: false,
   propertiesSelectOptions: {
-    PCITY: [], 
-    PTYPE: [], 
-    PSTAT: [], 
-    PASIGN:[]
+    p_city: [], 
+    p_type: [], 
+    p_status: [], 
+    p_assign:[]
   } 
 })
 
 export const PropertiesContextProvider = ({children}: {children:any}) => {
   const [isLoadingPropertyContext, setIsLoading] = useState<boolean>(false)
   const [propertiesSelectOptions, setPropertiesSelectOptions] = useState<propertiesSelectOptions>({
-    PCITY: [], 
-    PTYPE: [], 
-    PSTAT: [], 
-    PASIGN:[]
+    p_city: [], 
+    p_type: [], 
+    p_status: [], 
+    p_assign:[]
   })
   
   const mounted = useRef(false);
@@ -58,10 +58,10 @@ export const PropertiesContextProvider = ({children}: {children:any}) => {
         type propKey = keyof typeof propertiesResponseMap
 
         const propertiesResponseMap = {
-          PCITY: cities,
-          PTYPE: types,
-          PSTAT: statuses,
-          PASIGN: assignTypes
+          p_city: cities,
+          p_type: types,
+          p_status: statuses,
+          p_assign: assignTypes
         }
 
         const propertiesSelectOptions = Object.keys(propertiesResponseMap).reduce((acc:any, fieldName:any) => {

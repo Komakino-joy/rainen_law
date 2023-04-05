@@ -12,8 +12,8 @@ export default async function handler(
               cm."CNAME"
             FROM
               public.clntmstr cm
-            INNER JOIN public.propmstr pm 
-            ON cm."CNMBR" = pm."PNMBR"
+            INNER JOIN public.properties pm 
+            ON cm."CNMBR" = pm.p_number
             WHERE 
               cm."CNAME" IS NOT NULL
             ORDER BY

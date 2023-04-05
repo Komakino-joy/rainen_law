@@ -35,10 +35,10 @@ const ClientCard:React.FC<ClientCardProps> = ({
               { cProps.map((prop:Property) => {          
 
                   const address = formatAddress({
-                    street: prop.PSTRET,
-                    condo: prop.PCONDO,
-                    unit: prop.PUNIT,
-                    lot: prop.PLOT
+                    street: prop.p_street,
+                    condo: prop.p_condo,
+                    unit: prop.p_unit,
+                    lot: prop.p_lot
                   })
 
                   return (
@@ -49,13 +49,13 @@ const ClientCard:React.FC<ClientCardProps> = ({
                       >
                         <section className='flex-y f-100'>
                           <span><b>Address:&nbsp;</b>{address}</span>
-                          <span><b>City:&nbsp;</b>{prop.PCITY}</span>
-                          <span><b>Instructions:&nbsp;</b>{prop.PINSTR}</span>
+                          <span><b>City:&nbsp;</b>{prop.p_city}</span>
+                          <span><b>Instructions:&nbsp;</b>{prop.p_instructions}</span>
                         </section>
                         <section className='flex-y f-50'>
-                          <span><b>CompRef:&nbsp;</b>{prop.PCOMPREF}</span>
-                          <span><b>Type:&nbsp;</b>{prop.PTYPE}</span>
-                          <span><b>Status:&nbsp;</b>{prop.PSTAT}</span>
+                          <span><b>CompRef:&nbsp;</b>{prop.p_comp_ref}</span>
+                          <span><b>Type:&nbsp;</b>{prop.p_type}</span>
+                          <span><b>Status:&nbsp;</b>{prop.p_status}</span>
                         </section>
                         <span title={`Edit ${address}`}>
                           <PencilIcon />

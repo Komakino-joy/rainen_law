@@ -24,31 +24,31 @@ const ReportProperties:React.FC<ReportPropertiesProps> = ({
     () => [
       {
         Header: 'Request Date',
-        accessor: (d:any) => timestampToDate(d.PTDATE, 'mmDDyyyy').date,
+        accessor: (d:any) => timestampToDate(d.p_input_date, 'mmDDyyyy').date,
       },
       {
         Header: 'Address ( lot, st., city )',
-        accessor: (d:any) => `${d.PLOT + ', ' || ''} ${d.PSTRET + ', '|| ''} ${d.PCITY || ''}`,
+        accessor: (d:any) => `${d.p_lot + ', ' || ''} ${d.p_street + ', '|| ''} ${d.p_city || ''}`,
       },
       {
         Header: 'Ref No.',
-        accessor: (d:any) => d.PCOMPREF || '',
+        accessor: (d:any) => d.p_comp_ref || '',
       },
       {
         Header: 'Given to examiner',
-        accessor: (d:any) => `${d.PASIGN ? "Yes" : "No"}`,
+        accessor: (d:any) => `${d.p_assign ? "Yes" : "No"}`,
       },
       {
         Header: 'Client',
-        accessor: (d:any) => `(${d.PNMBR}) ${d.CNAME || ''}`,
+        accessor: (d:any) => `(${d.p_number}) ${d.CNAME || ''}`,
       },
       {
         Header: 'Type',
-        accessor: (d:any) => d.PTYPE
+        accessor: (d:any) => d.p_type
       },
       {
         Header: 'Status',
-        accessor: (d:any) => d.PSTAT
+        accessor: (d:any) => d.p_status
       },
     ],
     [tableData]

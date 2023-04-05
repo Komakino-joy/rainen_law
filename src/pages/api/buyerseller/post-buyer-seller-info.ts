@@ -9,10 +9,10 @@ export default async function handler(
       try {
         const getBuyerSellerInfoQuery = `
             SELECT * 
-            FROM public.buysell bs 
-            WHERE bs."PCOMPREF" = $1;
+            FROM public.buyer_seller bs 
+            WHERE bs.p_comp_ref = $1;
           `
-        const result = await conn.query(getBuyerSellerInfoQuery, [req.body.PCOMPREF])
+        const result = await conn.query(getBuyerSellerInfoQuery, [req.body.p_comp_ref])
         res.status(200).json(result.rows)
       
       } catch ( error ) {

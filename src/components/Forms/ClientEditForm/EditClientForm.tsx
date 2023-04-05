@@ -115,26 +115,29 @@ const ClientForm:React.FC<EditClientFormProps> = ({
   });
 
   const onSubmit = async(data:any) => {
-    if(!isDirty) return 
-    if(queryType === 'insert') {
-      const newClientId = await httpPostInsertClient({
-        data,
-        username: user.username
-      })
-
-      reset()
-      handleAfterSubmit(newClientId)
-    }
-
-    if(queryType === 'update') {
-      const updatedRecord = httpPostUpdateClient({
-        data,
-        id: clientInfoSnippet.id, // Passing id to update correct record
-        username: user.username,
-      })
-
-      handleAfterSubmit(clientInfoSnippet.id)
-      reset(updatedRecord)
+    if(!isDirty) {
+      return 
+    }  else {
+      if(queryType === 'insert') {
+        const newClientId = await httpPostInsertClient({
+          data,
+          username: user.username
+        })
+  
+        reset()
+        handleAfterSubmit(newClientId)
+      }
+  
+      if(queryType === 'update') {
+        const updatedRecord = httpPostUpdateClient({
+          data,
+          id: clientInfoSnippet.id, // Passing id to update correct record
+          username: user.username,
+        })
+  
+        handleAfterSubmit(clientInfoSnippet.id)
+        reset(updatedRecord)
+      }
     }
   };
 
@@ -156,7 +159,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
                 labelKey="clientName"
                 labelText="Client/Firm Name"
                 type="text"
-                isRequired={false}
+                isRequired={true}
                 register={register} 
                 errors={errors}
               />
@@ -164,6 +167,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
               <Controller 
                 name={"status"}  
                 control={control} 
+                rules={{ required: true }}
                 render={({
                   field: {onChange},
                 }) => {
@@ -177,7 +181,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
                       customClass={styles.status}
                       selectOnChange={onChange}
                       options={clientStatusDropDownOptions}
-                      isRequired={false}
+                      isRequired={true}
                       register={register} 
                       errors={errors}
                     />
@@ -192,7 +196,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
                 labelText="Address Line 1"
                 type="text" 
                 customClass={styles.address}
-                isRequired={false}
+                isRequired={true}
                 register={register} 
                 errors={errors}
               />
@@ -216,7 +220,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
                 labelText="City"
                 customClass={styles.city}
                 type="text" 
-                isRequired={false}
+                isRequired={true}
                 register={register} 
                 errors={errors}
               />
@@ -224,6 +228,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
               <Controller 
                   name={"state"}  
                   control={control} 
+                  rules={{ required: true }}
                   defaultValue={defaultSelectValues.state}
                   render={({
                     field: {onChange},
@@ -238,7 +243,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
                         customClass={styles.state}
                         selectOnChange={onChange}
                         options={abbreviatedStatesLabelValuePair}
-                        isRequired={false}
+                        isRequired={true}
                         register={register} 
                         errors={errors}
                       />
@@ -252,7 +257,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
                 labelText="Zip Code"
                 customClass={styles.zip}
                 type="text" 
-                isRequired={false}
+                isRequired={true}
                 register={register} 
                 errors={errors}
               />
@@ -265,7 +270,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
                 labelText="Phone Number"
                 customClass={styles.phone}
                 type="tel" 
-                isRequired={false}
+                isRequired={true}
                 register={register} 
                 errors={errors}
               />
@@ -276,7 +281,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
                 labelText="Fax Number"
                 customClass={styles.fax}
                 type="tel" 
-                isRequired={false}
+                isRequired={true}
                 register={register} 
                 errors={errors}
               />
@@ -287,7 +292,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
                 labelText="Email Address"
                 customClass={styles.email}
                 type="email" 
-                isRequired={false}
+                isRequired={true}
                 register={register} 
                 errors={errors}
               />
@@ -300,7 +305,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
                 labelText="Contact"
                 customClass={styles.contact}
                 type="text" 
-                isRequired={false}
+                isRequired={true}
                 register={register} 
                 errors={errors}
               />
@@ -311,7 +316,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
                 labelText="Statement Addressee"
                 customClass={styles.statement}
                 type="text" 
-                isRequired={false}
+                isRequired={true}
                 register={register} 
                 errors={errors}
               />
@@ -324,7 +329,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
                 labelKey="notes"
                 labelText="Notes"
                 type="textarea" 
-                isRequired={false}
+                isRequired={true}
                 register={register} 
                 errors={errors}
               />

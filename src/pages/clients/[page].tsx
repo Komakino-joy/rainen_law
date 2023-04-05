@@ -38,11 +38,11 @@ export async function getServerSideProps(context:any) {
         FROM public."clntmstr" cm
         LEFT JOIN (
             SELECT 
-                pm."PNMBR", 
+                pm.p_number, 
                 COUNT(*) AS "PROPCOUNT" 
-            FROM public.propmstr pm
-            GROUP BY pm."PNMBR"
-        ) pc ON pc."PNMBR" = cm."CNMBR"
+            FROM public.properties pm
+            GROUP BY pm.p_number
+        ) pc ON pc.p_number = cm."CNMBR"
         LEFT JOIN (
             SELECT 
                 i."INMBR", 

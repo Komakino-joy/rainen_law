@@ -16,17 +16,17 @@ export default async function handler(
             pm.*, 
             cm."CNAME",  
             cm."CNMBR",
-            bs."PSELR1",
-            bs."PSELR2",
-            bs."PSELR3",
-            bs."PSELR4",
-            bs."PBUYR1",
-            bs."PBUYR2"
-          FROM public.propmstr pm
+            bs."seller_1",
+            bs."seller_2",
+            bs."seller_3",
+            bs."seller_4",
+            bs."buyer_1",
+            bs."buyer_2"
+          FROM public.properties pm
           LEFT JOIN public.clntmstr cm
-            ON cm."CNMBR" = pm."PNMBR"
-          LEFT JOIN buysell bs 
-            ON bs."PCOMPREF" = pm."PCOMPREF"
+            ON cm."CNMBR" = pm.p_number
+          LEFT JOIN buyer_seller bs 
+            ON bs.p_comp_ref = pm.p_comp_ref
           WHERE pm.id = $1
           ;
         `,[propertyId]

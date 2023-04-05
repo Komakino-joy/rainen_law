@@ -67,7 +67,8 @@ export default ({
   onChange: () => void;
   options: any[];
   defaultValue: any;
-}) => (
+}) => {
+  return (
   <>
     <Select
       defaultInputValue={defaultValue}
@@ -80,7 +81,6 @@ export default ({
       isClearable={true}
       isSearchable={true}
       
-      defaultValue={{label: '', value:''}}
       options={[{label: '', value:''}, ...options]}
 
       filterOption={createFilter({ ignoreAccents: false })}
@@ -97,3 +97,4 @@ export default ({
     />
   </>
 )
+}

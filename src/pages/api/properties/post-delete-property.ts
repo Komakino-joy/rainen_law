@@ -14,7 +14,7 @@ export default async function handler(
       try {
         await conn.query('BEGIN')
         const deletePropertyQuery = pgPromise.as.format(`
-          DELETE FROM public."propmstr" pm WHERE pm.id = $1;
+          DELETE FROM public."properties" pm WHERE pm.id = $1;
         `,[id]
         )
         await conn.query(deletePropertyQuery)

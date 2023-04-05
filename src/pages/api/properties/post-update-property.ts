@@ -1,3 +1,4 @@
+import dbRef from '@/constants/dbRefs'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import pgPromise from 'pg-promise'
 import conn from '../../../lib/db'
@@ -8,30 +9,35 @@ export default async function handler(
 ) {
     if (req.method === "POST") { 
       const {
-        clientName='',
-        city='', 
-        street='', 
-        lot='', 
-        condo='', 
-        unit='', 
-        book1='',
-        book2='',
-        page1='',
-        page2='',
-        cert1='',
-        requester='', 
-        fileNumber=0, 
-        type='', 
-        status='',
-        assigned='',
-        compRef=0,
-        instructions='',
-        clientFileNumber='',
-        state='',
-        zip='',
-        docNumber='',
-        requestDate,
-        closedDate,
+        clientName,
+        p_city, 
+        p_street, 
+        p_lot, 
+        p_condo, 
+        p_unit, 
+        p_book_1,
+        p_book_2,
+        p_page_1,
+        p_page_2,
+        p_cert_1,
+        p_requester, 
+        p_file, 
+        p_type, 
+        p_status,
+        p_assign,
+        p_comp_ref,
+        p_instructions,
+        c_file,
+        p_state,
+        p_zip,
+        buyer_1,
+        buyer_2,
+        seller_1,
+        seller_2,
+        seller_3,
+        seller_4,
+        p_request_date,
+        p_closed_date,
         id,
         last_updated_by,
       } = req.body
@@ -43,80 +49,106 @@ export default async function handler(
         const clientIDQuery = 'SELECT cm."CNMBR" FROM public.clntmstr cm WHERE cm."CNAME" = ($1)'
         const clientIdResponse = await conn.query(clientIDQuery, [clientName])
 
-        const addNewPropertyQuery = pgPromise.as.format(`
-          UPDATE public."propmstr" pm
+        const updateBuySellQuery = pgPromise.as.format(`
+        UPDATE ${dbRef.table_names.buyer_seller} bs
+        SET 
+          ${dbRef.buyer_seller.seller_1}=$1,
+          ${dbRef.buyer_seller.seller_2}=$2,
+          ${dbRef.buyer_seller.seller_3}=$3,
+          ${dbRef.buyer_seller.seller_4}=$4,
+          ${dbRef.buyer_seller.buyer_1}=$5,
+          ${dbRef.buyer_seller.buyer_2}=$6
+        
+        WHERE bs.${dbRef.buyer_seller.p_comp_ref} = $7
+
+          RETURNING *
+        ;
+      `,[
+          seller_1,
+          seller_2,
+          seller_3,
+          seller_4,
+          buyer_1,
+          buyer_2,
+          Number(p_comp_ref),
+        ]
+      )
+
+        const updatePropertyQuery = pgPromise.as.format(`
+          UPDATE ${dbRef.table_names.properties} pm
           SET
-            "PTDATE" = $1,
-            "PCITY" = $2,
-            "PSTRET" = $3,
-            "PLOT" = $4,
-            "PCONDO" = $5,
-            "PUNIT" = $6,
-            "PBOOK1" = $7,
-            "PBOOK2" = $8,
-            "PPAGE1" = $9,
-            "PPAGE2" = $10,
-            "PCERT1" = $11,
-            "PNMBR" = $12,
-            "PREQ" = $13,
-            "PFILE" = $14, 
-            "PTYPE" = $15,
-            "PSTAT" = $16,
-            "PASIGN" = $17,
-            "PCOMPREF" = $18,
-            "PINSTR" = $19,
-            "CFILE" = $20,
-            "FILE" = $21,
-            "PSTATE" = $22,
-            "PZIP" = $23,
-            "PDOCNUM" = $24,
-            "PRDATE" = $25,
-            "PCDATE" = $26,
-            last_updated_by = $27,
-            "last_updated" = $28 
+            ${dbRef.properties.p_input_date} = $1,
+            ${dbRef.properties.p_city} = $2,
+            ${dbRef.properties.p_street} = $3,
+            ${dbRef.properties.p_lot} = $4,
+            ${dbRef.properties.p_condo} = $5,
+            ${dbRef.properties.p_unit} = $6,
+            ${dbRef.properties.p_book_1} = $7,
+            ${dbRef.properties.p_book_2} = $8,
+            ${dbRef.properties.p_page_1} = $9,
+            ${dbRef.properties.p_page_2} = $10,
+            ${dbRef.properties.p_cert_1} = $11,
+            ${dbRef.properties.p_number} = $12,
+            ${dbRef.properties.p_requester} = $13,
+            ${dbRef.properties.p_file} = $14, 
+            ${dbRef.properties.p_type} = $15,
+            ${dbRef.properties.p_status} = $16,
+            ${dbRef.properties.p_assign} = $17,
+            ${dbRef.properties.p_comp_ref} = $18,
+            ${dbRef.properties.p_instructions} = $19,
+            ${dbRef.properties.c_file} = $20,
+            ${dbRef.properties.p_state} = $21,
+            ${dbRef.properties.p_zip} = $22,
+            ${dbRef.properties.p_request_date} = $23,
+            ${dbRef.properties.p_closed_date} = $24,
+            ${dbRef.properties.last_updated_by} = $25,
+            ${dbRef.properties.last_updated} = $26 
           
-          WHERE pm.id = $29
+          WHERE pm.${dbRef.properties.id} = $27
 
             RETURNING *
           ;
         `,[
             new Date(),
-            city,
-            street,
-            lot,
-            condo,
-            unit,
-            book1,
-            book2,
-            page1,
-            page2,
-            cert1,
+            p_city,
+            p_street,
+            p_lot,
+            p_condo,
+            p_unit,
+            p_book_1,
+            p_book_2,
+            p_page_1,
+            p_page_2,
+            p_cert_1,
             Number(clientIdResponse.rows[0].CNMBR),
-            requester,
-            fileNumber,
-            type,
-            status,
-            assigned,
-            Number(compRef),
-            instructions,
-            clientFileNumber,
-            Number(fileNumber),
-            state,
-            zip,
-            docNumber,
-            requestDate === '' ? null : requestDate,
-            closedDate === '' ? null : closedDate,
+            p_requester,
+            Number(p_file) || null,
+            p_type,
+            p_status,
+            p_assign,
+            Number(p_comp_ref),
+            p_instructions,
+            c_file,
+            p_state,
+            p_zip,
+            p_request_date === '' ? null : p_request_date,
+            p_closed_date === '' ? null : p_closed_date,
             last_updated_by,
             new Date(),
             id,
           ]
         )
 
-        const updatedRecord = await conn.query(addNewPropertyQuery)
+        
+        const updatedBuySellRecord = await conn.query(updateBuySellQuery)
+        const updatedPropertyRecord = await conn.query(updatePropertyQuery)
         await conn.query('COMMIT')
 
         res.status(200).json({
-          updatedRecord: updatedRecord.rows[0],
+          updatedRecord: {
+            ...updatedPropertyRecord.rows[0],
+            ...updatedBuySellRecord.rows[0]
+          },
           message: 'Record updated',
           status: 'success'
         })

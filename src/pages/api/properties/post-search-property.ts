@@ -26,8 +26,6 @@ export default async function handler(
         requestEndDate=''
       } = req.body
 
-      console.log(req.body)
-
       if(inputStartDate !== '' && inputEndDate === '') {
         inputEndDate = timestampToDate(Date(), 'mmDDyyyy').date 
       }
@@ -49,18 +47,18 @@ export default async function handler(
       }
 
       const param = {
-        city: city !== '' ? andEqualsClause('pm','PCITY', '1') : '',
-        street: street !== '' ? andLikeClause('pm','PSTRET', '2') : '',
-        lot: lot !== '' ? andLikeClause('pm','PLOT', '3') : '',
-        condo: condo !== '' ? andLikeClause('pm','PCONDO', '4'): '',
-        instructions: instructions !== '' ? andLikeClause('pm','PINSTR', '5') : '',
+        city: city !== '' ? andEqualsClause('pm','p_city', '1') : '',
+        street: street !== '' ? andLikeClause('pm','p_street', '2') : '',
+        lot: lot !== '' ? andLikeClause('pm','p_lot', '3') : '',
+        condo: condo !== '' ? andLikeClause('pm','p_condo', '4'): '',
+        instructions: instructions !== '' ? andLikeClause('pm','p_instructions', '5') : '',
         client: client !== '' ? andEqualsClause('cm','CNAME', '6') : '',
-        type: type !== '' ? andEqualsClause('pm','PTYPE', '7') : '',
-        status: status !== '' ? andEqualsClause('pm','PSTAT', '8'): '',
-        compRef: compRef !== '' ? andEqualsClause('pm','PCOMPREF', '9'): '',
-        fileNumber: fileNumber !== '' ? andEqualsClause('pm','PFILE', '10'): '',
-        inputDateRange: inputStartDate !== '' && inputEndDate !== '' ? andBetweenClause('pm','PTDATE', '11', '12'): '',
-        requestDateRange: requestStartDate !== '' && requestEndDate !== '' ? andBetweenClause('pm','PRDATE', '13', '14'): '',
+        type: type !== '' ? andEqualsClause('pm','p_type', '7') : '',
+        status: status !== '' ? andEqualsClause('pm','p_status', '8'): '',
+        compRef: compRef !== '' ? andEqualsClause('pm','p_comp_ref', '9'): '',
+        fileNumber: fileNumber !== '' ? andEqualsClause('pm','p_file', '10'): '',
+        inputDateRange: inputStartDate !== '' && inputEndDate !== '' ? andBetweenClause('pm','p_input_date', '11', '12'): '',
+        requestDateRange: requestStartDate !== '' && requestEndDate !== '' ? andBetweenClause('pm','p_request_date', '13', '14'): '',
       }
 
       try {
@@ -69,34 +67,32 @@ export default async function handler(
             cm."CNAME",  
             cm."CNMBR",
             pm.id,
-            pm."PCITY",
-            pm."PSTRET",
-            pm."PLOT",
-            pm."PCONDO",
-            pm."PUNIT",
-            pm."PSTATE",
-            pm."PZIP",
-            pm."PSTAT",
-            pm."PTYPE",
-            pm."PASIGN",
-            pm."PCOMPREF",
-            pm."PINSTR",
-            pm."PNMBR",
-            pm."PREQ",
-            pm."PRDATE",
-            pm."PCDATE",
-            pm."PFILE",
-            pm."CFILE",
-            pm."PBOOK1",
-            pm."PBOOK2",
-            pm."PDOCNUM",
-            pm."PPAGE1",
-            pm."PPAGE2",
-            pm."PCERT1",
-            pm."EXPORT" AS "QBEXPORT"
-          FROM public.propmstr pm
+            pm.p_city,
+            pm.p_street,
+            pm.p_lot,
+            pm.p_condo,
+            pm.p_unit,
+            pm.p_state,
+            pm.p_zip,
+            pm.p_status,
+            pm.p_type,
+            pm.p_assign,
+            pm.p_comp_ref,
+            pm.p_instructions,
+            pm.p_number,
+            pm.p_requester,
+            pm.p_request_date,
+            pm.p_closed_date,
+            pm.p_file,
+            pm.c_file,
+            pm.p_book_1,
+            pm.p_book_2,
+            pm.p_page_1,
+            pm.p_page_2,
+            pm.p_cert_1
+          FROM public.properties pm
           LEFT JOIN public.clntmstr cm
-          ON cm."CNMBR" = pm."PNMBR"
+          ON cm."CNMBR" = pm.p_number
           WHERE pm.id IS NOT NULL
           ${param.city}
           ${param.street}
@@ -111,8 +107,8 @@ export default async function handler(
           ${param.inputDateRange}
           ${param.requestDateRange}
           ORDER BY 
-            pm."PSTRET",
-            pm."PLOT";
+            pm.p_street,
+            pm.p_lot;
         `,[
             city,
             street.toLowerCase(),

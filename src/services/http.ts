@@ -41,7 +41,7 @@ export const httpPostInsertProperty = async({username, data}: {username: string,
     created_by: username,
     last_updated_by: username,
   })
-  return response.data.newPropId
+  return response.data
 }
 
 export const httpPostUpdateProperty = async({id, username, data}: {id: string, username: string, data: Property}) => {
@@ -50,7 +50,7 @@ export const httpPostUpdateProperty = async({id, username, data}: {id: string, u
     id, 
     last_updated_by: username,
   })
-  return response.data.updatedRecord
+  return response.data
 }
 
 export const httpPostSearchProperty = async({data}:{data:{}}) => {
@@ -276,7 +276,7 @@ export const httpPostPropertiesInfo = async({cnmbr}:{cnmbr:string}) => {
 }
 
 export const httpPostBuyerSellerInfo = async({compRef}:{compRef:string}) => {
-  const response = await axios.post(`${BASE_URL}/api/buyerseller/post-buyer-seller-info`, {PCOMPREF: compRef} )
+  const response = await axios.post(`${BASE_URL}/api/buyerseller/post-buyer-seller-info`, {p_comp_ref: compRef} )
   return response.data
 }
 

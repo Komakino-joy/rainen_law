@@ -60,13 +60,13 @@ export const SelectDropDownsContextProvider = ({children}: {children:any}) => {
         setCountyList(countyList)
 
         setClientStatusDropDownOptions(clientStatusList.map((status: ClientStatus) => (
-          { label:status.status_desc, value:status.status_code }
+          { label:status.status_desc, value:status.status_desc }
         )))
         setPropertyStatusDropDownOptions(propertyStatusList.map((status: PropertyStatus) => (
-          { label:status.status_code, value:status.status_code }
+          { label:status.status_desc, value:status.status_desc }
         )))
         setPropertyTypeDropDownOptions(propertyTypeList.map((type: PropertyType) => (
-          { label:type.type_desc, value:type.type_code }
+          { label:type.type_code, value:type.type_code }
         )))
         setCountyDropDownOptions(countyList.map((county: County) => (
           { label:county.code, value:county.code }

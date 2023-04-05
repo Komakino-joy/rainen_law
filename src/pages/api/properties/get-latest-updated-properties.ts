@@ -11,25 +11,25 @@ export default async function handler(
         const allProperties = `
           SELECT 
             cm."CNAME",
-            pm."PTDATE",
-            pm."PCITY",
-            pm."PSTRET",
-            pm."PLOT",
-            pm."PCONDO",
-            pm."PUNIT",
-            pm."PNMBR",
-            pm."PREQ",
-            pm."PTYPE",
-            pm."PSTAT",
-            pm."PCOMPREF",
-            pm."PINSTR",
+            pm.p_input_date,
+            pm.p_city,
+            pm.p_street,
+            pm.p_lot,
+            pm.p_condo,
+            pm.p_unit,
+            pm.p_number,
+            pm.p_requester,
+            pm.p_type,
+            pm.p_status,
+            pm.p_comp_ref,
+            pm.p_instructions,
             pm.id
-          FROM public."propmstr" pm
+          FROM public."properties" pm
           LEFT JOIN public."clntmstr" cm 
-          ON cm."CNMBR" = pm."PNMBR"
+          ON cm."CNMBR" = pm.p_number
           ORDER BY 
             pm.last_updated DESC,
-            pm."PTDATE" DESC,
+            pm.p_input_date DESC,
             pm.id
           LIMIT 10
         `
