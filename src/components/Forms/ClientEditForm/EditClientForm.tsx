@@ -1,4 +1,4 @@
-import { Client, ClientInfoSnippet } from "@/types/common";
+import { Client, ClientInfoSnippet, DateTime } from "@/types/common";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
@@ -21,6 +21,7 @@ import Spinner from "@/components/Spinner/Spinner";
 import PrintClientLabel from "@/components/PrintClientLabel/PrintClientLabel";
 import { useSelectDropDownsContext } from "@/context/SelectDropDowns";
 import { useAuth } from "@/context/AuthContext";
+import dbRef from "@/constants/dbRefs";
 
 interface EditClientFormProps {
   clientId: string | null;
@@ -39,14 +40,14 @@ const ClientForm:React.FC<EditClientFormProps> = ({
   const [titlesCount, setTitlesCount] = useState(null)
   const [printLabelInfo, setPrintLabelInfo] = useState({})
   const [defaultSelectValues , setDefaultSelectValues] = useState({
-    status: '',
-    state: 'MA'
+    [dbRef.clients.c_status]: '',
+    [dbRef.clients.c_state]: 'MA'
   })
   const [clientInfoSnippet, setClientInfoSnippet] = useState<ClientInfoSnippet>({
-    id: 'New', 
-    cnmbr: null,
-    clientName: 'New Client',
-    lastUpdated: null
+    [dbRef.clients.id]: 'New', 
+    [dbRef.clients.c_number]: null,
+    [dbRef.clients.c_name]: 'New Client',
+    [dbRef.clients.last_updated]: null
   })
 
   const { 
@@ -64,51 +65,50 @@ const ClientForm:React.FC<EditClientFormProps> = ({
         const clientInfo = await httpPostSelectedClient({id: clientId})
         
         const {
-          id='', CNMBR='', CNAME='', last_updated=null, CSTAT='', CSEARCH='', CADD1='', 
-          CADD2='', CCITY='', CSTATE='', CZIP='', CPHONE='',
-          CFAX='', CEMAIL='', CCNTCT='', CSTATTO='', CNOTES=''
+          id='', c_number='', c_name='', last_updated=null, c_status='', c_address_1='', 
+          c_address_2='', c_city='', c_state='', c_zip='', c_phone='',
+          c_fax='', c_email='', c_contact='', c_statement_addresse='', c_notes=''
         } = clientInfo
 
         setPrintLabelInfo((prevState) => ({
           ...prevState,
-          CNAME,
-          CADD1,
-          CADD2,
-          CCITY,
-          CSTATE,
-          CZIP
+          c_name,
+          c_address_1,
+          c_address_2,
+          c_city,
+          c_state,
+          c_zip
         }))
 
         setClientInfoSnippet((prevState) => ({
           ...prevState,
-          id: id,
-          cnmbr: CNMBR.toString(),
-          clientName: CNAME,
-          lastUpdated: last_updated ? timestampToDate(last_updated, 'mmDDyyyy') : null
+          [dbRef.clients.id]: id,
+          [dbRef.clients.c_number]: c_number.toString(),
+          [dbRef.clients.c_name]: c_name,
+          [dbRef.clients.last_updated]: last_updated ? timestampToDate(last_updated, 'mmDDyyyy') : null
         }))
   
         setIsLoading(false)
 
         setDefaultSelectValues({
-          status: CLIENT_STATUS_CODES_MAP[CSTAT as ClientStatusCodeMapType] || '',
-          state: CSTATE || ''
+          [dbRef.clients.c_status]: CLIENT_STATUS_CODES_MAP[c_status as ClientStatusCodeMapType] || '',
+          [dbRef.clients.c_state]: c_state || ''
         })
 
         return {
-          clientName: CNAME ,
-          status: CSTAT ,
-          searchName: CSEARCH ,
-          addressLine1: CADD1 ,
-          addressLine2: CADD2 ,
-          city: CCITY ,
-          state: CSTATE ,
-          zip: CZIP ,
-          phone: CPHONE ,
-          fax: CFAX ,
-          email: CEMAIL ,
-          contact: CCNTCT ,
-          statementAddressee: CSTATTO ,
-          notes: CNOTES  
+          [dbRef.clients.c_name]: c_name ,
+          [dbRef.clients.c_status]: c_status ,
+          [dbRef.clients.c_address_1]: c_address_1 ,
+          [dbRef.clients.c_address_2]: c_address_2 ,
+          [dbRef.clients.c_city]: c_city ,
+          [dbRef.clients.c_state]: c_state ,
+          [dbRef.clients.c_zip]: c_zip ,
+          [dbRef.clients.c_phone]: c_phone ,
+          [dbRef.clients.c_fax]: c_fax ,
+          [dbRef.clients.c_email]: c_email ,
+          [dbRef.clients.c_contact]: c_contact ,
+          [dbRef.clients.c_statement_addresse]: c_statement_addresse ,
+          [dbRef.clients.c_notes]: c_notes  
         };
       }
     }
@@ -131,22 +131,24 @@ const ClientForm:React.FC<EditClientFormProps> = ({
       if(queryType === 'update') {
         const updatedRecord = httpPostUpdateClient({
           data,
-          id: clientInfoSnippet.id, // Passing id to update correct record
+          id: clientInfoSnippet[dbRef.clients.id as ClientInfoKeys ], // Passing id to update correct record
           username: user.username,
         })
   
-        handleAfterSubmit(clientInfoSnippet.id)
+        handleAfterSubmit(clientInfoSnippet[dbRef.clients.id as ClientInfoKeys ])
         reset(updatedRecord)
       }
     }
   };
 
+  type ClientInfoKeys = keyof typeof clientInfoSnippet
+
   return (
     <div className='form-wrapper edit-form'>
       <header>
-        <span>{clientInfoSnippet.clientName}</span>
-        { clientInfoSnippet.cnmbr ?
-            <span> Client Number: {clientInfoSnippet.cnmbr} </span>
+        <span>{clientInfoSnippet[dbRef.clients.c_name as  ClientInfoKeys]}</span>
+        { clientInfoSnippet[dbRef.clients.c_number as  ClientInfoKeys] ?
+            <span> Client Number: {clientInfoSnippet[dbRef.clients.c_number as  ClientInfoKeys]} </span>
           : null
         }
       </header>
@@ -154,9 +156,9 @@ const ClientForm:React.FC<EditClientFormProps> = ({
         : <form className="flex-y" onSubmit={handleSubmit(onSubmit)}>
             <section className={`flex-x ${styles['client-status-section']}`}>
               <FormInput 
-                name="clientName"
+                name={dbRef.clients.c_name}
                 customClass={styles.client}
-                labelKey="clientName"
+                labelKey={dbRef.clients.c_name}
                 labelText="Client/Firm Name"
                 type="text"
                 isRequired={true}
@@ -165,7 +167,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
               />
 
               <Controller 
-                name={"status"}  
+                name={dbRef.clients.c_status}  
                 control={control} 
                 rules={{ required: true }}
                 render={({
@@ -173,8 +175,8 @@ const ClientForm:React.FC<EditClientFormProps> = ({
                 }) => {
                   return (
                     <FormInput 
-                      name="status"
-                      labelKey="status"
+                      name={dbRef.clients.c_status} 
+                      labelKey={dbRef.clients.c_status} 
                       labelText="Status"
                       type="select" 
                       defaultValue={defaultSelectValues.status}
@@ -191,8 +193,8 @@ const ClientForm:React.FC<EditClientFormProps> = ({
             </section>
             <section className={styles['address-section']}>
               <FormInput 
-                name="addressLine1"
-                labelKey="addressLine1"
+                name={dbRef.clients.c_address_1} 
+                labelKey={dbRef.clients.c_address_1} 
                 labelText="Address Line 1"
                 type="text" 
                 customClass={styles.address}
@@ -202,8 +204,8 @@ const ClientForm:React.FC<EditClientFormProps> = ({
               />
 
               <FormInput
-                name="addressLine2" 
-                labelKey="addressLine2"
+                name={dbRef.clients.c_address_2}  
+                labelKey={dbRef.clients.c_address_2} 
                 labelText="Address Line 2"
                 type="text" 
                 customClass={styles.address}
@@ -215,8 +217,8 @@ const ClientForm:React.FC<EditClientFormProps> = ({
 
             <section className={`flex-x ${styles['city-state-zip-section']}`}>
               <FormInput 
-                name="city"
-                labelKey="city"
+                name={dbRef.clients.c_city} 
+                labelKey={dbRef.clients.c_city} 
                 labelText="City"
                 customClass={styles.city}
                 type="text" 
@@ -226,7 +228,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
               />
 
               <Controller 
-                  name={"state"}  
+                  name={dbRef.clients.c_state}   
                   control={control} 
                   rules={{ required: true }}
                   defaultValue={defaultSelectValues.state}
@@ -235,8 +237,8 @@ const ClientForm:React.FC<EditClientFormProps> = ({
                   }) => {
                     return (
                       <FormInput 
-                        name="state"
-                        labelKey="state"
+                        name={dbRef.clients.c_state} 
+                        labelKey={dbRef.clients.c_state} 
                         labelText="State"
                         type="select" 
                         defaultValue={defaultSelectValues.state}
@@ -252,8 +254,8 @@ const ClientForm:React.FC<EditClientFormProps> = ({
                 />
 
               <FormInput 
-                name="zip"
-                labelKey="zip"
+                name={dbRef.clients.c_zip} 
+                labelKey={dbRef.clients.c_zip} 
                 labelText="Zip Code"
                 customClass={styles.zip}
                 type="text" 
@@ -265,8 +267,8 @@ const ClientForm:React.FC<EditClientFormProps> = ({
 
             <section className={`flex-x ${styles['phone-fax-email-section']}`}>
               <FormInput 
-                name="phone"
-                labelKey="phone"
+                name={dbRef.clients.c_phone} 
+                labelKey={dbRef.clients.c_phone} 
                 labelText="Phone Number"
                 customClass={styles.phone}
                 type="tel" 
@@ -276,8 +278,8 @@ const ClientForm:React.FC<EditClientFormProps> = ({
               />
 
               <FormInput 
-                name="fax"
-                labelKey="fax"
+                name={dbRef.clients.c_fax} 
+                labelKey={dbRef.clients.c_fax} 
                 labelText="Fax Number"
                 customClass={styles.fax}
                 type="tel" 
@@ -287,8 +289,8 @@ const ClientForm:React.FC<EditClientFormProps> = ({
               />
 
               <FormInput 
-                name="email"
-                labelKey="email"
+                name={dbRef.clients.c_email} 
+                labelKey={dbRef.clients.c_email} 
                 labelText="Email Address"
                 customClass={styles.email}
                 type="email" 
@@ -300,8 +302,8 @@ const ClientForm:React.FC<EditClientFormProps> = ({
 
             <section className={`flex-x ${styles['contact-statement-section']}`}>
               <FormInput 
-                name="contact"
-                labelKey="contact"
+                name={dbRef.clients.c_contact} 
+                labelKey={dbRef.clients.c_contact} 
                 labelText="Contact"
                 customClass={styles.contact}
                 type="text" 
@@ -311,8 +313,8 @@ const ClientForm:React.FC<EditClientFormProps> = ({
               />
 
               <FormInput 
-                name="statementAddressee"
-                labelKey="statementAddressee"
+                name={dbRef.clients.c_statement_addresse} 
+                labelKey={dbRef.clients.c_statement_addresse} 
                 labelText="Statement Addressee"
                 customClass={styles.statement}
                 type="text" 
@@ -325,8 +327,8 @@ const ClientForm:React.FC<EditClientFormProps> = ({
 
             <section className={styles['notes-section']}>
               <FormInput 
-                name="notes"
-                labelKey="notes"
+                name={dbRef.clients.c_notes} 
+                labelKey={dbRef.clients.c_notes} 
                 labelText="Notes"
                 type="textarea" 
                 isRequired={true}
@@ -349,17 +351,17 @@ const ClientForm:React.FC<EditClientFormProps> = ({
             </section>
 
             <footer className="form-footer">
-              { clientInfoSnippet.lastUpdated && 
+              { clientInfoSnippet[dbRef.clients.last_updated as ClientInfoKeys ] && 
                 <>
-                  <span>Last Updated: { clientInfoSnippet.lastUpdated.date }</span>
-                  <span className="italicized-text">{ clientInfoSnippet.lastUpdated.time }</span>
+                  <span>Last Updated: {(clientInfoSnippet[dbRef.clients.last_updated as ClientInfoKeys ] as DateTime).date}</span>
+                  <span className="italicized-text">{(clientInfoSnippet[dbRef.clients.last_updated as ClientInfoKeys ] as DateTime).time}</span>
                 </>
               }
             </footer>
           </form>
       }
 
-      { queryType === 'update' && clientInfoSnippet.cnmbr ?
+      { queryType === 'update' && clientInfoSnippet[dbRef.clients.c_number as ClientInfoKeys ] ?
         <Tabs>
           <TabList>
             <Tab>Properties</Tab>
@@ -367,12 +369,12 @@ const ClientForm:React.FC<EditClientFormProps> = ({
           </TabList>
 
           <TabPanel>
-            <SubTableProperties cnmbr={clientInfoSnippet.cnmbr.toString()} />
+            <SubTableProperties cnmbr={(clientInfoSnippet[dbRef.clients.c_number as ClientInfoKeys] as string).toString()} />
           </TabPanel>
 
           <TabPanel>
             <SubTableINS 
-              inmbr={clientInfoSnippet.cnmbr.toString()} 
+              inmbr={(clientInfoSnippet[dbRef.clients.c_number as ClientInfoKeys] as string).toString()} 
               setTitlesCount={setTitlesCount}
             />
           </TabPanel>

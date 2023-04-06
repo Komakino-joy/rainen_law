@@ -271,7 +271,7 @@ export const httpPostInsTitlesInfo = async({inmbr}:{inmbr:string}) => {
 }
 
 export const httpPostPropertiesInfo = async({cnmbr}:{cnmbr:string}) => {
-  const response = await axios.post(`${BASE_URL}/api/clients/post-properties-info`, {CNMBR: cnmbr} )
+  const response = await axios.post(`${BASE_URL}/api/clients/post-properties-info`, {c_number: cnmbr} )
   return response.data
 }
 

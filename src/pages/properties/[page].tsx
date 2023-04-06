@@ -16,12 +16,12 @@ export async function getServerSideProps(context:any) {
     const pageSize = 50
     const pageOffset = pageSize * (page - 1)
 
-    const totalRecordsQuery = `select COUNT(*) from public.properties`
+    const totalRecordsQuery = `select COUNT(*) from ${dbRefs.table_names.properties}`
     const totalRecordsResult = (await conn.query(totalRecordsQuery)).rows[0].count;
 
     const allProperties = `
       SELECT 
-        cm."CNAME",
+        cm.c_name,
         pm.p_input_date,
         pm.p_city,
         pm.p_street,
@@ -35,9 +35,9 @@ export async function getServerSideProps(context:any) {
         pm.p_comp_ref,
         pm.p_instructions,
         pm.id
-      FROM public.properties pm
-      LEFT JOIN public.clntmstr cm 
-      ON cm."CNMBR" = pm.p_number
+      FROM ${dbRefs.table_names.properties} pm
+      LEFT JOIN ${dbRefs.table_names.clients} cm 
+      ON cm.c_number = pm.p_number
       ORDER BY 
         pm.last_updated DESC,
         pm.p_input_date DESC,

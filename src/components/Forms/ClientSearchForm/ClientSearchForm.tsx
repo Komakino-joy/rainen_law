@@ -4,6 +4,7 @@ import FormInput from "../Common/FormInput/FormInput";
 import { useClientsContext } from "@/context/Clients";
 import Button from "@/components/Button/Button";
 import { useState } from "react";
+import dbRef from "@/constants/dbRefs";
 
 interface ClientSearchFormProps {
   onSubmit: any;
@@ -18,17 +19,17 @@ const ClientSearchForm:React.FC<ClientSearchFormProps> = ({
   const [clearSelectInputBoxes, setClearSelectInputBoxes] = useState(false)
 
   const {
-    CNAME: clientNames,
-    CNMBR: clientNumbers,
-    CSTAT: clientStats,
-    CCNTCT: clientContacts,
-    CSTATTO: clientStattos,
-    CCITY: clientCities,
-    CSTATE: clientStates,
-    CZIP: clientZips,
-    CPHONE: clientPhones,
-    CFAX: clientFaxes,
-    CEMAIL: clientEmails
+    c_name: clientNames,
+    c_number: clientNumbers,
+    c_status: clientStats,
+    c_contact: clientContacts,
+    c_statement_addresse: clientStattos,
+    c_city: clientCities,
+    c_state: clientStates,
+    c_zip: clientZips,
+    c_phone: clientPhones,
+    c_fax: clientFaxes,
+    c_email: clientEmails
   } = clientSelectOptions
 
   const { 
@@ -55,7 +56,7 @@ const ClientSearchForm:React.FC<ClientSearchFormProps> = ({
         <section className="flex-x gap-sm">
           { clientNames && clientNames.length > 0 &&
             <Controller 
-              name={"clientName"}  
+              name={dbRef.clients.c_name}  
               control={control} 
               render={({
                 field: {onChange},
@@ -63,8 +64,8 @@ const ClientSearchForm:React.FC<ClientSearchFormProps> = ({
                 return (
                   <FormInput 
                     key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
-                    name="clientName"
-                    labelKey="clientName"
+                    name={dbRef.clients.c_name}  
+                    labelKey={dbRef.clients.c_name}  
                     labelText="Name"
                     type="select" 
                     customClass="f-100"
@@ -81,7 +82,7 @@ const ClientSearchForm:React.FC<ClientSearchFormProps> = ({
 
           { clientNumbers && clientNumbers.length > 0 &&
             <Controller 
-              name={"clientNumber"}  
+              name={dbRef.clients.c_number}    
               control={control} 
               render={({
                 field: {onChange},
@@ -89,8 +90,8 @@ const ClientSearchForm:React.FC<ClientSearchFormProps> = ({
                 return (
                   <FormInput 
                     key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
-                    name="clientNumber"
-                    labelKey="clientNumber"
+                    name={dbRef.clients.c_number} 
+                    labelKey={dbRef.clients.c_number} 
                     labelText="Number"
                     type="select" 
                     customClass="f-100"
@@ -107,7 +108,7 @@ const ClientSearchForm:React.FC<ClientSearchFormProps> = ({
 
           { clientStats && clientStats.length > 0 &&
             <Controller 
-              name={"clientStat"}  
+              name={dbRef.clients.c_status}  
               control={control} 
               render={({
                 field: {onChange},
@@ -115,8 +116,8 @@ const ClientSearchForm:React.FC<ClientSearchFormProps> = ({
                 return (
                   <FormInput 
                     key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
-                    name="clientStat"
-                    labelKey="clientStat"
+                    name={dbRef.clients.c_status} 
+                    labelKey={dbRef.clients.c_status} 
                     labelText="Status"
                     type="select" 
                     customClass="f-50"
@@ -135,7 +136,7 @@ const ClientSearchForm:React.FC<ClientSearchFormProps> = ({
         <section className="flex-x gap-sm">
           { clientPhones && clientPhones.length > 0 &&
             <Controller 
-              name={"clientPhone"}  
+              name={dbRef.clients.c_phone}   
               control={control} 
               render={({
                 field: {onChange},
@@ -143,8 +144,8 @@ const ClientSearchForm:React.FC<ClientSearchFormProps> = ({
                 return (
                   <FormInput 
                     key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
-                    name="clientPhone"
-                    labelKey="clientPhone"
+                    name={dbRef.clients.c_phone}
+                    labelKey={dbRef.clients.c_phone}
                     labelText="Phone Number"
                     type="select" 
                     customClass="f-100"
@@ -161,7 +162,7 @@ const ClientSearchForm:React.FC<ClientSearchFormProps> = ({
 
           { clientFaxes && clientFaxes.length > 0 &&
             <Controller 
-              name={"clientFax"}  
+              name={dbRef.clients.c_fax}  
               control={control} 
               render={({
                 field: {onChange},
@@ -169,8 +170,8 @@ const ClientSearchForm:React.FC<ClientSearchFormProps> = ({
                 return (
                   <FormInput 
                     key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
-                    name="clientFax"
-                    labelKey="clientFax"
+                    name={dbRef.clients.c_fax}  
+                    labelKey={dbRef.clients.c_fax}  
                     labelText="Fax Number"
                     type="select" 
                     customClass="f-100"
@@ -187,7 +188,7 @@ const ClientSearchForm:React.FC<ClientSearchFormProps> = ({
 
           { clientEmails && clientEmails.length > 0 &&
             <Controller 
-              name={"clientEmail"}  
+              name={dbRef.clients.c_email}    
               control={control} 
               render={({
                 field: {onChange},
@@ -195,8 +196,8 @@ const ClientSearchForm:React.FC<ClientSearchFormProps> = ({
                 return (
                   <FormInput 
                     key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
-                    name="clientEmail"
-                    labelKey="clientEmail"
+                    name={dbRef.clients.c_email} 
+                    labelKey={dbRef.clients.c_email} 
                     labelText="Email"
                     type="select" 
                     customClass="f-100"
@@ -215,7 +216,7 @@ const ClientSearchForm:React.FC<ClientSearchFormProps> = ({
         <section className="flex-x gap-sm">
           { clientContacts && clientContacts.length > 0 &&
             <Controller 
-              name={"clientContact"}  
+              name={dbRef.clients.c_contact}   
               control={control} 
               render={({
                 field: {onChange},
@@ -223,8 +224,8 @@ const ClientSearchForm:React.FC<ClientSearchFormProps> = ({
                 return (
                   <FormInput 
                     key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
-                    name="clientContact"
-                    labelKey="clientContact"
+                    name={dbRef.clients.c_contact}  
+                    labelKey={dbRef.clients.c_contact}  
                     labelText="Contact"
                     type="select" 
                     customClass="f-100"
@@ -241,7 +242,7 @@ const ClientSearchForm:React.FC<ClientSearchFormProps> = ({
 
           { clientStattos && clientStattos.length > 0 &&
             <Controller 
-              name={"clientStatementAddressee"}  
+              name={dbRef.clients.c_statement_addresse}    
               control={control} 
               render={({
                 field: {onChange},
@@ -249,8 +250,8 @@ const ClientSearchForm:React.FC<ClientSearchFormProps> = ({
                 return (
                   <FormInput 
                     key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
-                    name="clientStatementAddressee"
-                    labelKey="clientStatementAddressee"
+                    name={dbRef.clients.c_statement_addresse} 
+                    labelKey={dbRef.clients.c_statement_addresse} 
                     labelText="Statement Addressee"
                     type="select" 
                     customClass="f-100"
@@ -269,7 +270,7 @@ const ClientSearchForm:React.FC<ClientSearchFormProps> = ({
         <section className="flex-x gap-sm">
           { clientCities && clientCities.length > 0 &&
             <Controller 
-              name={"clientCity"}  
+              name={dbRef.clients.c_city}   
               control={control} 
               render={({
                 field: {onChange},
@@ -277,8 +278,8 @@ const ClientSearchForm:React.FC<ClientSearchFormProps> = ({
                 return (
                   <FormInput 
                     key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
-                    name="clientCity"
-                    labelKey="clientCity"
+                    name={dbRef.clients.c_city}   
+                    labelKey={dbRef.clients.c_city}   
                     labelText="City"
                     type="select" 
                     customClass="f-100"
@@ -295,7 +296,7 @@ const ClientSearchForm:React.FC<ClientSearchFormProps> = ({
 
           { clientStates && clientStates.length > 0 &&
             <Controller 
-              name={"clientState"}  
+              name={dbRef.clients.c_state}    
               control={control} 
               render={({
                 field: {onChange},
@@ -303,8 +304,8 @@ const ClientSearchForm:React.FC<ClientSearchFormProps> = ({
                 return (
                   <FormInput 
                     key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
-                    name="clientState"
-                    labelKey="clientState"
+                    name={dbRef.clients.c_state}
+                    labelKey={dbRef.clients.c_state}
                     labelText="State"
                     type="select" 
                     customClass="f-50"
@@ -321,7 +322,7 @@ const ClientSearchForm:React.FC<ClientSearchFormProps> = ({
 
           { clientZips && clientZips.length > 0 &&
             <Controller 
-              name={"clientZip"}  
+              name={dbRef.clients.c_zip}  
               control={control} 
               render={({
                 field: {onChange},
@@ -329,8 +330,8 @@ const ClientSearchForm:React.FC<ClientSearchFormProps> = ({
                 return (
                   <FormInput 
                     key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
-                    name="clientZip"
-                    labelKey="clientZip"
+                    name={dbRef.clients.c_zip}
+                    labelKey={dbRef.clients.c_zip}
                     labelText="Zip Code"
                     type="select" 
                     customClass="f-100"

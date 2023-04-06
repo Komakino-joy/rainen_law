@@ -1,4 +1,5 @@
 
+import dbRef from '@/constants/dbRefs'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import conn from '../../../lib/db'
 
@@ -10,10 +11,10 @@ export default async function handler(
       try {
         const getDistinctAssign = `
             SELECT 
-            DISTINCT pm.p_assign 
-            FROM public."properties" pm 
-            WHERE pm.p_assign IS NOT NULL 
-            ORDER BY pm.p_assign;
+            DISTINCT p.${dbRef.properties.p_assign} 
+            FROM ${dbRef.table_names.properties} p 
+            WHERE p.${dbRef.properties.p_assign} IS NOT NULL 
+            ORDER BY p.${dbRef.properties.p_assign};
           `
         const result = await conn.query(getDistinctAssign)
         

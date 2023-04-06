@@ -2,17 +2,17 @@
 
 import { Property } from '@/types/common';
 import React, { useState } from 'react'
+import toast from 'react-hot-toast';
+import { confirmAlert } from 'react-confirm-alert';
 import Modal from '@/components/Modal/Modal';
+import Spinner from '@/components/Spinner/Spinner';
+import InfoCard from '@/components/InfoCard/InfoCard';
 import ClientCard from '@/components/ClientCard/ClientCard';
 import PropertyForm from '@/components/Forms/PropertyEditForm/EditPropertyForm';
-import InfoCard from '@/components/InfoCard/InfoCard';
 import SearchPropertiesForm from '@/components/Forms/PropertySearchForm/SearchPropertiesForm'
 import { useClientsContext } from '@/context/Clients';
 import { usePropertiesContext } from '@/context/Properties';
-import Spinner from '@/components/Spinner/Spinner';
 import { httpPostSearchProperty } from '@/services/http';
-import { confirmAlert } from 'react-confirm-alert';
-import toast from 'react-hot-toast';
 
 const SearchPropertiesPage = () => {
 

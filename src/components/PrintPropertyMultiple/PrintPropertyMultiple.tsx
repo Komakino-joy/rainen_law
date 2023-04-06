@@ -65,7 +65,7 @@ const PrintPropertyMultiple = ({
                 buyer_1, 
                 buyer_2,
                 p_instructions,
-                CNAME, 
+                c_name, 
                 p_requester,
                 c_file,
                 p_request_date, 
@@ -95,7 +95,7 @@ const PrintPropertyMultiple = ({
                   <p> {`S:${seller_3 || ''} S:${seller_4 || ''}`} </p>
                   <p> {`B:${buyer_1 || ''} B:${buyer_2 || ''}`} </p>
                   <p> {`*${p_instructions || ''}`} </p>
-                  <p> {`${CNAME || ''}, ${p_requester || ''}`} </p>
+                  <p> {`${c_name || ''}, ${p_requester || ''}`} </p>
                   <p> {`${c_file || ''}`} </p>
                 </div>
               )

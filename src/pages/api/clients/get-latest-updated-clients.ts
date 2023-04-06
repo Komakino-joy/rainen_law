@@ -1,3 +1,4 @@
+import dbRef from '@/constants/dbRefs'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import conn from '../../../lib/db'
 
@@ -9,13 +10,13 @@ export default async function handler(
       try {
         const getAllClientsQuery = `
             SELECT * FROM
-              public.clntmstr cm
+              ${dbRef.table_names.clients} cm
             WHERE 
-              cm."CNAME" IS NOT NULL
+              cm.${dbRef.clients.c_name} IS NOT NULL
             ORDER BY
-              cm.last_updated DESC,
-              cm."CNAME" ASC,
-              cm.id
+              cm.${dbRef.clients.last_updated} DESC,
+              cm.${dbRef.clients.c_name} ASC,
+              cm.${dbRef.clients.id}
             LIMIT 10;
           `
         const result = await conn.query(getAllClientsQuery)

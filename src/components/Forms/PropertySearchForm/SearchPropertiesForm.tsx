@@ -8,6 +8,7 @@ import { useClientsContext } from "@/context/Clients";
 import { usePropertiesContext } from "@/context/Properties";
 import Button from "@/components/Button/Button";
 import { useState } from "react";
+import dbRef from "@/constants/dbRefs";
 
 interface SearchPropertiesFormProps {
   onSubmit: any;
@@ -46,8 +47,8 @@ const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
       <form className="flex-y">
         <section className="flex-x gap-sm">
           <FormInput 
-            name="compRef"
-            labelKey="compRef"
+            name={dbRef.properties.p_comp_ref}
+            labelKey={dbRef.properties.p_comp_ref}
             labelText="CompRef"
             type="text" 
             isRequired={true}
@@ -55,8 +56,8 @@ const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
             errors={errors}
           />
           <FormInput 
-            name="fileNumber"
-            labelKey="fileNumber"
+            name={dbRef.properties.p_file}
+            labelKey={dbRef.properties.p_file}
             labelText="FileNumber"
             type="text" 
             isRequired={true}
@@ -104,9 +105,9 @@ const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
           />
         </section>
         <section className="flex-x gap-sm">
-          { clientSelectOptions.CNAME && clientSelectOptions.CNAME.length > 0 &&
+          { clientSelectOptions.c_name && clientSelectOptions.c_name.length > 0 &&
             <Controller 
-              name={"client"}  
+              name={dbRef.clients.c_name} 
               control={control} 
               render={({
                 field: { onChange},
@@ -114,13 +115,13 @@ const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
                 return (
                   <FormInput 
                     key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
-                    name="client"
-                    labelKey="client"
+                    name={dbRef.clients.c_name} 
+                    labelKey={dbRef.clients.c_name} 
                     labelText="Client"
                     type="select" 
                     customClass="f-100"
                     selectOnChange={onChange}
-                    options={clientSelectOptions.CNAME}
+                    options={clientSelectOptions.c_name}
                     isRequired={false}
                     register={register} 
                     errors={errors}
@@ -132,16 +133,16 @@ const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
 
           { propertiesSelectOptions.p_type && propertiesSelectOptions.p_type.length > 0 &&
             <Controller 
-              name={"type"}  
+              name={dbRef.properties.p_type}  
               control={control} 
               render={({
                 field: { onChange},
               }) => {
                 return (
                   <FormInput 
-                    name="type"
                     key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
-                    labelKey="type"
+                    name={dbRef.properties.p_type}  
+                    labelKey={dbRef.properties.p_type}  
                     labelText="Type"
                     type="select" 
                     customClass="f-25"
@@ -158,15 +159,16 @@ const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
           
           { propertiesSelectOptions.p_status && propertiesSelectOptions.p_status.length > 0 &&
             <Controller 
-              name={"status"}  
+              name={dbRef.properties.p_status}    
               control={control} 
               render={({
                 field: { onChange},
               }) => {
                 return (
                   <FormInput 
-                    name="status"
-                    labelKey="status"
+                    key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
+                    name={dbRef.properties.p_status} 
+                    labelKey={dbRef.properties.p_status} 
                     labelText="Status"
                     type="select" 
                     customClass="f-25"
@@ -185,7 +187,7 @@ const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
         <section className="flex-x gap-sm">
         { propertiesSelectOptions.p_city && propertiesSelectOptions.p_city.length > 0 &&
             <Controller 
-              name={"city"}  
+              name={dbRef.properties.p_city}  
               control={control} 
               render={({
                 field: {onChange},
@@ -193,8 +195,8 @@ const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
                 return (
                   <FormInput 
                     key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
-                    name="city"
-                    labelKey="city"
+                    name={dbRef.properties.p_city}
+                    labelKey={dbRef.properties.p_city}
                     labelText="City"
                     type="select" 
                     customClass="f-100"
@@ -210,8 +212,8 @@ const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
           }
 
           <FormInput 
-            name="street"
-            labelKey="street"
+            name={dbRef.properties.p_street}
+            labelKey={dbRef.properties.p_street}
             labelText="Street"
             customClass='f-100'
             type="text" 
@@ -221,8 +223,8 @@ const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
           />
 
           <FormInput 
-            name="condo"
-            labelKey="condo"
+            name={dbRef.properties.p_condo}
+            labelKey={dbRef.properties.p_condo}
             labelText="Condo"
             customClass='f-50'
             type="text" 
@@ -232,8 +234,8 @@ const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
           />
 
           <FormInput 
-            name="lot"
-            labelKey="lot"
+            name={dbRef.properties.p_lot}
+            labelKey={dbRef.properties.p_lot}
             labelText="Lot"
             customClass='f-25'
             type="text" 
@@ -244,8 +246,8 @@ const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
         </section>
 
         <FormInput 
-          name="instructions"
-          labelKey="instructions"
+          name={dbRef.properties.p_instructions}
+          labelKey={dbRef.properties.p_instructions}
           labelText="Instructions"
           type="text" 
           isRequired={false}

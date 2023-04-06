@@ -8,34 +8,34 @@ import { createContext, useContext, useEffect, useRef, useState } from "react";
 interface ClientsContextProps {
   isLoadingClientsContext: boolean,
   clientSelectOptions: {
-    CNAME: [{ label: string; value: string;}];
-    CNMBR: [{ label: string; value: string;}];
-    CSTAT: [{ label: string; value: string;}];
-    CCNTCT: [{ label: string; value: string;}];
-    CSTATTO: [{ label: string; value: string;}];
-    CCITY: [{ label: string; value: string;}];
-    CSTATE: [{ label: string; value: string;}];
-    CZIP: [{ label: string; value: string;}];
-    CPHONE: [{ label: string; value: string;}];
-    CFAX: [{ label: string; value: string;}];
-    CEMAIL: [{ label: string; value: string;}];
+    c_name: [{ label: string; value: string;}];
+    c_number: [{ label: string; value: string;}];
+    c_status: [{ label: string; value: string;}];
+    c_contact: [{ label: string; value: string;}];
+    c_statement_addresse: [{ label: string; value: string;}];
+    c_city: [{ label: string; value: string;}];
+    c_state: [{ label: string; value: string;}];
+    c_zip: [{ label: string; value: string;}];
+    c_phone: [{ label: string; value: string;}];
+    c_fax: [{ label: string; value: string;}];
+    c_email: [{ label: string; value: string;}];
   };
 }
 
 const ClientsContext = createContext<ClientsContextProps>({
   isLoadingClientsContext: false,
   clientSelectOptions: {
-    CNAME: [{ label: '', value: ''}],
-    CNMBR: [{ label: '', value: ''}],
-    CSTAT: [{ label: '', value: ''}],
-    CCNTCT: [{ label: '', value: ''}],
-    CSTATTO: [{ label: '', value: ''}],
-    CCITY: [{ label: '', value: ''}],
-    CSTATE: [{ label: '', value: ''}],
-    CZIP: [{ label: '', value: ''}],
-    CPHONE: [{ label: '', value: ''}],
-    CFAX: [{ label: '', value: ''}],
-    CEMAIL: [{ label: '', value: ''}]
+    c_name: [{ label: '', value: ''}],
+    c_number: [{ label: '', value: ''}],
+    c_status: [{ label: '', value: ''}],
+    c_contact: [{ label: '', value: ''}],
+    c_statement_addresse: [{ label: '', value: ''}],
+    c_city: [{ label: '', value: ''}],
+    c_state: [{ label: '', value: ''}],
+    c_zip: [{ label: '', value: ''}],
+    c_phone: [{ label: '', value: ''}],
+    c_fax: [{ label: '', value: ''}],
+    c_email: [{ label: '', value: ''}]
   },
 })
 
@@ -54,8 +54,8 @@ export const ClientsContextProvider = ({children}: {children:any}) => {
         setIsLoading(true)
         // These are the only fields we care to make into Options for Select component
         const fields = [
-          'CNAME', 'CNMBR', 'CSTAT', 'CCNTCT', 'CSTATTO',
-          'CCITY', 'CSTATE', 'CZIP', 'CPHONE', 'CFAX', 'CEMAIL'
+          'c_name', 'c_number', 'c_status', 'c_contact', 'c_statement_addresse',
+          'c_city', 'c_state', 'c_zip', 'c_phone', 'c_fax', 'c_email'
         ]
         const clients = await httpGetAllClients()
 
@@ -88,7 +88,7 @@ export const ClientsContextProvider = ({children}: {children:any}) => {
           clientsObject[key] = uniqueLabelValuePairs(clientsObject[key])
         ))
 
-        clientsObject.CNMBR.sort(function(a: LabelValuePair, b:LabelValuePair) {
+        clientsObject.c_number.sort(function(a: LabelValuePair, b:LabelValuePair) {
           return a.value - b.value;
         })
 

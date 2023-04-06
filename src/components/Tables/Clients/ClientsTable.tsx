@@ -32,39 +32,39 @@ const ClientsTable:React.FC<ClientsTableProps> = ({
     () => [
       {
         Header: 'Client#',
-        accessor: (d:any) => d.CNMBR,
+        accessor: (d:any) => d.c_number,
       },
       {
         Header: 'Client Name',
-        accessor: (d:any) => d.CNAME,
+        accessor: (d:any) => d.c_name,
       },
       {
         Header: 'Address',
-        accessor: (d:any) => `${d.CADD1} ${d.CADD2 ? d.CADD2 : ''}`,
+        accessor: (d:any) => `${d.c_address_1} ${d.c_address_2 ? d.c_address_2 : ''}`,
       },
       {
         Header: 'City',
-        accessor: (d:any) => d.CCITY || 'N/A',
+        accessor: (d:any) => d.c_city || 'N/A',
       },
       {
         Header: 'State',
-        accessor: (d:any) => d.CSTATE || 'N/A',
+        accessor: (d:any) => d.c_state || 'N/A',
       },
       {
         Header: 'Zip',
-        accessor: (d:any) => d.CZIP || 'N/A',
+        accessor: (d:any) => d.c_zip || 'N/A',
       },
       {
         Header: 'Phone',
-        accessor: (d:any) => d.CPHONE || 'N/A',
+        accessor: (d:any) => d.c_phone || 'N/A',
       },
       {
         Header: 'Fax',
-        accessor: (d:any) => d.CFAX || 'N/A',
+        accessor: (d:any) => d.c_fax || 'N/A',
       },
       {
         Header: 'Is Client?',
-        accessor: (d:any) => d.ISCLIENT ? 'Yes' : "No",
+        accessor: (d:any) => d.c_is_client ? 'Yes' : "No",
       },
       {
         Header: 'Properties',

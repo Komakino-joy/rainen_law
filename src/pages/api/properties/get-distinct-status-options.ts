@@ -1,4 +1,5 @@
 
+import dbRef from '@/constants/dbRefs'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import conn from '../../../lib/db'
 
@@ -9,10 +10,10 @@ export default async function handler(
     if (req.method === "GET") { 
       try {
         const getDistinctTypes = `
-            SELECT DISTINCT pm.p_status 
-            FROM public.properties pm 
-            WHERE pm.p_status IS NOT NULL
-            ORDER BY pm.p_status ASC;
+            SELECT DISTINCT p.${dbRef.properties.p_status} 
+            FROM ${dbRef.table_names.properties} p 
+            WHERE p.${dbRef.properties.p_status} IS NOT NULL
+            ORDER BY p.${dbRef.properties.p_status} ASC;
           `
         const result = await conn.query(getDistinctTypes)
         

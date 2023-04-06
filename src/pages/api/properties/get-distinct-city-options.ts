@@ -1,4 +1,5 @@
 
+import dbRef from '@/constants/dbRefs'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import conn from '../../../lib/db'
 
@@ -9,9 +10,9 @@ export default async function handler(
     if (req.method === "GET") { 
       try {
         const getDistinctCities = `
-            SELECT DISTINCT pm.p_city 
-            FROM public.properties pm 
-            ORDER BY pm.p_city;
+            SELECT DISTINCT p.${dbRef.properties.p_city} 
+            FROM ${dbRef.table_names.properties} p 
+            ORDER BY p.${dbRef.properties.p_city};
           `
         const result = await conn.query(getDistinctCities)
         

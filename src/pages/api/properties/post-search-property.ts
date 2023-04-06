@@ -1,3 +1,4 @@
+import dbRef from '@/constants/dbRefs'
 import { timestampToDate } from '@/utils'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import pgPromise from 'pg-promise'
@@ -10,16 +11,16 @@ export default async function handler(
     if (req.method === "POST") { 
 
       let {
-        city='', 
-        street='', 
-        lot='', 
-        condo='', 
-        instructions='',
-        client='', 
-        type='', 
-        status='',
-        compRef='',
-        fileNumber='',
+        p_city='', 
+        p_street='', 
+        p_lot='', 
+        p_condo='', 
+        p_instructions='',
+        c_name='', 
+        p_type='', 
+        p_status='',
+        p_comp_ref='',
+        p_file='',
         inputStartDate='',
         inputEndDate,
         requestStartDate='',
@@ -47,79 +48,80 @@ export default async function handler(
       }
 
       const param = {
-        city: city !== '' ? andEqualsClause('pm','p_city', '1') : '',
-        street: street !== '' ? andLikeClause('pm','p_street', '2') : '',
-        lot: lot !== '' ? andLikeClause('pm','p_lot', '3') : '',
-        condo: condo !== '' ? andLikeClause('pm','p_condo', '4'): '',
-        instructions: instructions !== '' ? andLikeClause('pm','p_instructions', '5') : '',
-        client: client !== '' ? andEqualsClause('cm','CNAME', '6') : '',
-        type: type !== '' ? andEqualsClause('pm','p_type', '7') : '',
-        status: status !== '' ? andEqualsClause('pm','p_status', '8'): '',
-        compRef: compRef !== '' ? andEqualsClause('pm','p_comp_ref', '9'): '',
-        fileNumber: fileNumber !== '' ? andEqualsClause('pm','p_file', '10'): '',
-        inputDateRange: inputStartDate !== '' && inputEndDate !== '' ? andBetweenClause('pm','p_input_date', '11', '12'): '',
-        requestDateRange: requestStartDate !== '' && requestEndDate !== '' ? andBetweenClause('pm','p_request_date', '13', '14'): '',
+        p_city: p_city !== '' ? andEqualsClause('p','p_city', '1') : '',
+        p_street: p_street !== '' ? andLikeClause('p','p_street', '2') : '',
+        p_lot: p_lot !== '' ? andLikeClause('p','p_lot', '3') : '',
+        p_condo: p_condo !== '' ? andLikeClause('p','p_condo', '4'): '',
+        p_instructions: p_instructions !== '' ? andLikeClause('p','p_instructions', '5') : '',
+        c_name: c_name !== '' ? andEqualsClause('c','c_name', '6') : '',
+        p_type: p_type !== '' ? andEqualsClause('p','p_type', '7') : '',
+        p_status: p_status !== '' ? andEqualsClause('p','p_status', '8'): '',
+        p_comp_ref: p_comp_ref !== '' ? andEqualsClause('p','p_comp_ref', '9'): '',
+        p_file: p_file !== '' ? andEqualsClause('p','p_file', '10'): '',
+        inputDateRange: inputStartDate !== '' && inputEndDate !== '' ? andBetweenClause('p','p_input_date', '11', '12'): '',
+        requestDateRange: requestStartDate !== '' && requestEndDate !== '' ? andBetweenClause('p','p_request_date', '13', '14'): '',
       }
 
       try {
         const propertiesQuery = pgPromise.as.format(`
           SELECT
-            cm."CNAME",  
-            cm."CNMBR",
-            pm.id,
-            pm.p_city,
-            pm.p_street,
-            pm.p_lot,
-            pm.p_condo,
-            pm.p_unit,
-            pm.p_state,
-            pm.p_zip,
-            pm.p_status,
-            pm.p_type,
-            pm.p_assign,
-            pm.p_comp_ref,
-            pm.p_instructions,
-            pm.p_number,
-            pm.p_requester,
-            pm.p_request_date,
-            pm.p_closed_date,
-            pm.p_file,
-            pm.c_file,
-            pm.p_book_1,
-            pm.p_book_2,
-            pm.p_page_1,
-            pm.p_page_2,
-            pm.p_cert_1
-          FROM public.properties pm
-          LEFT JOIN public.clntmstr cm
-          ON cm."CNMBR" = pm.p_number
-          WHERE pm.id IS NOT NULL
-          ${param.city}
-          ${param.street}
-          ${param.lot}
-          ${param.condo}
-          ${param.instructions}
-          ${param.client}
-          ${param.type}
-          ${param.status}
-          ${param.compRef}
-          ${param.fileNumber}
-          ${param.inputDateRange}
-          ${param.requestDateRange}
+            c.${dbRef.clients.c_name},  
+            c.${dbRef.clients.c_number},
+            p.${dbRef.properties.id},
+            p.${dbRef.properties.p_city},
+            p.${dbRef.properties.p_street},
+            p.${dbRef.properties.p_lot},
+            p.${dbRef.properties.p_condo},
+            p.${dbRef.properties.p_unit},
+            p.${dbRef.properties.p_state},
+            p.${dbRef.properties.p_zip},
+            p.${dbRef.properties.p_status},
+            p.${dbRef.properties.p_type},
+            p.${dbRef.properties.p_assign},
+            p.${dbRef.properties.p_comp_ref},
+            p.${dbRef.properties.p_instructions},
+            p.${dbRef.properties.p_number},
+            p.${dbRef.properties.p_requester},
+            p.${dbRef.properties.p_request_date},
+            p.${dbRef.properties.p_closed_date},
+            p.${dbRef.properties.p_file},
+            p.${dbRef.properties.c_file},
+            p.${dbRef.properties.p_book_1},
+            p.${dbRef.properties.p_book_2},
+            p.${dbRef.properties.p_page_1},
+            p.${dbRef.properties.p_page_2},
+            p.${dbRef.properties.p_cert_1}
+          FROM ${dbRef.table_names.properties} p
+          LEFT JOIN ${dbRef.table_names.clients} c
+          ON c.${dbRef.clients.c_number} = p.${dbRef.properties.p_number}
+          WHERE 
+            p.${dbRef.properties.id} IS NOT NULL
+            ${param.p_city}
+            ${param.p_street}
+            ${param.p_lot}
+            ${param.p_condo}
+            ${param.p_instructions}
+            ${param.c_name}
+            ${param.p_type}
+            ${param.p_status}
+            ${param.p_comp_ref}
+            ${param.p_file}
+            ${param.inputDateRange}
+            ${param.requestDateRange}
           ORDER BY 
-            pm.p_street,
-            pm.p_lot;
+            p.${dbRef.properties.p_street},
+            p.${dbRef.properties.p_lot},
         `,[
-            city,
-            street.toLowerCase(),
-            lot.toLowerCase(),
-            condo.toLowerCase(),
-            instructions.toLowerCase(),
-            client,
-            type,
-            status,
-            compRef,
-            fileNumber,
+            p_city,
+            p_street.toLowerCase(),
+            p_lot.toLowerCase(),
+            p_condo.toLowerCase(),
+            p_instructions.toLowerCase(),
+            c_name,
+            p_type,
+            p_status,
+            p_comp_ref,
+            p_file,
             inputStartDate,
             inputEndDate,
             requestStartDate,

@@ -17,40 +17,40 @@ export async function getServerSideProps(context:any) {
     const pageSize = 100
     const pageOffset = pageSize * (page - 1)
 
-    const totalRecordsQuery = `select COUNT(*) from public.clntmstr`
+    const totalRecordsQuery = `select COUNT(*) from ${dbRefs.table_names.clients}`
     const totalRecordsResult = (await conn.query(totalRecordsQuery)).rows[0].count;
     
     const allClients = `
         SELECT 
             cm.id,
-            cm."CNMBR",
-            cm."CNAME",
-            cm."CADD1",
-            cm."CADD2",
-            cm."CCITY",
-            cm."CSTATE",
-            cm."CZIP",
-            cm."CPHONE",
-            cm."CFAX",
-            true as "ISCLIENT",
+            cm.c_number,
+            cm.c_name,
+            cm.c_address_1,
+            cm.c_address_2,
+            cm.c_city,
+            cm.c_state,
+            cm.c_zip,
+            cm.c_phone,
+            cm.c_fax,
+            true as c_is_client,
             COALESCE(pc."PROPCOUNT", 0) as "PROPCOUNT",
             COALESCE(i."TITLESCOUNT", 0) as "TITLESCOUNT"
-        FROM public."clntmstr" cm
+        FROM ${dbRefs.table_names.clients} cm
         LEFT JOIN (
             SELECT 
                 pm.p_number, 
                 COUNT(*) AS "PROPCOUNT" 
-            FROM public.properties pm
+            FROM ${dbRefs.table_names.properties} pm
             GROUP BY pm.p_number
-        ) pc ON pc.p_number = cm."CNMBR"
+        ) pc ON pc.p_number = cm.c_number
         LEFT JOIN (
             SELECT 
                 i."INMBR", 
                 COUNT(*) AS "TITLESCOUNT" 
             FROM public.ins i
             GROUP BY i."INMBR"
-        ) i ON i."INMBR" = cm."CNMBR"
-      ORDER BY cm."CNMBR", cm."CNAME"
+        ) i ON i."INMBR" = cm.c_number
+      ORDER BY cm.c_number, cm.c_name
       OFFSET $1 LIMIT ${pageSize};
     `
     const clientsResults = JSON.parse(JSON.stringify((await conn.query(allClients, [pageOffset])).rows));

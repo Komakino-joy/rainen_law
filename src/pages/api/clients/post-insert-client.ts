@@ -1,3 +1,4 @@
+import dbRefs from '@/constants/dbRefs'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import pgPromise from 'pg-promise'
 import conn from '../../../lib/db'
@@ -9,20 +10,19 @@ export default async function handler(
     if (req.method === "POST") { 
 
       const {
-        clientName='',
-        searchName='', 
-        addressLine1='', 
-        addressLine2='', 
-        city='',
-        state='',
-        zip='',
-        phone='',
-        fax='',
-        contact='',
-        status='', 
-        statementAddressee='',
-        email='',
-        notes='',
+        c_name,
+        c_address_1, 
+        c_address_2, 
+        c_city,
+        c_state,
+        c_zip,
+        c_phone,
+        c_fax,
+        c_contact,
+        c_status, 
+        c_statement_addressee,
+        c_email,
+        c_notes,
         created_by,
         last_updated_by,
       } = req.body
@@ -31,55 +31,55 @@ export default async function handler(
 
         await conn.query('BEGIN')
 
-        // Need to get the latest CNMBR + 1 so we can assign it to the new Client
-        const newCNMBRQuery = 'SELECT MAX(cm."CNMBR") FROM public.clntmstr cm;'
-        const clientIdResponse = await conn.query(newCNMBRQuery)
-        const newCNMBR = clientIdResponse.rows[0].max + 1
+        // Need to get the latest c_number + 1 so we can assign it to the new Client
+        const newCNumberQuery = `
+          SELECT MAX(c.${dbRefs.clients.c_number}) 
+          FROM ${dbRefs.table_names.clients} c;`
+        const clientIdResponse = await conn.query(newCNumberQuery)
+        const newCNumber = clientIdResponse.rows[0].max + 1
 
         const addNewClientQuery = pgPromise.as.format(`
-          INSERT INTO public.clntmstr
+          INSERT INTO ${dbRefs.table_names.clients}
           (
-            "CNMBR",
-            "CNAME",
-            "CSEARCH",
-            "CADD1",
-            "CADD2",
-            "CCITY",
-            "CSTATE",
-            "CZIP",
-            "CPHONE",
-            "CFAX",
-            "CCNTCT",
-            "CSTAT",
-            "CSTATTO", 
-            "CEMAIL",
-            "CNOTES",
-            created_by,
-            last_updated_by,
-            last_updated,
-            created_at
+            c.${dbRefs.clients.c_number},
+            c.${dbRefs.clients.c_name},
+            c.${dbRefs.clients.c_address_1},
+            c.${dbRefs.clients.c_address_2},
+            c.${dbRefs.clients.c_city},
+            c.${dbRefs.clients.c_state},
+            c.${dbRefs.clients.c_zip},
+            c.${dbRefs.clients.c_phone},
+            c.${dbRefs.clients.c_fax},
+            c.${dbRefs.clients.c_contact},
+            c.${dbRefs.clients.c_status},
+            c.${dbRefs.clients.c_statement_addresse}, 
+            c.${dbRefs.clients.c_email},
+            c.${dbRefs.clients.c_notes},
+            c.${dbRefs.clients.created_by},
+            c.${dbRefs.clients.last_updated_by},
+            c.${dbRefs.clients.last_updated}
+            c.${dbRefs.clients.created_at}
           )
           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11,
-            $12, $13, $14, $15, $16, $17, $18, $19)
+            $12, $13, $14, $15, $16, $17, $18)
 
             RETURNING *
           ;
         `,[
-            newCNMBR,
-            clientName,
-            searchName, 
-            addressLine1, 
-            addressLine2, 
-            city,
-            state,
-            zip,
-            phone,
-            fax,
-            contact,
-            status, 
-            statementAddressee,
-            email,
-            notes,
+            newCNumber,
+            c_name,
+            c_address_1, 
+            c_address_2, 
+            c_city,
+            c_state,
+            c_zip,
+            c_phone,
+            c_fax,
+            c_contact,
+            c_status, 
+            c_statement_addressee,
+            c_email,
+            c_notes,
             created_by,
             last_updated_by,
             new Date(),

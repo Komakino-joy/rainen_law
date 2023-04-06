@@ -2,8 +2,8 @@ export type ModalType = 'property' | 'client'
 export type TableRefs = 'counties' | 'pType' | 'pStat' | 'PAssign' | 'clientStat' | 'examiners' |'users';
 export interface Property {
   p_input_date: string;
-  CNAME: string;
-  CNMBR: string;
+  c_name: string;
+  c_number: string;
   id: string;
   p_city: string;
   p_street: string;
@@ -46,7 +46,7 @@ export interface Property {
   buyer_1: string;
   buyer_2: string;
   p_instructions: string;
-  CNAME: string;
+  c_name: string;
   p_requester: string;
   c_file: string;
 }
@@ -60,40 +60,42 @@ export interface ReportProperty {
   county_name: string;
   p_comp_ref: number;
   p_number: number;
-  CNAME: string;
+  c_name: string;
   p_type: 'FT' | 'RD' | 'FC' | 'H';
   p_assign: string;
   p_assign2: string;
 }
 
 export interface Client {
-  CNMBR: number;
-  CNAME: string;
-  CADD1: string;
-  CADD2: string;
-  CCITY: string;
-  CSTATE: string;
-  CZIP: string;
-  CPHONE: string;
-  CFAX: string;
-  CCNTCT: string;
-  CSTAT: string;
-  CSTATTO: string;
-  CSEARCH: string;
-  CEMAIL: string;
-  CNOTES: string;
+  c_number: number;
+  c_name: string;
+  c_address_1: string;
+  c_address_2: string;
+  c_city: string;
+  c_state: string;
+  c_zip: string;
+  c_phone: string;
+  c_fax: string;
+  c_contact: string;
+  c_status: string;
+  c_statement_addresse: string;
+  c_search: string;
+  c_email: string;
+  c_notes: string;
   id: number;
   last_updated: string;
 }
 
+export interface DateTime {
+  date:string, 
+  time:string
+}
+
 export interface ClientInfoSnippet {
-  id:string;
-  cnmbr: number | null;
-  clientName: string | null;
-  lastUpdated: {
-    date:string, 
-    time:string
-  } | null;
+  [dbRef.clients.id]:string;
+  [dbRef.clients.c_number]: number | null;
+  [dbRef.clients.c_name]: string | null;
+  [dbRef.clients.last_updated]: DateTime | null;
 }
 
 export interface INSTitle {
@@ -114,20 +116,20 @@ export interface INSTitle {
   LPOLICYNUM: string;
   OPOLICYAMT: number;
   OPOLICYNUM: string
-  CNAME: string;
+  c_name: string;
   IFILE: string;
   AGENTFEE: string;
   PREMPAID: string;
 }
 
 export interface OutstandingInsTitleReportEntry {
-  CNAME: string;
-  CADD1: string;
-  CADD2: string;
-  CCITY: string;
-  CSTATE: string;
-  CZIP: string;
-  CCNTCT: string;
+  c_name: string;
+  c_address_1: string;
+  c_address_2: string;
+  c_city: string;
+  c_state: string;
+  c_zip: string;
+  c_contact: string;
   ISTRET: string;
   ICITY: string;
   OPOLICYNUM: string;
@@ -177,20 +179,20 @@ export interface Policy {
   IREMIT: string;
   ISTATE: string;
   IZIP: string;
-  CNAME: string;
+  c_name: string;
   IPDATE: string;
   INOTES: string;
   ICDATE: string;
 }
 
 export interface RemittanceReportEntry {
-  CNAME: string;
-  CADD1: string;
-  CADD2: string;
-  CCITY: string;
-  CSTATE: string;
-  CZIP: string;
-  CCNTCT: string;
+  c_name: string;
+  c_address_1: string;
+  c_address_2: string;
+  c_city: string;
+  c_state: string;
+  c_zip: string;
+  c_contact: string;
   ISTRET: string;
   ICITY: string;
   OPOLICYNUM: string;

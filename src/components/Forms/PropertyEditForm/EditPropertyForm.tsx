@@ -48,7 +48,7 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
     propertyStatusDropDownOptions, 
     propertyTypeDropDownOptions
   } = useSelectDropDownsContext()
-  const { CNAME: clientNames } = clientSelectOptions
+  const { c_name: clientNames } = clientSelectOptions
   
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [printLabelInfo, setPrintLabelInfo] = useState({})
@@ -94,7 +94,7 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
             id='', p_city='', p_street='', p_state='', p_zip='', 
             p_book_1='', p_book_2='', p_page_1='', p_page_2='',
             p_cert_1='', p_lot='', p_condo='', p_unit='', p_status='', p_type='', 
-            p_assign='', CNAME='', p_comp_ref='', p_file='', c_file='', 
+            p_assign='', c_name='', p_comp_ref='', p_file='', c_file='', 
             p_requester='', p_request_date='', p_closed_date='', p_instructions='', last_updated='', p_number='',
             p_input_date='', seller_1='', seller_2='', seller_3='', seller_4='', buyer_1='', buyer_2=''
           } = propertyData
@@ -102,7 +102,7 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
           setPrintLabelInfo((prevState) => ({
             ...prevState,
             p_request_date, p_type, p_input_date, p_comp_ref, p_unit, p_condo, p_book_1, p_book_2, p_page_1, c_file, 
-            p_page_2, p_cert_1, seller_1, seller_2, seller_3, seller_4, buyer_1, buyer_2, p_instructions, CNAME, p_requester
+            p_page_2, p_cert_1, seller_1, seller_2, seller_3, seller_4, buyer_1, buyer_2, p_instructions, c_name, p_requester
           }))
 
           setPropertyInfoSnippet((prevState) => ({
@@ -121,7 +121,7 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
             status: p_status || '',
             type: p_type || '',
             assigned: p_assign || '',
-            clientName: CNAME || ''
+            clientName: c_name || ''
           })
 
           return {
@@ -129,7 +129,7 @@ const EditPropertyForm:React.FC<EditPropertyFormProps> = ({
             p_status,
             p_type,
             p_assign ,
-            clientName:  CNAME,
+            clientName:  c_name,
             p_city ,
             p_zip ,
             p_book_1 ,

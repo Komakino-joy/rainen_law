@@ -15,12 +15,12 @@ const PrintClientLabel = ({
 }) => {
 
   const {
-    CNAME,
-    CADD1,
-    CADD2,
-    CCITY,
-    CSTATE,
-    CZIP
+    c_name,
+    c_address_1,
+    c_address_2,
+    c_city,
+    c_state,
+    c_zip
   } = clientInfo
 
 
@@ -55,10 +55,10 @@ const PrintClientLabel = ({
         <style>{getPageMargins()}</style>
         <div ref={componentRef}>
             <div style={{lineHeight: '22px', fontFamily: `'Courier New', Courier, monospace`, fontSize: '16px'}}>
-              <p> {CNAME}</p>
-              <p> {CADD1} </p>
-              <p> {CADD2} </p>
-              <p> {`${CCITY || ''} ${CSTATE || ''} ${CZIP || ''}`} </p>
+              <p> {c_name}</p>
+              <p> {c_address_1} </p>
+              <p> {c_address_2} </p>
+              <p> {`${c_city || ''} ${c_state || ''} ${c_zip || ''}`} </p>
             </div>
         </div>
       </div>

@@ -9,15 +9,15 @@ export default async function handler(
       try {
         const getAllClientsQuery = `
             SELECT DISTINCT
-              cm."CNAME"
+              cm.c_name
             FROM
-              public.clntmstr cm
-            INNER JOIN public.properties pm 
-            ON cm."CNMBR" = pm.p_number
+              ${dbRefs.table_names.clients} cm
+            INNER JOIN ${dbRefs.table_names.properties} pm 
+            ON cm.c_number = pm.p_number
             WHERE 
-              cm."CNAME" IS NOT NULL
+              cm.c_name IS NOT NULL
             ORDER BY
-              "CNAME" ASC
+              c_name ASC
               LIMIT 50;
           `
         const result = await conn.query(getAllClientsQuery)

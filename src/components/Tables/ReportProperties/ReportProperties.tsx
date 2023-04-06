@@ -40,7 +40,7 @@ const ReportProperties:React.FC<ReportPropertiesProps> = ({
       },
       {
         Header: 'Client',
-        accessor: (d:any) => `(${d.p_number}) ${d.CNAME || ''}`,
+        accessor: (d:any) => `(${d.p_number}) ${d.c_name || ''}`,
       },
       {
         Header: 'Type',

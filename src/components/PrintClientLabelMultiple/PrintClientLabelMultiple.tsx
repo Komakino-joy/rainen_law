@@ -49,17 +49,17 @@ const PrintClientLabelMultiple = ({
           { clients.map(client => {
 
             const {
-              CNAME,
-              CADD1,
-              CADD2,
-              CCITY,
-              CSTATE,
-              CZIP
+              c_name,
+              c_address_1,
+              c_address_2,
+              c_city,
+              c_state,
+              c_zip
             } = client
 
             return (
                 <div 
-                  key={CNAME}
+                  key={c_name}
                   style={{
                     fontSize: '16px',
                     height: '100px',
@@ -69,10 +69,10 @@ const PrintClientLabelMultiple = ({
                     fontFamily: `'Times New Roman','Courier New', Courier, monospace`, 
                   }}
                 >
-                  <p> {CNAME}</p>
-                  <p> {CADD1} </p>
-                  <p> {CADD2} </p>
-                  <p> {`${CCITY || ''} ${CSTATE || ''} ${CZIP || ''}`} </p>
+                  <p> {c_name}</p>
+                  <p> {c_address_1} </p>
+                  <p> {c_address_2} </p>
+                  <p> {`${c_city || ''} ${c_state || ''} ${c_zip || ''}`} </p>
                 </div>
               )
             }) 

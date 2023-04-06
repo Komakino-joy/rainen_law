@@ -1,3 +1,4 @@
+import dbRefs from '@/constants/dbRefs'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import pgPromise from 'pg-promise'
 import conn from '../../../lib/db'
@@ -12,7 +13,12 @@ export default async function handler(
 
       try {
         const clientByIdQuery = pgPromise.as.format(`
-          SELECT * FROM public.clntmstr WHERE id = $1;
+          SELECT 
+            * 
+          FROM 
+            ${dbRefs.table_names.clients} 
+          WHERE 
+            ${dbRefs.clients.id} = $1;
         `,[clientId]
         )
         
