@@ -1,14 +1,17 @@
+import { useState } from "react";
+import { useRouter } from "next/router";
+
 import { 
   useForm, 
   Controller 
 } from "react-hook-form";
-import { useRouter } from "next/router";
-import FormInput from "../Common/FormInput/FormInput";
+
+import dbRef from "@/constants/dbRefs";
+import Button from "@/components/Button/Button";
 import { useClientsContext } from "@/context/Clients";
 import { usePropertiesContext } from "@/context/Properties";
-import Button from "@/components/Button/Button";
-import { useState } from "react";
-import dbRef from "@/constants/dbRefs";
+
+import FormInput from "../Common/FormInput/FormInput";
 
 interface SearchPropertiesFormProps {
   onSubmit: any;
@@ -20,7 +23,7 @@ const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
   const router = useRouter()
 
   const { propertiesSelectOptions} = usePropertiesContext()
-  const {clientSelectOptions} = useClientsContext()
+  const { clientSelectOptions } = useClientsContext()
 
   const [clearSelectInputBoxes, setClearSelectInputBoxes] = useState(false)
 
@@ -109,6 +112,7 @@ const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
             <Controller 
               name={dbRef.clients.c_name} 
               control={control} 
+              defaultValue={''}
               render={({
                 field: { onChange},
               }) => {
@@ -125,6 +129,7 @@ const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
                     isRequired={false}
                     register={register} 
                     errors={errors}
+                    defaultValue={''}
                   />
                 ) 
               }}
@@ -135,6 +140,7 @@ const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
             <Controller 
               name={dbRef.properties.p_type}  
               control={control} 
+              defaultValue={''}
               render={({
                 field: { onChange},
               }) => {
@@ -151,6 +157,7 @@ const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
                     isRequired={false}
                     register={register} 
                     errors={errors}
+                    defaultValue={''}
                   />
                 ) 
               }}
@@ -161,6 +168,7 @@ const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
             <Controller 
               name={dbRef.properties.p_status}    
               control={control} 
+              defaultValue={''}
               render={({
                 field: { onChange},
               }) => {
@@ -177,6 +185,7 @@ const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
                     isRequired={false}
                     register={register} 
                     errors={errors}
+                    defaultValue={''}
                   />
                 ) 
               }}
@@ -189,6 +198,7 @@ const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
             <Controller 
               name={dbRef.properties.p_city}  
               control={control} 
+              defaultValue={''}
               render={({
                 field: {onChange},
               }) => {
@@ -205,6 +215,7 @@ const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
                     isRequired={false}
                     register={register} 
                     errors={errors}
+                    defaultValue={''}
                   />
                 ) 
               }}

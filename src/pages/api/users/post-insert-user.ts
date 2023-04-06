@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import bcrypt from 'bcrypt';
 import pgPromise from 'pg-promise'
 import conn from '../../../lib/db'
+import dbRef from '@/constants/dbRefs';
 
 export default async function handler(
   req: NextApiRequest,
@@ -34,14 +35,14 @@ export default async function handler(
               }
 
               const insertQuery = pgPromise.as.format(`
-                  INSERT INTO public.users
+                  INSERT INTO ${dbRef.table_names.users}
                   (
-                    username,
-                    f_name,
-                    l_name,
-                    password,
-                    created_at,
-                    last_updated
+                    ${dbRef.users.username},
+                    ${dbRef.users.f_name},
+                    ${dbRef.users.l_name},
+                    ${dbRef.users.password},
+                    ${dbRef.users.created_at},
+                    ${dbRef.users.last_updated}
                   )
                   VALUES (
                     $1, $2, $3, 

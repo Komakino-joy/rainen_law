@@ -1,3 +1,4 @@
+import dbRef from '@/constants/dbRefs'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import pgPromise from 'pg-promise'
 import conn from '../../../lib/db'
@@ -12,8 +13,14 @@ export default async function handler(
 
       try {
         const selectQuery = pgPromise.as.format(`
-          SELECT id, username, f_name, l_name, password FROM public.users 
-          WHERE id = $1;
+          SELECT 
+            ${dbRef.users.id}, 
+            ${dbRef.users.f_name}, 
+            ${dbRef.users.l_name}, 
+            ${dbRef.users.username}, 
+            ${dbRef.users.password} 
+          FROM ${dbRef.table_names.users} 
+          WHERE ${dbRef.users.id} = $1;
         `,[id]
         )
         

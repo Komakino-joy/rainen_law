@@ -37,7 +37,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
   const {user} = useAuth()
   const {clientStatusDropDownOptions} = useSelectDropDownsContext()
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [titlesCount, setTitlesCount] = useState(null)
+  const [titlescount, settitlescount] = useState(null)
   const [printLabelInfo, setPrintLabelInfo] = useState({})
   const [defaultSelectValues , setDefaultSelectValues] = useState({
     [dbRef.clients.c_status]: '',
@@ -67,7 +67,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
         const {
           id='', c_number='', c_name='', last_updated=null, c_status='', c_address_1='', 
           c_address_2='', c_city='', c_state='', c_zip='', c_phone='',
-          c_fax='', c_email='', c_contact='', c_statement_addresse='', c_notes=''
+          c_fax='', c_email='', c_contact='', c_statement_addressee='', c_notes=''
         } = clientInfo
 
         setPrintLabelInfo((prevState) => ({
@@ -107,7 +107,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
           [dbRef.clients.c_fax]: c_fax ,
           [dbRef.clients.c_email]: c_email ,
           [dbRef.clients.c_contact]: c_contact ,
-          [dbRef.clients.c_statement_addresse]: c_statement_addresse ,
+          [dbRef.clients.c_statement_addressee]: c_statement_addressee ,
           [dbRef.clients.c_notes]: c_notes  
         };
       }
@@ -170,6 +170,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
                 name={dbRef.clients.c_status}  
                 control={control} 
                 rules={{ required: true }}
+                defaultValue={defaultSelectValues[dbRef.clients.c_status]}
                 render={({
                   field: {onChange},
                 }) => {
@@ -179,7 +180,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
                       labelKey={dbRef.clients.c_status} 
                       labelText="Status"
                       type="select" 
-                      defaultValue={defaultSelectValues.status}
+                      defaultValue={defaultSelectValues[dbRef.clients.c_status]}
                       customClass={styles.status}
                       selectOnChange={onChange}
                       options={clientStatusDropDownOptions}
@@ -231,7 +232,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
                   name={dbRef.clients.c_state}   
                   control={control} 
                   rules={{ required: true }}
-                  defaultValue={defaultSelectValues.state}
+                  defaultValue={defaultSelectValues[dbRef.clients.c_state]}
                   render={({
                     field: {onChange},
                   }) => {
@@ -241,7 +242,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
                         labelKey={dbRef.clients.c_state} 
                         labelText="State"
                         type="select" 
-                        defaultValue={defaultSelectValues.state}
+                        defaultValue={defaultSelectValues[dbRef.clients.c_state]}
                         customClass={styles.state}
                         selectOnChange={onChange}
                         options={abbreviatedStatesLabelValuePair}
@@ -313,8 +314,8 @@ const ClientForm:React.FC<EditClientFormProps> = ({
               />
 
               <FormInput 
-                name={dbRef.clients.c_statement_addresse} 
-                labelKey={dbRef.clients.c_statement_addresse} 
+                name={dbRef.clients.c_statement_addressee} 
+                labelKey={dbRef.clients.c_statement_addressee} 
                 labelText="Statement Addressee"
                 customClass={styles.statement}
                 type="text" 
@@ -365,7 +366,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
         <Tabs>
           <TabList>
             <Tab>Properties</Tab>
-            <Tab>Titles{titlesCount ? <span className="italicized-record-count">({titlesCount})</span>  : ''}</Tab>
+            <Tab>Titles{titlescount ? <span className="italicized-record-count">({titlescount})</span>  : ''}</Tab>
           </TabList>
 
           <TabPanel>
@@ -375,7 +376,7 @@ const ClientForm:React.FC<EditClientFormProps> = ({
           <TabPanel>
             <SubTableINS 
               inmbr={(clientInfoSnippet[dbRef.clients.c_number as ClientInfoKeys] as string).toString()} 
-              setTitlesCount={setTitlesCount}
+              settitlescount={settitlescount}
             />
           </TabPanel>
         </Tabs>

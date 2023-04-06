@@ -1,5 +1,6 @@
 const dbRef = {
   table_names: {
+    city: "city",
     users: "users",
     clients: "clients",
     counties: "counties",
@@ -11,6 +12,15 @@ const dbRef = {
     buyer_seller: "buyer_seller",
     client_status: "client_status",
     insurance_titles: "insurance_titles",
+  },
+  city: {
+    city: "city",
+    county: "county"
+  },
+  counties: {
+    id: "id",
+    code: "code",
+    county: "county"
   },
   properties: {
     id: "id",
@@ -31,6 +41,7 @@ const dbRef = {
     p_type: "p_type",
     p_status: "p_status",
     p_assign: "p_assign",
+    p_assign_2: "p_assign_2",
     p_comp_ref: "p_comp_ref",
     p_instructions: "p_instructions",
     c_file: "c_file",
@@ -69,9 +80,8 @@ const dbRef = {
     c_fax: "c_fax",
     c_contact: "c_contact",
     c_status: "c_status",
-    c_statement_addresse: "c_statement_addresse",
+    c_statement_addressee: "c_statement_addressee",
     c_email: "c_email",
-    c_is_client: "c_is_client",
     c_notes: "c_notes",
     created_by: "created_by",
     last_updated_by: "last_updated_by",
@@ -104,20 +114,33 @@ const dbRef = {
     i_bill: "i_bill",
     i_policy_date: "i_policy_date",
     i_remit: "i_remit",
-    printed: "printed",
-    file: "file",
-    comp_ref: "comp_ref",
-    c_file: "c_file",
     export: "export",
-    prem_rol: "prem_rol",
     i_state: "i_state",
     i_zip: "i_zip",
     i_notes: "i_notes",
-    last_viewed: "last_viewed",
+  },
+
+  users: {
+    id: "id",
+    f_name: "f_name",
+    l_name: "l_name",
+    username: "username",
+    password: "password",
+    created_at: "created_at",
+    last_updated: "last_updated"
+  },
+
+  examiners: {
+    id: "id",
+    name: "name",
+    code: "code",
+    type: "type",
+    compensate: "compensate",
+    is_active: "is_active",
+    created_at: "created_at",
     created_by: "created_by",
-    last_updated_by: "last_updated_by",
     last_updated: "last_updated",
-    created_at: "created_at"
+    last_updated_by: "last_updated_by"
   }
 }
 

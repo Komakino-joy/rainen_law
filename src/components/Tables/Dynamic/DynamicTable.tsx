@@ -100,8 +100,6 @@ const SelectOptionsTable:React.FC<DynamicTable> = ({
       ]
     });
   }
-
-  
   const data = useMemo(() => (
     tableData
     ), [tableData]
@@ -164,7 +162,7 @@ const SelectOptionsTable:React.FC<DynamicTable> = ({
       },
 
     ],
-    [tableData]
+    [handleModalOpen, selectionType]
   )
 
   const {
@@ -175,25 +173,22 @@ const SelectOptionsTable:React.FC<DynamicTable> = ({
     prepareRow,
   } = useTable(
     {
-      //@ts-ignore
       columns,
       data,
       initialState: {
         hiddenColumns
       }
     },
-    useFilters, // useFilters!
+    useFilters
   )
 
   return (
     <table className={`is-sub-table ${tableClassName}`} {...getTableProps()}>
       <thead>
         {headerGroups.map((headerGroup,idx) => (
-        //@ts-ignore
-        <tr {...headerGroup.getHeaderGroupProps()}>
+        <tr {...headerGroup.getHeaderGroupProps()}  key={headerGroup.id}>
           {headerGroup.headers.map((column, idx) => (
-            //@ts-ignore
-            <th {...column.getHeaderProps()} >
+            <th {...column.getHeaderProps()} key={column.id}>
               {column.render('Header')}
             </th>
           ))}
@@ -204,12 +199,11 @@ const SelectOptionsTable:React.FC<DynamicTable> = ({
         {rows.map((row,idx) => {
           prepareRow(row)
           return (
-            // @ts-ignore 
-            <tr {...row.getRowProps()}>
+            <tr {...row.getRowProps()} key={row.id}>
               {row.cells.map((cell, idx) => (
                 <td
-                  // @ts-ignore
                   {...cell.getCellProps()}
+                  key={cell.row.id}
                 >
                   {cell.render('Cell')}
                 </td>

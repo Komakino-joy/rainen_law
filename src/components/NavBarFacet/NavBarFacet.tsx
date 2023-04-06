@@ -6,7 +6,7 @@ import styles from './NavBarFacet.module.scss'
 
 interface NavBarFacetProps {
   name: string;
-  links: {
+  links?: {
     href: string;
     ctaText: string;
   }[];
@@ -29,26 +29,29 @@ const NavBarFacet:React.FC<NavBarFacetProps> = ({
         <span className={router.pathname.split('/')[1] === name ? styles['selected'] : ''}>
           {name}
         </span>
-        <ChevronDown />
+        {links ? <ChevronDown /> : null}
       </span>
-      <div 
-        className={`${ isExpanded ? styles['expanded'] : styles['hidden']}`} 
-        onMouseEnter={() => setIsExpanded(true)}
-        onMouseLeave={() => setIsExpanded(false)}
-      >
-        <div className={styles['nav-bar-facet-dropdown']}>
-          { links.map(link => (
-              <Link 
-                key={link.href}
-                href={link.href} 
-                onClick={() => setIsExpanded(false)}
-              >
-                {link.ctaText}
-              </Link>
-            ))
-          }
-        </div>
-      </div>
+      { links ?
+          <div 
+            className={`${ isExpanded ? styles['expanded'] : styles['hidden']}`} 
+            onMouseEnter={() => setIsExpanded(true)}
+            onMouseLeave={() => setIsExpanded(false)}
+          >
+              <div className={styles['nav-bar-facet-dropdown']}>
+                { links.map(link => (
+                    <Link 
+                      key={link.href}
+                      href={link.href} 
+                      onClick={() => setIsExpanded(false)}
+                    >
+                      {link.ctaText}
+                    </Link>
+                  ))
+                }
+              </div>
+          </div>
+        :null
+        }
     </div>
   )
 }

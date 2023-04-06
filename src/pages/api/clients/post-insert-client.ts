@@ -1,6 +1,6 @@
-import dbRefs from '@/constants/dbRefs'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import pgPromise from 'pg-promise'
+import dbRef from '@/constants/dbRefs'
 import conn from '../../../lib/db'
 
 export default async function handler(
@@ -28,43 +28,45 @@ export default async function handler(
       } = req.body
 
       try {
-
         await conn.query('BEGIN')
 
         // Need to get the latest c_number + 1 so we can assign it to the new Client
         const newCNumberQuery = `
-          SELECT MAX(c.${dbRefs.clients.c_number}) 
-          FROM ${dbRefs.table_names.clients} c;`
+          SELECT MAX(${dbRef.clients.c_number}) 
+          FROM ${dbRef.table_names.clients};
+        `
+
         const clientIdResponse = await conn.query(newCNumberQuery)
         const newCNumber = clientIdResponse.rows[0].max + 1
 
         const addNewClientQuery = pgPromise.as.format(`
-          INSERT INTO ${dbRefs.table_names.clients}
+          INSERT INTO ${dbRef.table_names.clients}
           (
-            c.${dbRefs.clients.c_number},
-            c.${dbRefs.clients.c_name},
-            c.${dbRefs.clients.c_address_1},
-            c.${dbRefs.clients.c_address_2},
-            c.${dbRefs.clients.c_city},
-            c.${dbRefs.clients.c_state},
-            c.${dbRefs.clients.c_zip},
-            c.${dbRefs.clients.c_phone},
-            c.${dbRefs.clients.c_fax},
-            c.${dbRefs.clients.c_contact},
-            c.${dbRefs.clients.c_status},
-            c.${dbRefs.clients.c_statement_addresse}, 
-            c.${dbRefs.clients.c_email},
-            c.${dbRefs.clients.c_notes},
-            c.${dbRefs.clients.created_by},
-            c.${dbRefs.clients.last_updated_by},
-            c.${dbRefs.clients.last_updated}
-            c.${dbRefs.clients.created_at}
+            ${dbRef.clients.c_number},
+            ${dbRef.clients.c_name},
+            ${dbRef.clients.c_address_1},
+            ${dbRef.clients.c_address_2},
+            ${dbRef.clients.c_city},
+            ${dbRef.clients.c_state},
+            ${dbRef.clients.c_zip},
+            ${dbRef.clients.c_phone},
+            ${dbRef.clients.c_fax},
+            ${dbRef.clients.c_contact},
+            ${dbRef.clients.c_status},
+            ${dbRef.clients.c_statement_addressee}, 
+            ${dbRef.clients.c_email},
+            ${dbRef.clients.c_notes},
+            ${dbRef.clients.created_by},
+            ${dbRef.clients.last_updated_by},
+            ${dbRef.clients.last_updated},
+            ${dbRef.clients.created_at}
           )
-          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11,
-            $12, $13, $14, $15, $16, $17, $18)
+          VALUES (
+            $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
+            $11, $12, $13, $14, $15, $16, $17, $18
+          )
 
-            RETURNING *
-          ;
+          RETURNING * ;
         `,[
             newCNumber,
             c_name,

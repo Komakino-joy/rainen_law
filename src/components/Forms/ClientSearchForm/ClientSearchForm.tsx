@@ -23,7 +23,7 @@ const ClientSearchForm:React.FC<ClientSearchFormProps> = ({
     c_number: clientNumbers,
     c_status: clientStats,
     c_contact: clientContacts,
-    c_statement_addresse: clientStattos,
+    c_statement_addressee: clientStattos,
     c_city: clientCities,
     c_state: clientStates,
     c_zip: clientZips,
@@ -242,7 +242,7 @@ const ClientSearchForm:React.FC<ClientSearchFormProps> = ({
 
           { clientStattos && clientStattos.length > 0 &&
             <Controller 
-              name={dbRef.clients.c_statement_addresse}    
+              name={dbRef.clients.c_statement_addressee}    
               control={control} 
               render={({
                 field: {onChange},
@@ -250,8 +250,8 @@ const ClientSearchForm:React.FC<ClientSearchFormProps> = ({
                 return (
                   <FormInput 
                     key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
-                    name={dbRef.clients.c_statement_addresse} 
-                    labelKey={dbRef.clients.c_statement_addresse} 
+                    name={dbRef.clients.c_statement_addressee} 
+                    labelKey={dbRef.clients.c_statement_addressee} 
                     labelText="Statement Addressee"
                     type="select" 
                     customClass="f-100"

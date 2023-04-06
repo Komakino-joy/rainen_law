@@ -1,15 +1,18 @@
+import { DownArrowIcon, SortIcon, UpArrowIcon } from '@/components/Icons/Icons';
+import dbRef from '@/constants/dbRefs';
 import { httpPostInsTitlesInfo } from '@/services/http';
+import { INSTitle } from '@/types/common';
 import { useEffect, useMemo, useState } from 'react';
 import { useTable, useFilters, useSortBy } from 'react-table';
 
 interface SubTableINSProps {
   inmbr: string;
-  setTitlesCount: any;
+  settitlescount: any;
 }
 
 const SubTableINS:React.FC<SubTableINSProps> = ({
   inmbr, 
-  setTitlesCount
+  settitlescount
 }) => {
 
   const [tableData, setTableData] = useState([])
@@ -18,9 +21,9 @@ const SubTableINS:React.FC<SubTableINSProps> = ({
     (async() => {
       const {titles, count} = await httpPostInsTitlesInfo({inmbr} )
       setTableData(titles)
-      setTitlesCount(count)
+      settitlescount(count)
     })();
-  },[])
+  },[inmbr, settitlescount])
 
   const data = useMemo(() => (
     tableData
@@ -31,30 +34,30 @@ const SubTableINS:React.FC<SubTableINSProps> = ({
     () => [
       {
         Header: 'ID',
-        accessor: (d:any) => d.id,
+        accessor: (d:INSTitle) => d[dbRef.insurance_titles.id as keyof INSTitle],
       },
       {
         Header: 'Street',
-        accessor: (d:any) => d.ISTRET || 'N/A',
+        accessor: (d:INSTitle) => d[dbRef.insurance_titles.i_street as keyof INSTitle] || 'N/A',
       },
       {
         Header: 'City',
-        accessor: (d:any) => d.ICITY || 'N/A',
+        accessor: (d:INSTitle) => d[dbRef.insurance_titles.i_city as keyof INSTitle] || 'N/A',
       },
       {
         Header: 'Lot',
-        accessor: (d:any) => d.ILOT || 'N/A',
+        accessor: (d:INSTitle) => d[dbRef.insurance_titles.i_lot as keyof INSTitle] || 'N/A',
       },
       {
         Header: 'Condo',
-        accessor: (d:any) => d.ICONDO || 'N/A',
+        accessor: (d:INSTitle) => d[dbRef.insurance_titles.i_condo as keyof INSTitle] || 'N/A',
       },
       {
         Header: 'Unit',
-        accessor: (d:any) => d.IUNIT || 'N/A',
+        accessor: (d:INSTitle) => d[dbRef.insurance_titles.i_unit as keyof INSTitle] || 'N/A',
       }
     ],
-    [tableData]
+    []
   )
 
   const {
@@ -65,12 +68,11 @@ const SubTableINS:React.FC<SubTableINSProps> = ({
     prepareRow,
   } = useTable(
     {
-      //@ts-ignore
       columns,
       data,
       initialState: {}
     },
-    useFilters, // useFilters!
+    useFilters,
     useSortBy
   )
 
@@ -78,12 +80,11 @@ const SubTableINS:React.FC<SubTableINSProps> = ({
     <table className='is-sub-table' {...getTableProps()}>
       <thead>
         {headerGroups.map((headerGroup,idx) => (
-        //@ts-ignore
-        <tr {...headerGroup.getHeaderGroupProps()}>
+        <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
           {headerGroup.headers.map((column, idx) => (
-            //@ts-ignore
             <th 
-              {...column.getHeaderProps(column.getSortByToggleProps())} 
+            {...column.getHeaderProps(column.getSortByToggleProps())} 
+              key={column.id}
               className={
                 column.isSorted
                   ? column.isSortedDesc
@@ -92,7 +93,17 @@ const SubTableINS:React.FC<SubTableINSProps> = ({
                   : ""
                 }
             >
-              {column.render('Header')}
+              <span>
+                {column.render('Header')}
+                {column.Header === 'Print' 
+                  || column.Header === 'View / Edit'  ? null
+                  : column.isSorted
+                  ? column.isSortedDesc
+                  ? <DownArrowIcon />
+                  : <UpArrowIcon />
+                  : <SortIcon />
+                }
+              </span>
             </th>
           ))}
         </tr>
@@ -102,12 +113,11 @@ const SubTableINS:React.FC<SubTableINSProps> = ({
         {rows.map((row,idx) => {
           prepareRow(row)
           return (
-            // @ts-ignore 
-            <tr {...row.getRowProps()}>
+            <tr {...row.getRowProps()} key={row.id}>
               {row.cells.map((cell, idx) => (
                 <td
-                  // @ts-ignore
                   {...cell.getCellProps()}
+                  key={cell.row.id}
                 >
                   {cell.render('Cell')}
                 </td>

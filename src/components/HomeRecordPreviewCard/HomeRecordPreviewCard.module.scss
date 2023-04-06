@@ -29,20 +29,19 @@
       }
     }
   }
-
   .preview-table {
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.233);
     border-radius: 10px;
-    overflow: hidden;
     width: fit-content;
     margin: 0 auto;
     width: 100%;
 
+    
     table {
       border-radius: 10px;
       overflow: hidden;
       width: 100%;
-
+    
       thead {
         th {
           background-color: rgb(71, 71, 71);

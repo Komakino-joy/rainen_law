@@ -1,4 +1,5 @@
 import { PencilIcon } from '@/components/Icons/Icons';
+import dbRef from '@/constants/dbRefs';
 import { Examiner, TableRefs } from '@/types/common';
 import { useMemo } from 'react';
 import { useTable, useFilters } from 'react-table';
@@ -36,31 +37,31 @@ const ExaminersTable:React.FC<ExaminersTableProps> = ({
     () => [
       {
         Header: 'ID',
-        accessor: (d:Examiner) => d.id,
+        accessor: (d:Examiner) => d[dbRef.examiners.id as keyof Examiner],
       },
       {
         Header: 'Name',
-        accessor: (d:Examiner) => d.name || 'N/A',
+        accessor: (d:Examiner) => d[dbRef.examiners.name as keyof Examiner] || 'N/A',
       },
       {
         Header: 'Code',
-        accessor: (d:Examiner) => d.code || 'N/A',
+        accessor: (d:Examiner) => d[dbRef.examiners.code as keyof Examiner] || 'N/A',
       },
       {
         Header: 'Type',
-        accessor: (d:Examiner) => d.type || 'N/A',
+        accessor: (d:Examiner) => d[dbRef.examiners.type as keyof Examiner] || 'N/A',
       },
       {
         Header: 'Compensation',
-        accessor: (d:Examiner) => d.compensate || 'N/A',
+        accessor: (d:Examiner) => d[dbRef.examiners.compensate as keyof Examiner] || 'N/A',
       },
       {
         Header: 'Is Active ?',
-        accessor: (d:Examiner) => d.is_active || 'N/A',
+        accessor: (d:Examiner) => d[dbRef.examiners.is_active as keyof Examiner] || 'N/A',
       },
       {
         Header: 'View / Edit',
-        accessor: (d:Examiner) => d.id,
+        accessor: (d:Examiner) => d[dbRef.examiners.id as keyof Examiner],
         Cell: ({value}:{value:any}) => (
           <span
             title={`Edit ${selectionType}: ${value}`} 
@@ -72,7 +73,7 @@ const ExaminersTable:React.FC<ExaminersTableProps> = ({
       }
 
     ],
-    [tableData]
+    [handleModalOpen, selectionType]
   )
 
   const {
@@ -83,23 +84,20 @@ const ExaminersTable:React.FC<ExaminersTableProps> = ({
     prepareRow,
   } = useTable(
     {
-      //@ts-ignore
       columns,
       data,
       initialState: {}
     },
-    useFilters, // useFilters!
+    useFilters
   )
 
   return (
     <table className={`is-sub-table ${tableClassName}`} {...getTableProps()}>
       <thead>
         {headerGroups.map((headerGroup,idx) => (
-        //@ts-ignore
-        <tr {...headerGroup.getHeaderGroupProps()}>
+        <tr {...headerGroup.getHeaderGroupProps()}  key={headerGroup.id}>
           {headerGroup.headers.map((column, idx) => (
-            //@ts-ignore
-            <th {...column.getHeaderProps()} >
+            <th {...column.getHeaderProps()} key={column.id}>
               {column.render('Header')}
             </th>
           ))}
@@ -110,12 +108,11 @@ const ExaminersTable:React.FC<ExaminersTableProps> = ({
         {rows.map((row,idx) => {
           prepareRow(row)
           return (
-            // @ts-ignore 
-            <tr {...row.getRowProps()}>
+            <tr {...row.getRowProps()} key={row.id}>
               {row.cells.map((cell, idx) => (
                 <td
-                  // @ts-ignore
                   {...cell.getCellProps()}
+                  key={cell.row.id}
                 >
                   {cell.render('Cell')}
                 </td>

@@ -1,8 +1,16 @@
 .container {
   position: relative;
+
+  .home-preview-button-container {
+    position: absolute;
+    right: 120px;
+    top: -50px;
+  }
+
   .button-container {
     position: absolute;
     right: 0;
     top: -40px;
   }
+
 }

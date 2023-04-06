@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import conn from '../../../lib/db'
+import dbRef from '@/constants/dbRefs'
 
 export default async function handler(
   req: NextApiRequest,
@@ -9,18 +10,18 @@ export default async function handler(
       try {
         const getInsTitlesInfoQuery = `
             SELECT 
-              i.id,
-              i."ISTRET",
-              i."ICITY",
-              i."ILOT",
-              i."ICONDO",
-              i."IUNIT"
-            FROM public.ins i 
-            WHERE i."INMBR" = $1
+              ${dbRef.insurance_titles.id},
+              ${dbRef.insurance_titles.i_street},
+              ${dbRef.insurance_titles.i_city},
+              ${dbRef.insurance_titles.i_lot},
+              ${dbRef.insurance_titles.i_condo},
+              ${dbRef.insurance_titles.i_unit}
+            FROM ${dbRef.table_names.insurance_titles} 
+            WHERE ${dbRef.insurance_titles.i_number} = $1
             ORDER BY 
-              i."ICITY",
-              i."ISTRET",
-              i."ILOT";
+              ${dbRef.insurance_titles.i_city},
+              ${dbRef.insurance_titles.i_street},
+              ${dbRef.insurance_titles.i_lot};
           `
         const result = await conn.query(getInsTitlesInfoQuery, [req.body.inmbr])
 

@@ -110,7 +110,7 @@ export default async function handler(
             ${param.requestDateRange}
           ORDER BY 
             p.${dbRef.properties.p_street},
-            p.${dbRef.properties.p_lot},
+            p.${dbRef.properties.p_lot}
         `,[
             p_city,
             p_street.toLowerCase(),

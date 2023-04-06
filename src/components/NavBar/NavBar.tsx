@@ -17,6 +17,9 @@ const NavBar = () => {
       >
         Rainen Law
       </Link>
+      <NavBarFacet 
+        name='Home'
+      />
       { Object.keys(links).map(key => (
           <NavBarFacet 
             key={key}

@@ -102,6 +102,7 @@ const HomePage:React.FC = () =>  {
                   tableData={propertyData} 
                   handleModalOpen={handleModalOpen} 
                   setTableData={() => {}}
+                  isHomePreviewTable={true}
                 />
               </HomeRecordPreviewCard>      
               : null
@@ -113,6 +114,7 @@ const HomePage:React.FC = () =>  {
                   tableData={clientData} 
                   handleModalOpen={handleModalOpen}
                   setTableData={() => {}}
+                  isHomePreviewTable={true}
                   hiddenColumns={[
                     'Phone', 
                     'Fax', 

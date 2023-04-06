@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import pgPromise from 'pg-promise'
 import conn from '../../../lib/db'
+import dbRef from '@/constants/dbRefs'
 
 export default async function handler(
   req: NextApiRequest,
@@ -14,7 +15,8 @@ export default async function handler(
       try {
         await conn.query('BEGIN')
         const deleteQuery = pgPromise.as.format(`
-          DELETE FROM public.users WHERE id = $1;
+            DELETE FROM ${dbRef.table_names.users} 
+            WHERE ${dbRef.users.id} = $1;
         `,[id]
         )
         await conn.query(deleteQuery)

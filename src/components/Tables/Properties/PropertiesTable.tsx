@@ -1,26 +1,29 @@
 import { ModalType, Property } from '@/types/common';
 
 import { useMemo, useState } from 'react';
-import { useTable, useFilters } from 'react-table';
+import { useTable, useFilters, useSortBy } from 'react-table';
 
-import { PencilIcon } from '@/components/Icons/Icons';
+import { DownArrowIcon, PencilIcon, SortIcon, UpArrowIcon } from '@/components/Icons/Icons';
 import { timestampToDate } from '@/utils';
 import PrintPropertyMultiple from '@/components/PrintPropertyMultiple/PrintPropertyMultiple';
 
 import styles from './PropertiesTable.module.scss'
+import dbRef from '@/constants/dbRefs';
 
 interface PropertiesTableProps {
   tableData: any;
   handleModalOpen: (e: React.SyntheticEvent, id: string, type: ModalType) => void;
   setTableData: (tableData: Property[]) => void;
   hiddenColumns?: string[];
+  isHomePreviewTable?: boolean;
 }
 
 
 const PropertiesTable:React.FC<PropertiesTableProps> = ({
   tableData,
   handleModalOpen,
-  hiddenColumns=['']
+  hiddenColumns=[''],
+  isHomePreviewTable
 }) => {
   
   const [labelsToPrint, setLabelsToPrint] = useState<Property[]>([])
@@ -34,23 +37,23 @@ const PropertiesTable:React.FC<PropertiesTableProps> = ({
     () => [
       {
         Header: 'PT Date',
-        accessor: (d:Property) => timestampToDate(d.p_input_date, 'mmDDyyyy').date,
+        accessor: (d:Property) => timestampToDate(d[dbRef.properties.p_input_date as keyof Property], 'mmDDyyyy').date,
       },
       {
         Header: 'City',
-        accessor: (d:Property) => `${d.p_city}` || 'N/A',
+        accessor: (d:Property) => d[dbRef.properties.p_city as keyof Property] || 'N/A',
       },
       {
         Header: 'Street',
-        accessor: (d:Property) => `${d.p_street}` || 'N/A',
+        accessor: (d:Property) => d[dbRef.properties.p_street as keyof Property] || 'N/A',
       },
       {
         Header: 'Lot',
-        accessor: (d:Property) => `${d.p_lot}` || 'N/A',
+        accessor: (d:Property) => d[dbRef.properties.p_lot as keyof Property] || 'N/A',
       },
       {
         Header: 'Condo',
-        accessor: (d:Property) => d.p_condo !== 'null' ? d.p_condo : 'N/A',
+        accessor: (d:Property) => d[dbRef.properties.p_condo as keyof Property] !== 'null' ? d[dbRef.properties.p_condo as keyof Property] : 'N/A',
       },
       {
         Header: 'Print',
@@ -80,7 +83,7 @@ const PropertiesTable:React.FC<PropertiesTableProps> = ({
       },
       {
         Header: 'View / Edit',
-        accessor: (d:any) => d.id,
+        accessor: (d:any) => d[dbRef.properties.id as keyof Property],
         Cell: ({value}:{value:any}) => (
           <span
             title={`Edit Property: ${value}`} 
@@ -91,7 +94,7 @@ const PropertiesTable:React.FC<PropertiesTableProps> = ({
         )
       }
     ],
-    [tableData]
+    [handleModalOpen]
   )
   
   // Define a default UI for filtering
@@ -114,21 +117,23 @@ const PropertiesTable:React.FC<PropertiesTableProps> = ({
     rows,
     prepareRow,
   } = useTable({
-      //@ts-ignore
       columns,
       data,
-      defaultColumn, // Be sure to pass the defaultColumn option
+      defaultColumn,
       initialState: {
         hiddenColumns
       }
     },
-    useFilters, // useFilters!
+    useFilters,
+    useSortBy
   )
+
+  const buttonContainerClassName = isHomePreviewTable ? styles['home-preview-button-container'] : styles['button-container']
 
   return (
     <div className={styles.container}>
       { labelsToPrint.length > 0 &&
-        <div className={styles['button-container']}>
+        <div className={buttonContainerClassName}>
           <PrintPropertyMultiple properties={labelsToPrint}>
             {`Print ${labelsToPrint.length} ${labelsToPrint.length === 1 ? 'Label' : 'Labels'}`}
           </PrintPropertyMultiple>
@@ -137,12 +142,31 @@ const PropertiesTable:React.FC<PropertiesTableProps> = ({
       <table {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup,idx) => (
-          //@ts-ignore
-          <tr {...headerGroup.getHeaderGroupProps()}>
+          <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
             {headerGroup.headers.map((column, idx) => (
-              //@ts-ignore
-              <th {...column.getHeaderProps()} >
-                {column.render('Header')}
+              <th 
+                {...column.getHeaderProps(!isHomePreviewTable ? column.getSortByToggleProps() : undefined)} 
+                key={column.id}
+                className={
+                  column.isSorted
+                    ? column.isSortedDesc
+                      ? 'desc'
+                      : 'asc'
+                    : ''
+                  }
+              >
+                <span>
+                  {column.render('Header')}
+                  { column.Header === 'Print' 
+                    || column.Header === 'View / Edit' 
+                    || isHomePreviewTable ? null
+                    : column.isSorted
+                    ? column.isSortedDesc
+                    ? <DownArrowIcon />
+                    : <UpArrowIcon />
+                    : <SortIcon />
+                  }
+                </span>
               </th>
             ))}
           </tr>
@@ -152,13 +176,11 @@ const PropertiesTable:React.FC<PropertiesTableProps> = ({
           {rows.map((row,idx) => {
             prepareRow(row)
             return (
-              // @ts-ignore 
-              <tr {...row.getRowProps()}>
+              <tr {...row.getRowProps()} key={row.id}>
                 {row.cells.map((cell, idx) => (
                   <td
-                    // @ts-ignore
-                    key={idx}
                     {...cell.getCellProps()}
+                    key={cell.row.id}
                   >
                     {cell.render('Cell')}
                   </td>

@@ -6,6 +6,7 @@ import { useTable, useFilters } from 'react-table';
 import { timestampToDate } from '@/utils';
 
 import styles from './ReportProperties.module.scss'
+import dbRef from '@/constants/dbRefs';
 
 interface ReportPropertiesProps {
   tableData: Property[];
@@ -24,34 +25,37 @@ const ReportProperties:React.FC<ReportPropertiesProps> = ({
     () => [
       {
         Header: 'Request Date',
-        accessor: (d:any) => timestampToDate(d.p_input_date, 'mmDDyyyy').date,
+        accessor: (d:Property) => timestampToDate(d[dbRef.properties.p_input_date as keyof Property], 'mmDDyyyy').date,
       },
       {
         Header: 'Address ( lot, st., city )',
-        accessor: (d:any) => `${d.p_lot + ', ' || ''} ${d.p_street + ', '|| ''} ${d.p_city || ''}`,
+        accessor: (d:Property) => `
+          ${d[dbRef.properties.p_lot as keyof Property] + ', ' || ''} 
+          ${d[dbRef.properties.p_street as keyof Property] + ', '|| ''} 
+          ${d[dbRef.properties.p_city as keyof Property] || ''}`
       },
       {
         Header: 'Ref No.',
-        accessor: (d:any) => d.p_comp_ref || '',
+        accessor: (d:Property) => d[dbRef.properties.p_comp_ref as keyof Property] || '',
       },
       {
         Header: 'Given to examiner',
-        accessor: (d:any) => `${d.p_assign ? "Yes" : "No"}`,
+        accessor: (d:Property) => `${d[dbRef.properties.p_assign as keyof Property] ? "Yes" : "No"}`,
       },
       {
         Header: 'Client',
-        accessor: (d:any) => `(${d.p_number}) ${d.c_name || ''}`,
+        accessor: (d:Property) => `(${d[dbRef.properties.p_number as keyof Property]}) ${d[dbRef.clients.c_name as keyof Property] || ''}`,
       },
       {
         Header: 'Type',
-        accessor: (d:any) => d.p_type
+        accessor: (d:Property) => d[dbRef.properties.p_type as keyof Property]
       },
       {
         Header: 'Status',
-        accessor: (d:any) => d.p_status
+        accessor: (d:Property) => d[dbRef.properties.p_status as keyof Property]
       },
     ],
-    [tableData]
+    []
   )
   
   const {
@@ -62,23 +66,20 @@ const ReportProperties:React.FC<ReportPropertiesProps> = ({
     prepareRow,
   } = useTable(
     {
-      //@ts-ignore
       columns,
       data,
       initialState: {}
     },
-    useFilters, // useFilters!
+    useFilters
   )
 
   return (
     <table id={styles['property-report']} {...getTableProps()} className='is-report-table'>
       <thead>
         {headerGroups.map((headerGroup,idx) => (
-        //@ts-ignore
-        <tr {...headerGroup.getHeaderGroupProps()}>
+        <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
           {headerGroup.headers.map((column, idx) => (
-            //@ts-ignore
-            <th {...column.getHeaderProps()} >
+            <th {...column.getHeaderProps()} key={column.id}>
               {column.render('Header')}
             </th>
           ))}
@@ -88,14 +89,12 @@ const ReportProperties:React.FC<ReportPropertiesProps> = ({
       <tbody {...getTableBodyProps()}>
         {rows.map((row,idx) => {
           prepareRow(row)
-          return (
-            // @ts-ignore 
-            <tr {...row.getRowProps()}>
+          return ( 
+            <tr {...row.getRowProps()} key={row.id}>
               {row.cells.map((cell, idx) => (
                 <td
-                  // @ts-ignore
-                  key={idx}
                   {...cell.getCellProps()}
+                  key={cell.row.id}
                 >
                   {cell.render('Cell')}
                 </td>

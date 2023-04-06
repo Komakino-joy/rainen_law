@@ -1,3 +1,5 @@
+import { DownArrowIcon, UpArrowIcon, SortIcon } from '@/components/Icons/Icons';
+import dbRef from '@/constants/dbRefs';
 import { httpPostBuyerSellerInfo } from '@/services/http';
 import { BuyerSeller } from '@/types/common';
 
@@ -17,7 +19,7 @@ const SubTableSellerBuyer:React.FC<SubTableSellerBuyerProps> = ({compRef}) => {
       const buyerSellerInfo = await httpPostBuyerSellerInfo({compRef})
       setTableData(buyerSellerInfo)
     })();
-  },[])
+  },[compRef])
 
   const data = useMemo(() => (
     tableData
@@ -28,30 +30,30 @@ const SubTableSellerBuyer:React.FC<SubTableSellerBuyerProps> = ({compRef}) => {
     () => [
       {
         Header: 'Seller 1',
-        accessor: (d:BuyerSeller) => d.seller_1 || 'N/A',
+        accessor: (d:BuyerSeller) => d[dbRef.buyer_seller.seller_1 as keyof BuyerSeller] || 'N/A',
       },
       {
         Header: 'Seller 2',
-        accessor: (d:BuyerSeller) => d.seller_2 || 'N/A',
+        accessor: (d:BuyerSeller) => d[dbRef.buyer_seller.seller_2 as keyof BuyerSeller] || 'N/A',
       },
       {
         Header: 'Seller 3',
-        accessor: (d:BuyerSeller) => d.seller_3 || 'N/A',
+        accessor: (d:BuyerSeller) => d[dbRef.buyer_seller.seller_3 as keyof BuyerSeller]|| 'N/A',
       },
       {
         Header: 'Seller 4',
-        accessor: (d:BuyerSeller) => d.seller_4 || 'N/A',
+        accessor: (d:BuyerSeller) => d[dbRef.buyer_seller.seller_4 as keyof BuyerSeller] || 'N/A',
       },
       {
         Header: 'Buyer 1',
-        accessor: (d:BuyerSeller) => d.buyer_1 || 'N/A',
+        accessor: (d:BuyerSeller) => d[dbRef.buyer_seller.buyer_1 as keyof BuyerSeller] || 'N/A',
       },
       {
         Header: 'Buyer 2',
-        accessor: (d:BuyerSeller) => d.buyer_2 || 'N/A',
+        accessor: (d:BuyerSeller) => d[dbRef.buyer_seller.buyer_2 as keyof BuyerSeller]  || 'N/A',
       }
     ],
-    [tableData]
+    []
   )
 
   const {
@@ -62,25 +64,30 @@ const SubTableSellerBuyer:React.FC<SubTableSellerBuyerProps> = ({compRef}) => {
     prepareRow,
   } = useTable(
     {
-      //@ts-ignore
       columns,
       data,
       initialState: {}
     },
-    useFilters, // useFilters!
+    useFilters
   )
 
   return (
     <table className='is-sub-table' {...getTableProps()}>
       <thead>
         {headerGroups.map((headerGroup,idx) => (
-        //@ts-ignore
-        <tr {...headerGroup.getHeaderGroupProps()}>
+        <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
           {headerGroup.headers.map((column, idx) => (
-            //@ts-ignore
-            <th {...column.getHeaderProps()} >
+            <span key={column.id}>
               {column.render('Header')}
-            </th>
+              {column.Header === 'Print' 
+                || column.Header === 'View / Edit'  ? null
+                : column.isSorted
+                ? column.isSortedDesc
+                ? <DownArrowIcon />
+                : <UpArrowIcon />
+                : <SortIcon />
+              }
+            </span>
           ))}
         </tr>
         ))}
@@ -89,12 +96,11 @@ const SubTableSellerBuyer:React.FC<SubTableSellerBuyerProps> = ({compRef}) => {
         {rows.map((row,idx) => {
           prepareRow(row)
           return (
-            // @ts-ignore 
-            <tr {...row.getRowProps()}>
+            <tr{...row.getRowProps()} key={row.id}>
               {row.cells.map((cell, idx) => (
                 <td
-                  // @ts-ignore
                   {...cell.getCellProps()}
+                  key={cell.row.id}
                 >
                   {cell.render('Cell')}
                 </td>

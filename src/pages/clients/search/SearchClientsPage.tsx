@@ -1,6 +1,6 @@
 'use client';
 
-import { Property } from '@/types/common';
+import { Client } from '@/types/common';
 import React, { useState } from 'react'
 import Modal from '@/components/Modal/Modal';
 import InfoCard from '@/components/InfoCard/InfoCard';
@@ -20,7 +20,7 @@ const SearchClientsPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [fetchingData, setFetchingData] = useState(false)
   const [selectedclientId, setSelectedclientId] = useState<string|null>(null)
-  const [tableData, setTableData] = useState<Property[] | null>(null)
+  const [tableData, setTableData] = useState<Client[] | null>(null)
   const [noResults, setNoResults] = useState<boolean>(false)
 
   const handleOpenModal =(e: React.SyntheticEvent, clientId: string) => {

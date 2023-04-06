@@ -3,22 +3,24 @@ import { Client, ModalType } from '@/types/common';
 import { useMemo, useState } from 'react';
 import { useTable, useFilters, useSortBy } from 'react-table';
 
-import { PencilIcon } from '@/components/Icons/Icons';
-import PrintPropertyMultiple from '@/components/PrintPropertyMultiple/PrintPropertyMultiple';
+import { DownArrowIcon, PencilIcon, SortIcon, UpArrowIcon } from '@/components/Icons/Icons';
 import styles from './ClientsTable.module.scss'
 import PrintClientLabelMultiple from '@/components/PrintClientLabelMultiple/PrintClientLabelMultiple';
+import dbRef from '@/constants/dbRefs';
 
 interface ClientsTableProps {
   tableData: any;
   handleModalOpen: (e: React.SyntheticEvent, id: string, type:ModalType) => void;
   setTableData: (tableData: Client[]) => void;
   hiddenColumns?: string[];
+  isHomePreviewTable?: boolean;
 }
 
 const ClientsTable:React.FC<ClientsTableProps> = ({
   tableData,
   handleModalOpen,
-  hiddenColumns=['']
+  hiddenColumns=[''],
+  isHomePreviewTable
 }) => {
 
   const [labelsToPrint, setLabelsToPrint] = useState<Client[]>([])
@@ -32,52 +34,54 @@ const ClientsTable:React.FC<ClientsTableProps> = ({
     () => [
       {
         Header: 'Client#',
-        accessor: (d:any) => d.c_number,
+        accessor: (d:Client) => d[dbRef.clients.c_number as keyof Client],
       },
       {
         Header: 'Client Name',
-        accessor: (d:any) => d.c_name,
+        accessor: (d:Client) => d[dbRef.clients.c_name as keyof Client],
       },
       {
         Header: 'Address',
-        accessor: (d:any) => `${d.c_address_1} ${d.c_address_2 ? d.c_address_2 : ''}`,
+        accessor: (d:Client) => `
+          ${d[dbRef.clients.c_address_1 as keyof Client]} 
+          ${d[dbRef.clients.c_address_2 as keyof Client] 
+            ? d[dbRef.clients.c_address_2 as keyof Client]
+            : ''
+          }
+        `,
       },
       {
         Header: 'City',
-        accessor: (d:any) => d.c_city || 'N/A',
+        accessor: (d:Client) => d[dbRef.clients.c_city as keyof Client] || 'N/A',
       },
       {
         Header: 'State',
-        accessor: (d:any) => d.c_state || 'N/A',
+        accessor: (d:Client) => d[dbRef.clients.c_state as keyof Client] || 'N/A',
       },
       {
         Header: 'Zip',
-        accessor: (d:any) => d.c_zip || 'N/A',
+        accessor: (d:Client) => d[dbRef.clients.c_zip as keyof Client] || 'N/A',
       },
       {
         Header: 'Phone',
-        accessor: (d:any) => d.c_phone || 'N/A',
+        accessor: (d:Client) => d[dbRef.clients.c_phone as keyof Client] || 'N/A',
       },
       {
         Header: 'Fax',
-        accessor: (d:any) => d.c_fax || 'N/A',
-      },
-      {
-        Header: 'Is Client?',
-        accessor: (d:any) => d.c_is_client ? 'Yes' : "No",
+        accessor: (d:Client) => d[dbRef.clients.c_fax as keyof Client] || 'N/A',
       },
       {
         Header: 'Properties',
-        accessor: (d:any) => d.PROPCOUNT || 'N/A',
+        accessor: (d:Client) => d.propcount || 'N/A',
       },
       {
         Header: 'Titles',
-        accessor: (d:any) => d.TITLESCOUNT || 'N/A',
+        accessor: (d:Client) => d.titlescount || 'N/A',
       },
       {
         Header: 'Print',
         accessor: (d:Client) => d,
-        Cell: ({value}:{value:any}) => (
+        Cell: ({value}:{value:Client}) => (
           <input
             name={`client-${value.id}`}
             type='checkbox'
@@ -102,7 +106,7 @@ const ClientsTable:React.FC<ClientsTableProps> = ({
       },
       {
         Header: 'View / Edit',
-        accessor: (d:any) => d.id,
+        accessor: (d:any) => d[dbRef.clients.id as keyof Client],
         Cell: ({value}:{value:any}) => (
           <span
             title={`Edit Client: ${value}`} 
@@ -113,7 +117,7 @@ const ClientsTable:React.FC<ClientsTableProps> = ({
         )
       }
     ],
-    [tableData]
+    [handleModalOpen]
   )
   
   // Define a default UI for filtering
@@ -137,22 +141,23 @@ const ClientsTable:React.FC<ClientsTableProps> = ({
     prepareRow,
   } = useTable(
     {
-      //@ts-ignore
       columns,
       data,
-      defaultColumn, // Be sure to pass the defaultColumn option
+      defaultColumn, 
       initialState: {
         hiddenColumns
       }
     },
-    useFilters, // useFilters!
-    useSortBy,
+    useFilters,
+    useSortBy
   )
+
+  const buttonContainerClassName = isHomePreviewTable ? styles['home-preview-button-container'] : styles['button-container']
 
   return (
     <div className={styles.container}>
     { labelsToPrint.length > 0 &&
-      <div className={styles['button-container']}>
+      <div className={buttonContainerClassName}>
         <PrintClientLabelMultiple clients={labelsToPrint}>
           {`Print ${labelsToPrint.length} ${labelsToPrint.length === 1 ? 'Label' : 'Labels'}`}
         </PrintClientLabelMultiple>
@@ -161,21 +166,31 @@ const ClientsTable:React.FC<ClientsTableProps> = ({
       <table className='is-all-clients-table' {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup,idx) => (
-          //@ts-ignore
-          <tr {...headerGroup.getHeaderGroupProps()}>
+          <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
             {headerGroup.headers.map((column, idx) => (
-              //@ts-ignore
               <th 
-                {...column.getHeaderProps(column.getSortByToggleProps())} 
+                {...column.getHeaderProps( !isHomePreviewTable ? column.getSortByToggleProps() : undefined)} 
+                key={column.id}
                 className={
                   column.isSorted
                     ? column.isSortedDesc
-                      ? "desc"
-                      : "asc"
-                    : ""
+                      ? 'desc'
+                      : 'asc'
+                    : ''
                   }
               >
-                {column.render('Header')}
+                <span>
+                  {column.render('Header')}
+                  { column.Header === 'Print' 
+                    || column.Header === 'View / Edit'
+                    || isHomePreviewTable ? null
+                    :column.isSorted
+                    ? column.isSortedDesc
+                    ? <DownArrowIcon />
+                    : <UpArrowIcon />
+                    : <SortIcon />
+                  }
+                </span>
               </th>
             ))}
           </tr>
@@ -185,13 +200,11 @@ const ClientsTable:React.FC<ClientsTableProps> = ({
           {rows.map((row,idx) => {
             prepareRow(row)
             return (
-              // @ts-ignore 
-              <tr {...row.getRowProps()}>
+              <tr {...row.getRowProps()} key={row.id}>
                 {row.cells.map((cell, idx) => (
                   <td
-                    // @ts-ignore
-                    key={idx}
                     {...cell.getCellProps()}
+                    key={cell.row.id}
                   >
                     {cell.render('Cell')}
                   </td>

@@ -39,7 +39,7 @@ export default async function handler(
         p_request_date,
         p_closed_date,
         id,
-        last_updated_by,
+        username,
       } = req.body
 
       try {
@@ -133,7 +133,7 @@ export default async function handler(
             p_zip,
             p_request_date === '' ? null : p_request_date,
             p_closed_date === '' ? null : p_closed_date,
-            last_updated_by,
+            username,
             new Date(),
             id,
           ]

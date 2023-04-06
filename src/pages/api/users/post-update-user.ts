@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import bcrypt from 'bcrypt';
 import pgPromise from 'pg-promise'
 import conn from '../../../lib/db'
+import dbRef from '@/constants/dbRefs';
 
 export default async function handler(
   req: NextApiRequest,
@@ -38,14 +39,14 @@ export default async function handler(
                 return false
               }
               const updateQuery = pgPromise.as.format(`
-                  UPDATE public.users
+                  UPDATE ${dbRef.table_names.users}
                   SET
-                    username=$1,
-                    f_name=$2,
-                    l_name=$3,
-                    password=$4,
-                    last_updated=$5
-                  WHERE id = $6
+                    ${dbRef.users.username}=$1,
+                    ${dbRef.users.f_name}=$2,
+                    ${dbRef.users.l_name}=$3,
+                    ${dbRef.users.password}=$4,
+                    ${dbRef.users.last_updated}=$5
+                  WHERE ${dbRef.users.id} = $6
                   RETURNING *
                 ;
               `,[
@@ -70,8 +71,6 @@ export default async function handler(
           });
         });
 
-
-        
       } catch ( error ) {
         await conn.query('ROLLBACK')
         console.log( error );

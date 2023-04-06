@@ -78,12 +78,14 @@ export interface Client {
   c_fax: string;
   c_contact: string;
   c_status: string;
-  c_statement_addresse: string;
+  c_statement_addressee: string;
   c_search: string;
   c_email: string;
   c_notes: string;
   id: number;
   last_updated: string;
+  propcount: number;
+  titlescount: number;
 }
 
 export interface DateTime {
@@ -103,8 +105,6 @@ export interface INSTitle {
   tticoname: string;
   INMBR: string; 
   ISTAT: string; 
-  ISTATE: string; 
-  IZIP: string; 
   IREMIT: string;
   TITLECO: string;
   IPOLDATE: string;
@@ -121,30 +121,6 @@ export interface INSTitle {
   AGENTFEE: string;
   PREMPAID: string;
 }
-
-export interface OutstandingInsTitleReportEntry {
-  c_name: string;
-  c_address_1: string;
-  c_address_2: string;
-  c_city: string;
-  c_state: string;
-  c_zip: string;
-  c_contact: string;
-  ISTRET: string;
-  ICITY: string;
-  OPOLICYNUM: string;
-  LPOLICYNUM: string;
-  OPOLICYAMT: number;
-  LPOLICYAMT: number;
-  IFILE: number;
-  ILOT: string;
-  IPOLDATE: string;
-  PREMDUE: number;
-  IBILL: number;
-  PREMPAID: number;
-  filter: number;
-}
-
 export interface LabelValuePair {
   label: string;
   value: any;
@@ -177,41 +153,9 @@ export interface Policy {
   IBILL: string;
   POLICYDATE: string;
   IREMIT: string;
-  ISTATE: string;
-  IZIP: string;
   c_name: string;
   IPDATE: string;
-  INOTES: string;
   ICDATE: string;
-}
-
-export interface RemittanceReportEntry {
-  c_name: string;
-  c_address_1: string;
-  c_address_2: string;
-  c_city: string;
-  c_state: string;
-  c_zip: string;
-  c_contact: string;
-  ISTRET: string;
-  ICITY: string;
-  OPOLICYNUM: string;
-  LPOLICYNUM: string;
-  OPOLICYAMT: number;
-  LPOLICYAMT: number;
-  IFILE: string;
-  ILOT: string;
-  IPOLDATE: string;
-  PREMDUE: number;
-  IBILL: number;
-  PREMPAID: number;
-  filter: number;
-  tticoname: string;
-  tadd1: string;
-  tcity: string;
-  tstate: string;
-  tzip: string;
-  AGENTFEE: number;
 }
 
 export interface ClientStatus {

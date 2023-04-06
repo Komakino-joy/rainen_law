@@ -2,11 +2,12 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTable, useFilters, useSortBy } from 'react-table';
 
 import { timestampToDate } from '@/utils';
-import { PencilIcon } from '@/components/Icons/Icons';
+import { DownArrowIcon, PencilIcon, SortIcon, UpArrowIcon } from '@/components/Icons/Icons';
 import EditPropertyModal from '@/components/Modals/EditPropertyModal';
 import { useRouter } from 'next/router';
 import { Property } from '@/types/common';
 import { httpPostPropertiesInfo } from '@/services/http';
+import dbRef from '@/constants/dbRefs';
 
 interface SubTablePropertiesProps {
   cnmbr: string
@@ -27,7 +28,7 @@ const SubTableProperties:React.FC<SubTablePropertiesProps> = ({
       const propertiesInfo = await httpPostPropertiesInfo({cnmbr})
       setTableData(propertiesInfo)
     })();
-  },[])
+  },[cnmbr])
 
 
   const handleModalClose = () => {
@@ -59,27 +60,27 @@ const SubTableProperties:React.FC<SubTablePropertiesProps> = ({
     () => [
       {
         Header: 'Date',
-        accessor: (d:Property) => timestampToDate(d.p_input_date, 'mmDDyyyy').date,
+        accessor: (d:Property) => timestampToDate(d[dbRef.properties.p_input_date as keyof Property], 'mmDDyyyy').date,
       },
       {
         Header: 'City',
-        accessor: (d:Property) => d.p_city  || 'N/A',
+        accessor: (d:Property) => d[dbRef.properties.p_city as keyof Property]  || 'N/A',
       },
       {
         Header: 'Street',
-        accessor: (d:Property) => d.p_street || 'N/A',
+        accessor: (d:Property) => d[dbRef.properties.p_street as keyof Property] || 'N/A',
       },
       {
         Header: 'Lot',
-        accessor: (d:Property) => d.p_lot || 'N/A',
+        accessor: (d:Property) => d[dbRef.properties.p_lot as keyof Property]  || 'N/A',
       },
       {
         Header: 'Condo',
-        accessor: (d:Property) => d.p_condo !== 'null' ? d.p_condo : 'N/A',
+        accessor: (d:Property) => d[dbRef.properties.p_condo as keyof Property]  !== 'null' ? d[dbRef.properties.p_condo as keyof Property] : 'N/A',
       },
       {
         Header: 'View / Edit',
-        accessor: (d:Property) => d.id,
+        accessor: (d:Property) => d[dbRef.properties.id as keyof Property] ,
         Cell: ({value}:{value:string}) => (
           <span
             title={`Edit Property: ${value}`} 
@@ -90,17 +91,15 @@ const SubTableProperties:React.FC<SubTablePropertiesProps> = ({
         )
       }
     ],
-    [tableData]
+    []
   )
   
-  // Define a default UI for filtering
   function DefaultColumnFilter () {
     return null
   }
 
   const defaultColumn = useMemo(
     () => ({
-      // Let's set up our default Filter UI
       Filter: DefaultColumnFilter,
     }),
     []
@@ -114,14 +113,13 @@ const SubTableProperties:React.FC<SubTablePropertiesProps> = ({
     prepareRow,
   } = useTable(
     {
-      //@ts-ignore
       columns,
       data,
-      defaultColumn, // Be sure to pass the defaultColumn option
+      defaultColumn,
       initialState: {}
     },
-    useFilters, // useFilters!
-    useSortBy,
+    useFilters, 
+    useSortBy
   )
 
   return (
@@ -129,12 +127,11 @@ const SubTableProperties:React.FC<SubTablePropertiesProps> = ({
       <table className='is-sub-table' {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup,idx) => (
-          //@ts-ignore
-          <tr {...headerGroup.getHeaderGroupProps()}>
+          <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
             {headerGroup.headers.map((column, idx) => (
-              //@ts-ignore
               <th 
                 {...column.getHeaderProps(column.getSortByToggleProps())} 
+                key={column.id}
                 className={
                   column.isSorted
                     ? column.isSortedDesc
@@ -143,7 +140,17 @@ const SubTableProperties:React.FC<SubTablePropertiesProps> = ({
                     : ""
                   }
               >
-                {column.render('Header')}
+                <span>
+                  {column.render('Header')}
+                  {column.Header === 'Print' 
+                    || column.Header === 'View / Edit'  ? null
+                    : column.isSorted
+                    ? column.isSortedDesc
+                    ? <DownArrowIcon />
+                    : <UpArrowIcon />
+                    : <SortIcon />
+                  }
+                </span>
               </th>
             ))}
           </tr>
@@ -153,13 +160,11 @@ const SubTableProperties:React.FC<SubTablePropertiesProps> = ({
           {rows.map((row,idx) => {
             prepareRow(row)
             return (
-              // @ts-ignore 
-              <tr {...row.getRowProps()}>
+              <tr {...row.getRowProps()} key={row.id}>
                 {row.cells.map((cell, idx) => (
                   <td
-                    // @ts-ignore
-                    key={idx}
                     {...cell.getCellProps()}
+                    key={cell.row.id}
                   >
                     {cell.render('Cell')}
                   </td>

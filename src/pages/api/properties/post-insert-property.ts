@@ -38,8 +38,7 @@ export default async function handler(
         seller_4,
         p_request_date,
         p_closed_date,
-        created_by,
-        last_updated_by,
+        username,
       } = req.body
 
       try {
@@ -140,8 +139,8 @@ export default async function handler(
             p_zip,
             p_request_date === '' ? null : p_request_date,
             p_closed_date === '' ? null : p_closed_date,
-            created_by,
-            last_updated_by,
+            username,
+            username,
             new Date(),
             new Date(),
           ]

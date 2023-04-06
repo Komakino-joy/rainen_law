@@ -59,7 +59,7 @@ import styles from './Select.module.scss'
     }),
   };
 
-export default ({
+const CustomSelect = ({
   onChange,
   options,
   defaultValue
@@ -98,3 +98,5 @@ export default ({
   </>
 )
 }
+
+export default CustomSelect

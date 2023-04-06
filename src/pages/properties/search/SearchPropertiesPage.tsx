@@ -9,10 +9,12 @@ import Spinner from '@/components/Spinner/Spinner';
 import InfoCard from '@/components/InfoCard/InfoCard';
 import ClientCard from '@/components/ClientCard/ClientCard';
 import PropertyForm from '@/components/Forms/PropertyEditForm/EditPropertyForm';
+import PrintPropertyMultiple from '@/components/PrintPropertyMultiple/PrintPropertyMultiple'
 import SearchPropertiesForm from '@/components/Forms/PropertySearchForm/SearchPropertiesForm'
 import { useClientsContext } from '@/context/Clients';
 import { usePropertiesContext } from '@/context/Properties';
 import { httpPostSearchProperty } from '@/services/http';
+import styles from './SearchPropertiesPage.module.scss'
 
 const SearchPropertiesPage = () => {
 
@@ -25,6 +27,7 @@ const SearchPropertiesPage = () => {
   const [clientProperties, setClientProperties] = useState(null)
   const [selectedId, setSelectedId] = useState<string|null>(null)
   const [noResults, setNoResults] = useState<boolean>(false)
+  const [labelsToPrint, setLabelsToPrint] = useState<Property[]>([])
 
   const handleCardClick =(e: React.SyntheticEvent, id: string) => {
     e.preventDefault()
@@ -93,11 +96,23 @@ const SearchPropertiesPage = () => {
             { fetchingData ? <div className='search-results-spinner'><Spinner /></div>
               : clientProperties && Object.keys(clientProperties).length > 0 ?
               <div className='search-results-container'>
-                <h1>Properties by Street <span className='italicized-record-count'>(Streetsmycar: {Object.keys(clientProperties).length})</span></h1>
+                <h1 className={styles.header}>
+                  <span>
+                    Properties by Street <span className='italicized-record-count'>(Streets: {Object.keys(clientProperties).length})</span>
+                  </span>
+                  { labelsToPrint.length > 0 &&
+                    <div >
+                      <PrintPropertyMultiple properties={labelsToPrint}>
+                        {`Print ${labelsToPrint.length} ${labelsToPrint.length === 1 ? 'Label' : 'Labels'}`}
+                      </PrintPropertyMultiple>
+                    </div>
+                  }
+                </h1>
       
                   {Object.keys(clientProperties).map((key:string) =>  (
                       <ClientCard 
                         key={key}
+                        setLabelsToPrint={setLabelsToPrint}
                         handleCardClick={handleCardClick}
                         // @ts-ignore
                         propertyStreet={clientProperties[key][0].p_street} 

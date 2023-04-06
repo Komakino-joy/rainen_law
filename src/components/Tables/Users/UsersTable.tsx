@@ -1,4 +1,5 @@
 import { PencilIcon, TrashIcon } from '@/components/Icons/Icons';
+import dbRef from '@/constants/dbRefs';
 import { httpPostDeleteUser } from '@/services/http';
 import { TableRefs, User } from '@/types/common';
 import { useMemo } from 'react';
@@ -74,23 +75,23 @@ const UsersTable:React.FC<UsersTableProps> = ({
     () => [
       {
         Header: 'ID',
-        accessor: (d:any) => d.id,
+        accessor: (d:User) => d[dbRef.users.id as keyof User],
       },
       {
         Header: 'Username',
-        accessor: (d:any) => d.username,
+        accessor: (d:User) => d[dbRef.users.username as keyof User],
       },
       {
         Header: 'First Name',
-        accessor: (d:any) => d.f_name,
+        accessor: (d:User) => d[dbRef.users.f_name as keyof User],
       },
       {
         Header: 'Last Name',
-        accessor: (d:any) => d.l_name,
+        accessor: (d:User) => d[dbRef.users.l_name as keyof User],
       },
       {
         Header: 'View / Edit',
-        accessor: (d:any) => d.id,
+        accessor: (d:User) => d[dbRef.users.id as keyof User],
         Cell: ({value}:{value:any}) => (
           <span
             title={`Edit ${selectionType}: ${value}`} 
@@ -102,7 +103,7 @@ const UsersTable:React.FC<UsersTableProps> = ({
       },
       {
         Header: 'Delete',
-        accessor: (d:any) => d.id,
+        accessor: (d:any) => d[dbRef.users.id as keyof User],
         Cell: ({value}:{value:any}) => (
           <span 
             title={`Delete  ${selectionType}: ${value}`} 
@@ -114,7 +115,7 @@ const UsersTable:React.FC<UsersTableProps> = ({
       },
 
     ],
-    [tableData]
+    [handleModalOpen, selectionType]
   )
 
   const {
@@ -125,23 +126,20 @@ const UsersTable:React.FC<UsersTableProps> = ({
     prepareRow,
   } = useTable(
     {
-      //@ts-ignore
       columns,
       data,
       initialState: {}
     },
-    useFilters, // useFilters!
+    useFilters
   )
 
   return (
     <table className={`is-sub-table ${tableClassName}`} {...getTableProps()}>
       <thead>
         {headerGroups.map((headerGroup,idx) => (
-        //@ts-ignore
-        <tr {...headerGroup.getHeaderGroupProps()}>
+        <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
           {headerGroup.headers.map((column, idx) => (
-            //@ts-ignore
-            <th {...column.getHeaderProps()} >
+            <th {...column.getHeaderProps()} key={column.id}>
               {column.render('Header')}
             </th>
           ))}
@@ -152,12 +150,11 @@ const UsersTable:React.FC<UsersTableProps> = ({
         {rows.map((row,idx) => {
           prepareRow(row)
           return (
-            // @ts-ignore 
-            <tr {...row.getRowProps()}>
+            <tr {...row.getRowProps()} key={row.id}>
               {row.cells.map((cell, idx) => (
                 <td
-                  // @ts-ignore
                   {...cell.getCellProps()}
+                  key={cell.row.id}
                 >
                   {cell.render('Cell')}
                 </td>

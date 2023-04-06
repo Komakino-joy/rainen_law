@@ -12,7 +12,7 @@ interface ClientsContextProps {
     c_number: [{ label: string; value: string;}];
     c_status: [{ label: string; value: string;}];
     c_contact: [{ label: string; value: string;}];
-    c_statement_addresse: [{ label: string; value: string;}];
+    c_statement_addressee: [{ label: string; value: string;}];
     c_city: [{ label: string; value: string;}];
     c_state: [{ label: string; value: string;}];
     c_zip: [{ label: string; value: string;}];
@@ -29,7 +29,7 @@ const ClientsContext = createContext<ClientsContextProps>({
     c_number: [{ label: '', value: ''}],
     c_status: [{ label: '', value: ''}],
     c_contact: [{ label: '', value: ''}],
-    c_statement_addresse: [{ label: '', value: ''}],
+    c_statement_addressee: [{ label: '', value: ''}],
     c_city: [{ label: '', value: ''}],
     c_state: [{ label: '', value: ''}],
     c_zip: [{ label: '', value: ''}],
@@ -54,7 +54,7 @@ export const ClientsContextProvider = ({children}: {children:any}) => {
         setIsLoading(true)
         // These are the only fields we care to make into Options for Select component
         const fields = [
-          'c_name', 'c_number', 'c_status', 'c_contact', 'c_statement_addresse',
+          'c_name', 'c_number', 'c_status', 'c_contact', 'c_statement_addressee',
           'c_city', 'c_state', 'c_zip', 'c_phone', 'c_fax', 'c_email'
         ]
         const clients = await httpGetAllClients()
