@@ -7,6 +7,7 @@ import FormInput from "../Common/FormInput/FormInput";
 import styles from './EditExaminerForm.module.scss'
 import Spinner from "@/components/Spinner/Spinner";
 import { httpPostInsertExaminer, httpPostSelectedExaminer, httpPostUpdateExaminer } from "@/services/http";
+import dbRef from "@/constants/dbRefs";
 
 interface EditEditExaminerFormProps {
   tableData: any[];
@@ -37,20 +38,19 @@ const EditExaminerForm:React.FC<EditEditExaminerFormProps> = ({
   } = useForm({
     defaultValues: async () => {
       if (selectedId) {
-
         setIsLoading(true)
       
         const examinerInfo = await httpPostSelectedExaminer({ id: selectedId })
         
         const {
-          id='', 
-          name='', 
-          code='', 
-          type='',
-          compensate='',
-          isActive=false  
+          id, 
+          name, 
+          code, 
+          type,
+          compensate,
+          is_active  
         } = examinerInfo
-
+        
         setExaminerId(id)
         setDefaultSelectValues((prevState) => ({
           ...prevState,
@@ -60,10 +60,10 @@ const EditExaminerForm:React.FC<EditEditExaminerFormProps> = ({
         setIsLoading(false)
 
         return {
-          exName: name ,
-          exCode: code ,
-          exCompensate: compensate,
-          exIsActive: isActive
+          [dbRef.examiners.name]: name ,
+          [dbRef.examiners.code]: code ,
+          [dbRef.examiners.compensate]: compensate,
+          [dbRef.examiners.is_active]: is_active
         };
       }
     }
@@ -71,7 +71,6 @@ const EditExaminerForm:React.FC<EditEditExaminerFormProps> = ({
 
   const onSubmit = async(data:any) => {
     if(!isDirty) return 
-    
     if(queryType === 'insert') {
       const newRecord = await httpPostInsertExaminer({data})
       reset()
@@ -97,8 +96,8 @@ const EditExaminerForm:React.FC<EditEditExaminerFormProps> = ({
       { isLoading ? <Spinner />
         : <form className="flex-y" onSubmit={handleSubmit(onSubmit)}>
             <FormInput 
-              name="exName"
-              labelKey="exName"
+              name={dbRef.examiners.name}
+              labelKey={dbRef.examiners.name}
               labelText="Name"
               type="text"
               isRequired={true}
@@ -108,8 +107,8 @@ const EditExaminerForm:React.FC<EditEditExaminerFormProps> = ({
 
             <section className={`flex-x ${styles['code-type-section']}`}>
                 <FormInput 
-                  name="exCode"
-                  labelKey="exCode"
+                  name={dbRef.examiners.code}
+                  labelKey={dbRef.examiners.code}
                   labelText="Code"
                   type="text"
                   customClass={styles.code}
@@ -119,15 +118,15 @@ const EditExaminerForm:React.FC<EditEditExaminerFormProps> = ({
                 />
 
                 <Controller 
-                  name={"type"}  
+                  name={dbRef.examiners.type}  
                   control={control} 
                   render={({
                     field: {onChange},
                   }) => {
                     return (
                       <FormInput 
-                        name="type"
-                        labelKey="type"
+                        name={dbRef.examiners.type}
+                        labelKey={dbRef.examiners.type}
                         labelText="Type"
                         type="select" 
                         customClass={styles.type}
@@ -145,8 +144,8 @@ const EditExaminerForm:React.FC<EditEditExaminerFormProps> = ({
 
             <section className={`flex-x ${styles['comp-active-section']}`}>
               <FormInput 
-                name="exCompensate"
-                labelKey="exCompensate"
+                name={dbRef.examiners.compensate}
+                labelKey={dbRef.examiners.compensate}
                 labelText="Compensation"
                 type="number" 
                 customClass={styles.comp}
@@ -159,12 +158,11 @@ const EditExaminerForm:React.FC<EditEditExaminerFormProps> = ({
 
               
               <FormInput 
-                name="exIsActive"
-                labelKey="exIsActive"
+                name={dbRef.examiners.is_active}
+                labelKey={dbRef.examiners.is_active}
                 labelText="Is Active?"
                 type="checkbox" 
                 customClass={styles.active}
-                defaultValue={false}
                 isRequired={false}
                 register={register} 
                 errors={errors}

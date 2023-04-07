@@ -5,6 +5,7 @@ import { BuyerSeller } from '@/types/common';
 
 import { useEffect, useMemo, useState } from 'react';
 import { useTable, useFilters } from 'react-table';
+import { v4 as uuidv4 } from 'uuid'
 
 interface SubTableSellerBuyerProps {
   compRef: string;
@@ -75,19 +76,22 @@ const SubTableSellerBuyer:React.FC<SubTableSellerBuyerProps> = ({compRef}) => {
     <table className='is-sub-table' {...getTableProps()}>
       <thead>
         {headerGroups.map((headerGroup,idx) => (
-        <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
+        <tr {...headerGroup.getHeaderGroupProps()} key={uuidv4()}>
           {headerGroup.headers.map((column, idx) => (
-            <span key={column.id}>
-              {column.render('Header')}
-              {column.Header === 'Print' 
-                || column.Header === 'View / Edit'  ? null
-                : column.isSorted
-                ? column.isSortedDesc
-                ? <DownArrowIcon />
-                : <UpArrowIcon />
-                : <SortIcon />
-              }
-            </span>
+
+            <th {...column.getHeaderProps()} key={uuidv4()}>
+              <span>
+                {column.render('Header')}
+                {column.Header === 'Print' 
+                  || column.Header === 'View / Edit'  ? null
+                  : column.isSorted
+                  ? column.isSortedDesc
+                  ? <DownArrowIcon />
+                  : <UpArrowIcon />
+                  : <SortIcon />
+                }
+              </span>
+            </th>
           ))}
         </tr>
         ))}
@@ -96,11 +100,11 @@ const SubTableSellerBuyer:React.FC<SubTableSellerBuyerProps> = ({compRef}) => {
         {rows.map((row,idx) => {
           prepareRow(row)
           return (
-            <tr{...row.getRowProps()} key={row.id}>
+            <tr{...row.getRowProps()} key={uuidv4()}>
               {row.cells.map((cell, idx) => (
                 <td
                   {...cell.getCellProps()}
-                  key={cell.row.id}
+                  key={uuidv4()}
                 >
                   {cell.render('Cell')}
                 </td>

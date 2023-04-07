@@ -1,12 +1,13 @@
-import { Client, ModalType } from '@/types/common';
+import { Client, ModalType } from '@/types/common'
 
-import { useMemo, useState } from 'react';
-import { useTable, useFilters, useSortBy } from 'react-table';
+import { useMemo, useState } from 'react'
+import { useTable, useFilters, useSortBy } from 'react-table'
+import { v4 as uuidv4 } from 'uuid'
 
-import { DownArrowIcon, PencilIcon, SortIcon, UpArrowIcon } from '@/components/Icons/Icons';
+import { DownArrowIcon, PencilIcon, SortIcon, UpArrowIcon } from '@/components/Icons/Icons'
 import styles from './ClientsTable.module.scss'
-import PrintClientLabelMultiple from '@/components/PrintClientLabelMultiple/PrintClientLabelMultiple';
-import dbRef from '@/constants/dbRefs';
+import PrintClientLabelMultiple from '@/components/PrintClientLabelMultiple/PrintClientLabelMultiple'
+import dbRef from '@/constants/dbRefs'
 
 interface ClientsTableProps {
   tableData: any;
@@ -166,11 +167,11 @@ const ClientsTable:React.FC<ClientsTableProps> = ({
       <table className='is-all-clients-table' {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup,idx) => (
-          <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
+          <tr {...headerGroup.getHeaderGroupProps()} key={uuidv4()}>
             {headerGroup.headers.map((column, idx) => (
               <th 
                 {...column.getHeaderProps( !isHomePreviewTable ? column.getSortByToggleProps() : undefined)} 
-                key={column.id}
+                key={uuidv4()}
                 className={
                   column.isSorted
                     ? column.isSortedDesc
@@ -200,11 +201,11 @@ const ClientsTable:React.FC<ClientsTableProps> = ({
           {rows.map((row,idx) => {
             prepareRow(row)
             return (
-              <tr {...row.getRowProps()} key={row.id}>
+              <tr {...row.getRowProps()} key={uuidv4()}>
                 {row.cells.map((cell, idx) => (
                   <td
                     {...cell.getCellProps()}
-                    key={cell.row.id}
+                    key={uuidv4()}
                   >
                     {cell.render('Cell')}
                   </td>

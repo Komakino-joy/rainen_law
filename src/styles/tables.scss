@@ -49,11 +49,20 @@ table{
     th {
       background-color: rgba(17, 39, 109, 0.822);
       border: 1px solid rgba(14, 42, 117, 0.692);
+      padding: 10px 5px;
     }
 
     td {
       padding: 0px 3px;
       border: 1px solid lightgrey;
+    }
+
+    .desc {
+      border-bottom: 5px solid #ffa500;
+    }
+  
+    .asc {
+      border-top: 5px solid rgb(15, 202, 87);
     }
   }
 

@@ -25,4 +25,20 @@
       filter: brightness(80%);
     }
   }
+
+  .home {
+    font-size: 17px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    letter-spacing: .5px;
+    cursor: pointer;
+    line-height: 30px;
+
+    &.selected {
+      color: #0056f7;
+      font-weight: 600;
+      text-decoration: underline;
+    }
+  }
 }

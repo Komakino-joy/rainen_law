@@ -21,6 +21,7 @@ interface FormInput {
   selectOnChange?: any;
   validate?: any;
   autoComplete?: 'off' | 'new-password' | 'on' | null;
+  checked?:boolean;
 }
 
 const Required:React.FC = () => (
@@ -44,7 +45,8 @@ const FormInput:React.FC<FormInput> = ({
   disabled=false,
   selectOnChange,
   validate=null,
-  autoComplete
+  autoComplete,
+  checked
 }) => {
 
   return(
@@ -60,12 +62,21 @@ const FormInput:React.FC<FormInput> = ({
             defaultValue={defaultValue}
           /> 
           
-        : type === 'textarea' ? <textarea name={name} defaultValue={defaultValue} {...register(labelKey)}/>
+        : type === 'textarea' 
+        ? <textarea 
+            name={name} 
+            defaultValue={defaultValue} 
+            {...register(labelKey, { 
+              required: isRequired, 
+              validate: validate
+            })} 
+          />
         : <input 
             name={name}
-            type={type} 
+            type={type}
+            checked={checked} 
             min={min}
-            step={step}
+            step={step || 'any'}
             max={max}
             defaultValue={defaultValue}
             disabled={disabled}

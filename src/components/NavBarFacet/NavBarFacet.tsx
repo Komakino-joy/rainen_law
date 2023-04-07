@@ -18,7 +18,7 @@ const NavBarFacet:React.FC<NavBarFacetProps> = ({
 }) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false)
   const router = useRouter()
-  
+
   return (
     <div className={styles['nav-bar-facet']}>
       <span 

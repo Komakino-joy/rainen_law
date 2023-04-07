@@ -1,13 +1,14 @@
-import Link from 'next/link'
 import React from 'react'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
 import NavBarFacet from '../NavBarFacet/NavBarFacet'
 import links, { LinkType } from './links'
 import styles from './NavBar.module.scss'
 import { useAuth } from '@/context/AuthContext'
 
 const NavBar = () => {
-
   const { logout } = useAuth()
+  const router = useRouter()
 
   return (
     <div className={styles['nav-bar-wrapper']}>
@@ -17,9 +18,12 @@ const NavBar = () => {
       >
         Rainen Law
       </Link>
-      <NavBarFacet 
-        name='Home'
-      />
+      <Link 
+        href={'/'}
+        className={`${styles.home} ${router.pathname === '/' ? styles.selected : ''}`} 
+      >
+        Home
+      </Link>
       { Object.keys(links).map(key => (
           <NavBarFacet 
             key={key}

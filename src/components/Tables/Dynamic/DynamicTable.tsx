@@ -5,6 +5,7 @@ import { useMemo } from 'react';
 import { confirmAlert } from 'react-confirm-alert';
 import toast from 'react-hot-toast';
 import { useTable, useFilters } from 'react-table';
+import { v4 as uuidv4 } from 'uuid'
 
 interface DynamicTable {
   tableData: any[];
@@ -186,9 +187,9 @@ const SelectOptionsTable:React.FC<DynamicTable> = ({
     <table className={`is-sub-table ${tableClassName}`} {...getTableProps()}>
       <thead>
         {headerGroups.map((headerGroup,idx) => (
-        <tr {...headerGroup.getHeaderGroupProps()}  key={headerGroup.id}>
+        <tr {...headerGroup.getHeaderGroupProps()}  key={uuidv4()}>
           {headerGroup.headers.map((column, idx) => (
-            <th {...column.getHeaderProps()} key={column.id}>
+            <th {...column.getHeaderProps()} key={uuidv4()}>
               {column.render('Header')}
             </th>
           ))}
@@ -199,11 +200,11 @@ const SelectOptionsTable:React.FC<DynamicTable> = ({
         {rows.map((row,idx) => {
           prepareRow(row)
           return (
-            <tr {...row.getRowProps()} key={row.id}>
+            <tr {...row.getRowProps()} key={uuidv4()}>
               {row.cells.map((cell, idx) => (
                 <td
                   {...cell.getCellProps()}
-                  key={cell.row.id}
+                  key={uuidv4()}
                 >
                   {cell.render('Cell')}
                 </td>

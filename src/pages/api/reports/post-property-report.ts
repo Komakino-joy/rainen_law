@@ -28,12 +28,10 @@ export default async function handler(
               c.${dbRef.clients.c_name}, 
               p.${dbRef.properties.p_type}, 
               p.${dbRef.properties.p_assign}, 
-              p.${dbRef.properties.p_assign_2},
               p.${dbRef.properties.p_status}
             FROM ${dbRef.table_names.properties} p 
               LEFT JOIN ${dbRef.table_names.clients} c ON p.${dbRef.properties.p_number} = c.${dbRef.clients.c_number}
               LEFT JOIN ${dbRef.table_names.examiners} e1 ON p.${dbRef.properties.p_assign} = e1.${dbRef.examiners.code} 
-              LEFT JOIN ${dbRef.table_names.examiners} e2 ON p.${dbRef.properties.p_assign_2} = e2.${dbRef.examiners.code} 
               LEFT JOIN ${dbRef.table_names.city} ON p.${dbRef.properties.p_city} = city.${dbRef.city.city}
               LEFT JOIN ${dbRef.table_names.counties} cnt ON cnt.${dbRef.counties.code} = city.${dbRef.city.county}
             WHERE p.${dbRef.properties.p_input_date} BETWEEN DATE($1) AND DATE($2)

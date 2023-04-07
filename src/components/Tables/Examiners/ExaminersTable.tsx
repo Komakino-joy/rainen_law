@@ -3,6 +3,7 @@ import dbRef from '@/constants/dbRefs';
 import { Examiner, TableRefs } from '@/types/common';
 import { useMemo } from 'react';
 import { useTable, useFilters } from 'react-table';
+import { v4 as uuidv4 } from 'uuid'
 
 interface ExaminersTableProps {
   tableData: any[];
@@ -57,7 +58,7 @@ const ExaminersTable:React.FC<ExaminersTableProps> = ({
       },
       {
         Header: 'Is Active ?',
-        accessor: (d:Examiner) => d[dbRef.examiners.is_active as keyof Examiner] || 'N/A',
+        accessor: (d:Examiner) => d[dbRef.examiners.is_active as keyof Examiner].toString() || 'N/A',
       },
       {
         Header: 'View / Edit',
@@ -95,9 +96,9 @@ const ExaminersTable:React.FC<ExaminersTableProps> = ({
     <table className={`is-sub-table ${tableClassName}`} {...getTableProps()}>
       <thead>
         {headerGroups.map((headerGroup,idx) => (
-        <tr {...headerGroup.getHeaderGroupProps()}  key={headerGroup.id}>
+        <tr {...headerGroup.getHeaderGroupProps()}  key={uuidv4()}>
           {headerGroup.headers.map((column, idx) => (
-            <th {...column.getHeaderProps()} key={column.id}>
+            <th {...column.getHeaderProps()} key={uuidv4()}>
               {column.render('Header')}
             </th>
           ))}
@@ -108,11 +109,11 @@ const ExaminersTable:React.FC<ExaminersTableProps> = ({
         {rows.map((row,idx) => {
           prepareRow(row)
           return (
-            <tr {...row.getRowProps()} key={row.id}>
+            <tr {...row.getRowProps()} key={uuidv4()}>
               {row.cells.map((cell, idx) => (
                 <td
                   {...cell.getCellProps()}
-                  key={cell.row.id}
+                  key={uuidv4()}
                 >
                   {cell.render('Cell')}
                 </td>

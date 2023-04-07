@@ -55,7 +55,10 @@ const ClientForm:React.FC<EditClientFormProps> = ({
     handleSubmit, 
     reset,
     control,
-    formState: { errors, isDirty } 
+    formState: { 
+      errors, 
+      isDirty 
+    }, 
   } = useForm({
     defaultValues: async () => {
       if (clientId) {
