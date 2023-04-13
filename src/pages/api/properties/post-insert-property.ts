@@ -46,7 +46,7 @@ export default async function handler(
         await conn.query('BEGIN')
 
         // We need to get the Client Number from our DB since there is no reference to it in the properties table
-        const clientIDQuery = 'SELECT cm.c_number FROM ${dbRefs.table_names.clients} cm WHERE cm.c_name = ($1)'
+        const clientIDQuery = `SELECT cm.c_number FROM ${dbRef.table_names.clients} cm WHERE cm.c_name = ($1)`
         const clientIdResponse = await conn.query(clientIDQuery, [clientName])
 
         const addNewBuySellRecord = pgPromise.as.format(`

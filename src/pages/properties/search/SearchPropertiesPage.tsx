@@ -58,7 +58,7 @@ const SearchPropertiesPage = () => {
 
   const onSubmit = async (data:any) => {
     if(Object.keys(data).every(key => data[key] === '' || data[key] === undefined || data[key] === null)) {
-      alert('No search parameters were provided.')
+      toast.error('No search parameters were provided.')
     } else {
       setFetchingData(true)
       const properties = await httpPostSearchProperty({data})

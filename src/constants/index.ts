@@ -32,3 +32,5 @@ export const PROPERTY_STATUS_CODES_MAP = {
   C: 'Closed',
 }
 export type PropertyStatusCodeMapType = keyof typeof PROPERTY_STATUS_CODES_MAP
+
+export const CITY_HUB = '------------------ HUB ------------------'

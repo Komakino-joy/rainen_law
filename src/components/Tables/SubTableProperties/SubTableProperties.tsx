@@ -1,6 +1,6 @@
+/* eslint react/jsx-key: 0 */
 import { useEffect, useMemo, useState } from 'react';
 import { useTable, useFilters, useSortBy } from 'react-table';
-import { v4 as uuidv4 } from 'uuid'
 
 import { timestampToDate } from '@/utils';
 import { DownArrowIcon, PencilIcon, SortIcon, UpArrowIcon } from '@/components/Icons/Icons';
@@ -128,11 +128,11 @@ const SubTableProperties:React.FC<SubTablePropertiesProps> = ({
       <table className='is-sub-table' {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup,idx) => (
-          <tr {...headerGroup.getHeaderGroupProps()} key={uuidv4()}>
+          <tr {...headerGroup.getHeaderGroupProps()} >
             {headerGroup.headers.map((column, idx) => (
               <th 
                 {...column.getHeaderProps(column.getSortByToggleProps())} 
-                key={uuidv4()}
+                
                 className={
                   column.isSorted
                     ? column.isSortedDesc
@@ -161,11 +161,11 @@ const SubTableProperties:React.FC<SubTablePropertiesProps> = ({
           {rows.map((row,idx) => {
             prepareRow(row)
             return (
-              <tr {...row.getRowProps()} key={uuidv4()}>
+              <tr {...row.getRowProps()} >
                 {row.cells.map((cell, idx) => (
                   <td
                     {...cell.getCellProps()}
-                    key={uuidv4()}
+                    
                   >
                     {cell.render('Cell')}
                   </td>

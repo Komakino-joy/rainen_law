@@ -1,3 +1,4 @@
+'use client';
 import { Client, ModalType, Property } from '@/types/common';
 
 import React, { useEffect, useRef, useState } from 'react'

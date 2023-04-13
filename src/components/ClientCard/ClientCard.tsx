@@ -58,9 +58,10 @@ const ClientCard:React.FC<ClientCardProps> = ({
                           <span><b>Instructions:&nbsp;</b>{property.p_instructions}</span>
                         </section>
                         <section className='flex-y f-50'>
-                          <span><b>CompRef:&nbsp;</b>{property.p_comp_ref}</span>
-                          <span><b>Type:&nbsp;</b>{property.p_type}</span>
-                          <span><b>Status:&nbsp;</b>{property.p_status}</span>
+                          <span><b>CompRef:&nbsp;</b>{property.p_comp_ref || 'N/A'}</span>
+                          <span><b>File#:&nbsp;</b>{property.p_file || 'N/A'}</span>
+                          <span><b>Type:&nbsp;</b>{property.p_type || 'N/A'}</span>
+                          <span><b>Status:&nbsp;</b>{property.p_status || 'N/A'}</span>
                         </section>
                         <span title={`Edit ${address}`}>
                           <PencilIcon />

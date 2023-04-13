@@ -1,3 +1,4 @@
+import { CITY_HUB } from '@/constants'
 import dbRef from '@/constants/dbRefs'
 import { timestampToDate } from '@/utils'
 import type { NextApiRequest, NextApiResponse } from 'next'
@@ -26,7 +27,7 @@ export default async function handler(
         requestStartDate='',
         requestEndDate=''
       } = req.body
-
+ 
       if(inputStartDate !== '' && inputEndDate === '') {
         inputEndDate = timestampToDate(Date(), 'mmDDyyyy').date 
       }
@@ -47,22 +48,57 @@ export default async function handler(
         return `AND ${table}."${field}" BETWEEN DATE($${startParam}) AND DATE($${endParam})`
       }
 
-      const param = {
-        p_city: p_city !== '' ? andEqualsClause('p','p_city', '1') : '',
-        p_street: p_street !== '' ? andLikeClause('p','p_street', '2') : '',
-        p_lot: p_lot !== '' ? andLikeClause('p','p_lot', '3') : '',
-        p_condo: p_condo !== '' ? andLikeClause('p','p_condo', '4'): '',
-        p_instructions: p_instructions !== '' ? andLikeClause('p','p_instructions', '5') : '',
-        c_name: c_name !== '' ? andEqualsClause('c','c_name', '6') : '',
-        p_type: p_type !== '' ? andEqualsClause('p','p_type', '7') : '',
-        p_status: p_status !== '' ? andEqualsClause('p','p_status', '8'): '',
-        p_comp_ref: p_comp_ref !== '' ? andEqualsClause('p','p_comp_ref', '9'): '',
-        p_file: p_file !== '' ? andEqualsClause('p','p_file', '10'): '',
-        inputDateRange: inputStartDate !== '' && inputEndDate !== '' ? andBetweenClause('p','p_input_date', '11', '12'): '',
-        requestDateRange: requestStartDate !== '' && requestEndDate !== '' ? andBetweenClause('p','p_request_date', '13', '14'): '',
+      let p_city_param = '';
+      if(p_city !== '' && p_city === CITY_HUB) {
+        p_city_param = `AND LOWER(p_city) IN (
+          'allston',
+          'brighton',
+          'charlestown',
+          'dorchester',
+          'east boston',
+          'hyde park',
+          'jamaica plain',
+          'mattapan',
+          'roslindale',
+          'roxbury',
+          'south boston',
+          'west roxbury'
+        )`
+      } else if (p_city !== '') {
+        p_city_param = andEqualsClause('p', dbRef.properties.p_city, '1')
       }
 
+      const param = {
+        p_city: p_city_param,
+        p_street: p_street !== '' ? andLikeClause('p',dbRef.properties.p_street, '2') : '',
+        p_lot: p_lot !== '' ? andLikeClause('p',dbRef.properties.p_lot, '3') : '',
+        p_condo: p_condo !== '' ? andLikeClause('p',dbRef.properties.p_condo, '4'): '',
+        p_instructions: p_instructions !== '' ? andLikeClause('p',dbRef.properties.p_instructions, '5') : '',
+        c_number: '',
+        p_type: p_type !== '' ? andEqualsClause('p',dbRef.properties.p_type, '7') : '',
+        p_status: p_status !== '' ? andEqualsClause('p',dbRef.properties.p_status, '8'): '',
+        p_comp_ref: p_comp_ref !== '' ? andEqualsClause('p',dbRef.properties.p_comp_ref, '9'): '',
+        p_file: p_file !== '' ? andEqualsClause('p',dbRef.properties.p_file, '10'): '',
+        inputDateRange: inputStartDate !== '' && inputEndDate !== '' ? andBetweenClause('p',dbRef.properties.p_input_date, '11', '12'): '',
+        requestDateRange: requestStartDate !== '' && requestEndDate !== '' ? andBetweenClause('p',dbRef.properties.p_input_date, '13', '14'): '',
+      }
+      
       try {
+        
+        let c_number = ''
+        if (c_name) {
+          const clientNumberQuery = pgPromise.as.format(`
+            SELECT ${dbRef.clients.c_number} 
+            FROM ${dbRef.table_names.clients}
+            WHERE ${dbRef.clients.c_name} = $1 
+          `, [c_name])
+  
+          const clientNumberResult = (await conn.query(clientNumberQuery)).rows
+  
+          c_number = clientNumberResult[0].c_number
+          param.c_number = andEqualsClause('c','c_number', '6') 
+        }
+
         const propertiesQuery = pgPromise.as.format(`
           SELECT
             c.${dbRef.clients.c_name},  
@@ -101,7 +137,7 @@ export default async function handler(
             ${param.p_lot}
             ${param.p_condo}
             ${param.p_instructions}
-            ${param.c_name}
+            ${param.c_number}
             ${param.p_type}
             ${param.p_status}
             ${param.p_comp_ref}
@@ -109,15 +145,15 @@ export default async function handler(
             ${param.inputDateRange}
             ${param.requestDateRange}
           ORDER BY 
-            p.${dbRef.properties.p_street},
-            p.${dbRef.properties.p_lot}
+          p.${dbRef.properties.p_street},
+          split_part(p.${dbRef.properties.p_lot},'-',1)
         `,[
             p_city,
             p_street.toLowerCase(),
             p_lot.toLowerCase(),
             p_condo.toLowerCase(),
             p_instructions.toLowerCase(),
-            c_name,
+            c_number,
             p_type,
             p_status,
             p_comp_ref,
@@ -128,7 +164,7 @@ export default async function handler(
             requestEndDate
           ]
         )
-        
+
         const propertiesResults = (await conn.query(propertiesQuery)).rows
           res.status(200).json(propertiesResults)
       } catch ( error ) {

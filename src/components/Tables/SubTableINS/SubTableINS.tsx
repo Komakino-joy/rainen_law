@@ -1,10 +1,10 @@
+/* eslint react/jsx-key: 0 */
 import { DownArrowIcon, SortIcon, UpArrowIcon } from '@/components/Icons/Icons';
 import dbRef from '@/constants/dbRefs';
 import { httpPostInsTitlesInfo } from '@/services/http';
 import { INSTitle } from '@/types/common';
 import { useEffect, useMemo, useState } from 'react';
 import { useTable, useFilters, useSortBy } from 'react-table';
-import { v4 as uuidv4 } from 'uuid'
 
 interface SubTableINSProps {
   inmbr: string;
@@ -81,11 +81,11 @@ const SubTableINS:React.FC<SubTableINSProps> = ({
     <table className='is-sub-table' {...getTableProps()}>
       <thead>
         {headerGroups.map((headerGroup,idx) => (
-        <tr {...headerGroup.getHeaderGroupProps()} key={uuidv4()}>
+        <tr {...headerGroup.getHeaderGroupProps()} >
           {headerGroup.headers.map((column, idx) => (
             <th 
             {...column.getHeaderProps(column.getSortByToggleProps())} 
-              key={uuidv4()}
+              
               className={
                 column.isSorted
                   ? column.isSortedDesc
@@ -114,11 +114,11 @@ const SubTableINS:React.FC<SubTableINSProps> = ({
         {rows.map((row,idx) => {
           prepareRow(row)
           return (
-            <tr {...row.getRowProps()} key={uuidv4()}>
+            <tr {...row.getRowProps()} >
               {row.cells.map((cell, idx) => (
                 <td
                   {...cell.getCellProps()}
-                  key={uuidv4()}
+                  
                 >
                   {cell.render('Cell')}
                 </td>

@@ -1,3 +1,4 @@
+/* eslint react/jsx-key: 0 */
 import { DownArrowIcon, UpArrowIcon, SortIcon } from '@/components/Icons/Icons';
 import dbRef from '@/constants/dbRefs';
 import { httpPostBuyerSellerInfo } from '@/services/http';
@@ -5,7 +6,6 @@ import { BuyerSeller } from '@/types/common';
 
 import { useEffect, useMemo, useState } from 'react';
 import { useTable, useFilters } from 'react-table';
-import { v4 as uuidv4 } from 'uuid'
 
 interface SubTableSellerBuyerProps {
   compRef: string;
@@ -76,10 +76,10 @@ const SubTableSellerBuyer:React.FC<SubTableSellerBuyerProps> = ({compRef}) => {
     <table className='is-sub-table' {...getTableProps()}>
       <thead>
         {headerGroups.map((headerGroup,idx) => (
-        <tr {...headerGroup.getHeaderGroupProps()} key={uuidv4()}>
+        <tr {...headerGroup.getHeaderGroupProps()}>
           {headerGroup.headers.map((column, idx) => (
 
-            <th {...column.getHeaderProps()} key={uuidv4()}>
+            <th {...column.getHeaderProps()}>
               <span>
                 {column.render('Header')}
                 {column.Header === 'Print' 
@@ -100,11 +100,11 @@ const SubTableSellerBuyer:React.FC<SubTableSellerBuyerProps> = ({compRef}) => {
         {rows.map((row,idx) => {
           prepareRow(row)
           return (
-            <tr{...row.getRowProps()} key={uuidv4()}>
+            <tr{...row.getRowProps()}>
               {row.cells.map((cell, idx) => (
                 <td
                   {...cell.getCellProps()}
-                  key={uuidv4()}
+                
                 >
                   {cell.render('Cell')}
                 </td>

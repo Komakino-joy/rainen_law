@@ -1,3 +1,4 @@
+'use client';
 import React, { useRef, useState } from 'react'
 import { useForm } from "react-hook-form";
 import FormInput from '@/components/Forms/Common/FormInput/FormInput';

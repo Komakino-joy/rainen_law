@@ -52,7 +52,7 @@ const SearchClientsPage = () => {
 
   const onSubmit = async (data:any) => {
     if(Object.keys(data).every(key => data[key] === '' || data[key] === undefined || data[key] === null)) {
-      alert('No search parameters were provided.')
+      toast.error('No search parameters were provided.')
     } else {
       setFetchingData(true)
       const searchResults = await httpPostSearchClient({data})

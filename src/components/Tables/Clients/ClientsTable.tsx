@@ -1,8 +1,8 @@
+/* eslint react/jsx-key: 0 */
 import { Client, ModalType } from '@/types/common'
 
 import { useMemo, useState } from 'react'
 import { useTable, useFilters, useSortBy } from 'react-table'
-import { v4 as uuidv4 } from 'uuid'
 
 import { DownArrowIcon, PencilIcon, SortIcon, UpArrowIcon } from '@/components/Icons/Icons'
 import styles from './ClientsTable.module.scss'
@@ -167,11 +167,11 @@ const ClientsTable:React.FC<ClientsTableProps> = ({
       <table className='is-all-clients-table' {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup,idx) => (
-          <tr {...headerGroup.getHeaderGroupProps()} key={uuidv4()}>
+          <tr {...headerGroup.getHeaderGroupProps()} >
             {headerGroup.headers.map((column, idx) => (
               <th 
                 {...column.getHeaderProps( !isHomePreviewTable ? column.getSortByToggleProps() : undefined)} 
-                key={uuidv4()}
+                
                 className={
                   column.isSorted
                     ? column.isSortedDesc
@@ -201,11 +201,11 @@ const ClientsTable:React.FC<ClientsTableProps> = ({
           {rows.map((row,idx) => {
             prepareRow(row)
             return (
-              <tr {...row.getRowProps()} key={uuidv4()}>
+              <tr {...row.getRowProps()} >
                 {row.cells.map((cell, idx) => (
                   <td
                     {...cell.getCellProps()}
-                    key={uuidv4()}
+                    
                   >
                     {cell.render('Cell')}
                   </td>

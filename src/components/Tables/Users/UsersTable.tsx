@@ -1,3 +1,4 @@
+/* eslint react/jsx-key: 0 */
 import { PencilIcon, TrashIcon } from '@/components/Icons/Icons';
 import dbRef from '@/constants/dbRefs';
 import { httpPostDeleteUser } from '@/services/http';
@@ -6,7 +7,6 @@ import { useMemo } from 'react';
 import { confirmAlert } from 'react-confirm-alert';
 import toast from 'react-hot-toast';
 import { useTable, useFilters } from 'react-table';
-import { v4 as uuidv4 } from 'uuid'
 
 interface UsersTableProps {
   tableData: any[];
@@ -138,9 +138,9 @@ const UsersTable:React.FC<UsersTableProps> = ({
     <table className={`is-sub-table ${tableClassName}`} {...getTableProps()}>
       <thead>
         {headerGroups.map((headerGroup,idx) => (
-        <tr {...headerGroup.getHeaderGroupProps()} key={uuidv4()}>
+        <tr {...headerGroup.getHeaderGroupProps()}>
           {headerGroup.headers.map((column, idx) => (
-            <th {...column.getHeaderProps()} key={uuidv4()}>
+            <th {...column.getHeaderProps()}>
               {column.render('Header')}
             </th>
           ))}
@@ -151,11 +151,11 @@ const UsersTable:React.FC<UsersTableProps> = ({
         {rows.map((row,idx) => {
           prepareRow(row)
           return (
-            <tr {...row.getRowProps()} key={uuidv4()}>
+            <tr {...row.getRowProps()}>
               {row.cells.map((cell, idx) => (
                 <td
                   {...cell.getCellProps()}
-                  key={uuidv4()}
+                
                 >
                   {cell.render('Cell')}
                 </td>

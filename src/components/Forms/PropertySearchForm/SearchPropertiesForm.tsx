@@ -12,6 +12,8 @@ import { useClientsContext } from "@/context/Clients";
 import { usePropertiesContext } from "@/context/Properties";
 
 import FormInput from "../Common/FormInput/FormInput";
+import styles from './SearchPropertiesForm.module.scss'
+import { CITY_HUB } from "@/constants";
 
 interface SearchPropertiesFormProps {
   onSubmit: any;
@@ -211,7 +213,7 @@ const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
                     type="select" 
                     customClass="f-100"
                     selectOnChange={onChange}
-                    options={propertiesSelectOptions.p_city}
+                    options={[{label: CITY_HUB, value: CITY_HUB}, ...propertiesSelectOptions.p_city]}
                     isRequired={false}
                     register={register} 
                     errors={errors}
@@ -233,6 +235,9 @@ const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
             errors={errors}
           />
 
+        </section>
+
+        <section className="flex-x gap-sm">
           <FormInput 
             name={dbRef.properties.p_condo}
             labelKey={dbRef.properties.p_condo}
@@ -248,23 +253,24 @@ const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
             name={dbRef.properties.p_lot}
             labelKey={dbRef.properties.p_lot}
             labelText="Lot"
-            customClass='f-25'
+            customClass='f-50'
             type="text" 
             isRequired={false}
             register={register} 
             errors={errors}
           />
-        </section>
 
-        <FormInput 
-          name={dbRef.properties.p_instructions}
-          labelKey={dbRef.properties.p_instructions}
-          labelText="Instructions"
-          type="text" 
-          isRequired={false}
-          register={register} 
-          errors={errors}
-        />
+          <FormInput 
+            name={dbRef.properties.p_instructions}
+            labelKey={dbRef.properties.p_instructions}
+            labelText="Instructions"
+            type="text" 
+            customClass='f-100'
+            isRequired={false}
+            register={register} 
+            errors={errors}
+          />
+        </section>
 
         <section className='flex-x submit-button-section'>
           <Button 

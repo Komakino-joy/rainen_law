@@ -1,3 +1,5 @@
+'use client';
+
 import LoginForm from '@/components/Forms/LoginForm/LoginForm'
 import React from 'react'
 import styles from './Auth.module.scss'

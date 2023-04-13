@@ -35,7 +35,7 @@ export default async function handler(
               LEFT JOIN ${dbRef.table_names.city} ON p.${dbRef.properties.p_city} = city.${dbRef.city.city}
               LEFT JOIN ${dbRef.table_names.counties} cnt ON cnt.${dbRef.counties.code} = city.${dbRef.city.county}
             WHERE p.${dbRef.properties.p_input_date} BETWEEN DATE($1) AND DATE($2)
-            AND p.${dbRef.properties.p_status} != 'C';
+            AND LOWER(p.${dbRef.properties.p_status}) != 'closed';
         `,[startDate, endDate]
         )
         

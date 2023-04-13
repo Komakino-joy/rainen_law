@@ -1,8 +1,8 @@
+/* eslint react/jsx-key: 0 */
 import { ModalType, Property } from '@/types/common';
 
 import { useMemo, useState } from 'react';
 import { useTable, useFilters, useSortBy } from 'react-table';
-import { v4 as uuidv4 } from 'uuid'
 
 import { DownArrowIcon, PencilIcon, SortIcon, UpArrowIcon } from '@/components/Icons/Icons';
 import { timestampToDate } from '@/utils';
@@ -64,8 +64,8 @@ const PropertiesTable:React.FC<PropertiesTableProps> = ({
             name={`property-${value.id}`}
             type='checkbox'
             onClick={(e) => {
-              const ischecked = (e.target as HTMLInputElement).checked
-              if(ischecked) {
+              const isChecked = (e.target as HTMLInputElement).checked
+              if(isChecked) {
                 setLabelsToPrint((prevState) => {
                   const updatedArray = [...prevState, value]
                   return updatedArray
@@ -95,7 +95,7 @@ const PropertiesTable:React.FC<PropertiesTableProps> = ({
         )
       }
     ],
-    [handleModalOpen]
+    [tableData]
   )
   
   // Define a default UI for filtering
@@ -145,12 +145,10 @@ const PropertiesTable:React.FC<PropertiesTableProps> = ({
           {headerGroups.map((headerGroup,idx) => (
           <tr 
             {...headerGroup.getHeaderGroupProps()} 
-            key={uuidv4()}
           >
             {headerGroup.headers.map((column, idx) => (
               <th 
                 {...column.getHeaderProps(!isHomePreviewTable ? column.getSortByToggleProps() : undefined)} 
-                key={uuidv4()}
                 className={
                   column.isSorted
                     ? column.isSortedDesc
@@ -180,12 +178,9 @@ const PropertiesTable:React.FC<PropertiesTableProps> = ({
           {rows.map((row,idx) => {
             prepareRow(row)
             return (
-              <tr {...row.getRowProps()} key={uuidv4()}>
+              <tr {...row.getRowProps()}>
                 {row.cells.map((cell, idx) => (
-                  <td
-                    {...cell.getCellProps()}
-                    key={uuidv4()}
-                  >
+                  <td {...cell.getCellProps()}>
                     {cell.render('Cell')}
                   </td>
                 ))}

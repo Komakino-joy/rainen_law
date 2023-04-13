@@ -1,7 +1,8 @@
+import React, { useRef } from 'react'
+import { v4 as uuidv4 } from 'uuid'
+import { useReactToPrint } from 'react-to-print';
 import { Property } from '@/types/common';
 import { hasValue, timestampToDate } from '@/utils';
-import React, { useRef } from 'react'
-import { useReactToPrint } from 'react-to-print';
 import Button from '../Button/Button'
 import { PrinterIcon } from '../Icons/Icons';
 
@@ -24,7 +25,7 @@ const PrintPropertyMultiple = ({
 
   const getPageMargins = () => {
     return `@page { 
-      margin: 30px 0 30px 20px !important; 
+      margin: 23px 20px 30px 20px !important; 
     }`;
   };
 
@@ -46,7 +47,7 @@ const PrintPropertyMultiple = ({
 
       <div className={`${styles['label-container']}`}>
         <style>{getPageMargins()}</style>
-        <div ref={componentRef}>
+        <div ref={componentRef} style={{display: 'flex', flexWrap: 'wrap'}}>
             { properties.map(property => {
               const {
                 p_type, 
@@ -78,17 +79,19 @@ const PrintPropertyMultiple = ({
 
               return (
                 <div 
-                  key={p_comp_ref} 
+                  key={uuidv4()} 
                   style={{
-                    fontSize: '10px',
-                    height: '99.5px',
+                    fontSize: '16px',
+                    height: '200px',
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'center',
                     fontFamily: `'Times New Roman','Courier New', Courier, monospace`, 
+                    width: '50%',
+                    paddingLeft: '10px'
                   }}
                 >
-                  <p> { formatp_request_date}&nbsp;{'('}<b>{p_type}</b>{') '}<span style={{fontSize: '12px'}}>{'(Input '}{formatp_input_date}{') '}</span>{'CR#'}{p_comp_ref || ''}</p>
+                  <p> {formatp_request_date}&nbsp;{'('}<b>{p_type}</b>{') '}<span style={{fontSize: '14px'}}>{'(Input '}{formatp_input_date}{') '}</span>{'CR#'}{p_comp_ref || ''}</p>
                   <p> {`${formatp_unit} ${p_condo || ''}`} </p>
                   <p> {`B:${p_book_1 || ''} P:${p_page_1 || ''} B:${p_book_2 || ''} P:${p_page_2 || ''} C:${p_cert_1 || ''}`} </p>
                   <p> {`S:${seller_1 || ''} S:${seller_2 || ''}`} </p>

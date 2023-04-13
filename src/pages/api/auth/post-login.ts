@@ -22,7 +22,16 @@ export default async function handler(
           `
         const queryResults = await conn.query(selectQuery, [username.toLowerCase()])
 
-        const hash = queryResults.rows[0][dbRef.users.password]
+        let hash
+
+        if(queryResults?.rows[0]?.password) {
+          hash = queryResults.rows[0][dbRef.users.password]
+        } else {
+          res.status(200).json({
+            message: 'Username does not exist',
+            status: 'error'
+          })
+        }
        
         bcrypt.compare(password, hash, function(err, result) {
           if(err) {

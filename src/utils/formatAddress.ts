@@ -10,11 +10,12 @@ const formatAddress = ({
   lot:string;
 } ) => {
 
-  const address = [street]
+  const address = []
 
+  if(lot) address.push(`${lot}`) 
+  address.push(street)
   if(condo) address.push(condo) 
   if(unit) address.push(`Unit ${unit}`) 
-  if(lot) address.push(`Lot ${lot}`) 
 
   return address.join(', ')
 }
