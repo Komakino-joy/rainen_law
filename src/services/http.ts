@@ -2,31 +2,29 @@ import {Client, Examiner, INSTitle, Property} from '../types/common'
 import axios from "axios"
 import toast from "react-hot-toast"
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL
-
 // ---------------- Property http requests
 export const httpGetLatestUpdatedProperties = async() => {
-  const response = await axios.get(`${BASE_URL}/api/properties/get-latest-updated-properties`) 
+  const response = await axios.get(`/api/properties/get-latest-updated-properties`) 
   return response.data
 }
 
 export const httpGetDistinctPropertyTypeOptions = async() => {
-  const response = await axios.get(`${BASE_URL}/api/properties/get-distinct-type-options`)
+  const response = await axios.get(`/api/properties/get-distinct-type-options`)
   return response.data
 }
 
 export const httpGetDistinctPropertyStatusOptions = async() => {
-  const response = await axios.get(`${BASE_URL}/api/properties/get-distinct-status-options`)
+  const response = await axios.get(`/api/properties/get-distinct-status-options`)
   return response.data
 }
 
 export const httpGetDistinctPropertyAssignOptions = async() => {
-  const response = await axios.get(`${BASE_URL}/api/properties/get-distinct-assign-options`)
+  const response = await axios.get(`/api/properties/get-distinct-assign-options`)
   return response.data
 }
 
 export const httpGetPropertyCompRef = async() => {
-  const response = await axios.get(`${BASE_URL}/api/properties/get-new-comp-ref`)
+  const response = await axios.get(`/api/properties/get-new-comp-ref`)
   return response.data.newCompRef
 }
 
@@ -54,33 +52,33 @@ export const httpPostUpdateProperty = async({id, username, data}: {id: string, u
 }
 
 export const httpPostSearchProperty = async({data}:{data:{}}) => {
-  const response = await axios.post(`${BASE_URL}/api/properties/post-search-property`, data)
+  const response = await axios.post(`/api/properties/post-search-property`, data)
   return response.data
 }
 
 export const httpPostDeleteProperty = async({id}:{id:string}) => {
-  const response = await axios.post(`${BASE_URL}/api/properties/post-delete-property`, {id})
+  const response = await axios.post(`/api/properties/post-delete-property`, {id})
   return response
 }
 
 // ---------------- Client http requests
 export const httpGetAllClients = async() => {
-  const response = await axios.get(`${BASE_URL}/api/clients/get-all-clients`)
+  const response = await axios.get(`/api/clients/get-all-clients`)
   return response.data
 }
 
 export const httpGetLatestUpdatedClients = async() => {
-  const response = await axios.get(`${BASE_URL}/api/clients/get-latest-updated-clients`)
+  const response = await axios.get(`/api/clients/get-latest-updated-clients`)
   return response.data
 }
 
 export const httpPostSelectedClient = async({id}: {id: string}) => {
-  const response = await axios.post(`${BASE_URL}/api/clients/post-selected-client`, {clientId: id})
+  const response = await axios.post(`/api/clients/post-selected-client`, {clientId: id})
   return response.data[0]
 }
 
 export const httpPostInsertClient = async({username, data}: {username: string, data: Client}) => {
-  const response = await axios.post(`${BASE_URL}/api/clients/post-insert-client`, {
+  const response = await axios.post(`/api/clients/post-insert-client`, {
     ...data,
     created_by: username,
     last_updated_by: username,
@@ -91,7 +89,7 @@ export const httpPostInsertClient = async({username, data}: {username: string, d
 }
 
 export const httpPostUpdateClient = async({id, username, data}: {id: string, username: string, data: Client}) => {
-  const response = await axios.post(`${BASE_URL}/api/clients/post-update-client`, {
+  const response = await axios.post(`/api/clients/post-update-client`, {
     ...data,
     id, // Passing id to update correct record
     last_updated_by: username,
@@ -102,31 +100,31 @@ export const httpPostUpdateClient = async({id, username, data}: {id: string, use
 }
 
 export const httpPostDeleteClient = async({id}:{id:string}) => {
-  const response = await axios.post(`${BASE_URL}/api/clients/post-delete-client`, {id})
+  const response = await axios.post(`/api/clients/post-delete-client`, {id})
   return response
 }
 
 
 // ---------------- Examiner http requests
 export const httpGetExaminers = async() => {
-  const response = await axios.get(`${BASE_URL}/api/examiners/get-examiners`)
+  const response = await axios.get(`/api/examiners/get-examiners`)
   return response.data
 }
 
 export const httpPostSelectedExaminer = async({id}: {id:string;}) => {
-  const response = await axios.post(`${BASE_URL}/api/examiners/post-selected-examiner`, { id })
+  const response = await axios.post(`/api/examiners/post-selected-examiner`, { id })
   return response.data[0]
 }
 
 export const httpPostInsertExaminer = async({data}:{data:Examiner;}) => {
-  const response = await axios.post(`${BASE_URL}/api/examiners/post-insert-examiner`, data)
+  const response = await axios.post(`/api/examiners/post-insert-examiner`, data)
   // @ts-ignore
   toast[response.data.status](response.data.message)
   return response.data.newRecord
 }
 
 export const httpPostUpdateExaminer = async({id, data}: {id:string; data: Examiner;}) => {
-  const response = await axios.post(`${BASE_URL}/api/examiners/post-update-examiner`, {...data, id})
+  const response = await axios.post(`/api/examiners/post-update-examiner`, {...data, id})
   // @ts-ignore
   toast[response.data.status](response.data.message)
   return response.data.updatedRecord
@@ -135,24 +133,24 @@ export const httpPostUpdateExaminer = async({id, data}: {id:string; data: Examin
 
 // ---------------- County http requests
 export const httpGetCounties = async() => {
-  const response = await axios.get(`${BASE_URL}/api/counties/get-counties`)
+  const response = await axios.get(`/api/counties/get-counties`)
   return response.data
 }
 
 
 // ---------------- InsTitle http requests
 export const httpGetAllInsTitles = async() => {
-  const response = await axios.get(`${BASE_URL}/api/titles/get-all-ins-titles`)
+  const response = await axios.get(`/api/titles/get-all-ins-titles`)
   return response.data
 }
 
 export const httpPostSelectedInsTitle = async({id}: {id:string;}) => {
-  const response = await axios.post(`${BASE_URL}/api/titles/post-selected-ins-title`, {insTitleId: id})
+  const response = await axios.post(`/api/titles/post-selected-ins-title`, {insTitleId: id})
   return response.data[0]
 }
 
 export const httpPostInsertInsTitle = async({username, data}: {username: string, data: INSTitle}) => {
-  const response = await axios.post(`${BASE_URL}/api/titles/post-insert-ins-title`, {
+  const response = await axios.post(`/api/titles/post-insert-ins-title`, {
     ...data,
     created_by: username,
     last_updated_by: username,
@@ -175,28 +173,28 @@ export const httpPostUpdateInsTitle = async({id, username, data}: {id: string, u
 
 
 export const httpGetDistinctCityOptions = async() => {
-  const response = await axios.get(`${BASE_URL}/api/properties/get-distinct-city-options`)
+  const response = await axios.get(`/api/properties/get-distinct-city-options`)
   return response.data
 }
 
 
 export const httpGetSelectDropDownOptions = async() => {
-  const response = await axios.get(`${BASE_URL}/api/management/get-select-drop-down-options`)
+  const response = await axios.get(`/api/management/get-select-drop-down-options`)
   return response.data
 }
 
 export const httpGetUsers = async() => {
-  const response = await axios.get(`${BASE_URL}/api/users/get-users`) 
+  const response = await axios.get(`/api/users/get-users`) 
   return response.data
 }
 
 export const httpGetLatestUpdatedInsTitles = async() => {
-  const response = await axios.get(`${BASE_URL}/api/titles/get-latest-updated-ins-titles`)
+  const response = await axios.get(`/api/titles/get-latest-updated-ins-titles`)
   return response.data
 }
 
 export const httpPostSelectedDropDownOptions = async({id, selectionType}:{id:string; selectionType: string}) => {
-  const response = await axios.post(`${BASE_URL}/api/management/post-selected-drop-down-options`, {
+  const response = await axios.post(`/api/management/post-selected-drop-down-options`, {
     id,
     selectionType
   })
@@ -204,7 +202,7 @@ export const httpPostSelectedDropDownOptions = async({id, selectionType}:{id:str
 }
 
 export const httpPostInsertDropDownOptions = async({data, selectionType}:{data:{}; selectionType: string}) => {
-  const response = await axios.post(`${BASE_URL}/api/management/post-insert-select-drop-down-options`, {
+  const response = await axios.post(`/api/management/post-insert-select-drop-down-options`, {
     ...data,
     selectionType, 
   })
@@ -214,7 +212,7 @@ export const httpPostInsertDropDownOptions = async({data, selectionType}:{data:{
 }
 
 export const httpPostUpdateSelectDropDownOptions = async({data, id, selectionType}:{data:{}; id:string; selectionType: string}) => {
-  const response = await axios.post(`${BASE_URL}/api/management/post-update-select-drop-down-options`, {
+  const response = await axios.post(`/api/management/post-update-select-drop-down-options`, {
     ...data,
     id, 
     selectionType,
@@ -244,26 +242,26 @@ export const httpPostUpdateUser = async({data, id}:{data:{}; id:string;}) => {
 }
 
 export const httpPostDeleteSelectDropDownOptions = async({id, selectionType}:{id:string; selectionType:string;}) => {
-  const response = await axios.post(`${BASE_URL}/api/management/post-delete-select-drop-down-options`, 
+  const response = await axios.post(`/api/management/post-delete-select-drop-down-options`, 
     {id, selectionType}
   )
   return response
 }
 
 export const httpPostDeleteExaminer = async({id, selectionType}:{id:string; selectionType:string;}) => {
-  const response = await axios.post(`${BASE_URL}/api/examiners/post-delete-examiner`, 
+  const response = await axios.post(`/api/examiners/post-delete-examiner`, 
     {id, selectionType}
   )
   return response
 }
 
 export const httpPostDeleteInsTitle = async({id}:{id:string}) => {
-  const response = await axios.post(`${BASE_URL}/api/titles/post-delete-ins-title`, {insTitleId: id})
+  const response = await axios.post(`/api/titles/post-delete-ins-title`, {insTitleId: id})
   return response
 }
 
 export const httpPostInsTitlesInfo = async({inmbr}:{inmbr:string}) => {
-  const response = await axios.post(`${BASE_URL}/api/titles/post-ins-titles-info`, {inmbr} )
+  const response = await axios.post(`/api/titles/post-ins-titles-info`, {inmbr} )
   return {
     titles: response.data.titles,
     count: response.data.count
@@ -271,33 +269,33 @@ export const httpPostInsTitlesInfo = async({inmbr}:{inmbr:string}) => {
 }
 
 export const httpPostPropertiesInfo = async({cnmbr}:{cnmbr:string}) => {
-  const response = await axios.post(`${BASE_URL}/api/clients/post-properties-info`, {c_number: cnmbr} )
+  const response = await axios.post(`/api/clients/post-properties-info`, {c_number: cnmbr} )
   return response.data
 }
 
 export const httpPostBuyerSellerInfo = async({compRef}:{compRef:string}) => {
-  const response = await axios.post(`${BASE_URL}/api/buyerseller/post-buyer-seller-info`, {p_comp_ref: compRef} )
+  const response = await axios.post(`/api/buyerseller/post-buyer-seller-info`, {p_comp_ref: compRef} )
   return response.data
 }
 
 export const httpPostDeleteUser = async({id, selectionType}:{id:string; selectionType:string;}) => {
-  const response = await axios.post(`${BASE_URL}/api/users/post-delete-user`, 
+  const response = await axios.post(`/api/users/post-delete-user`, 
    {id, selectionType}
   )
   return response
 }
 
 export const httpPostLogin = async({data}:{data:{}}) => {
-  const response = await axios.post(`${BASE_URL}/api/auth/post-login`,{...data})
+  const response = await axios.post(`/api/auth/post-login`,{...data})
   return response
 }
 
 export const httpPostSearchClient = async({data}:{data:{}}) => {
-  const response = await axios.post(`${BASE_URL}/api/clients/post-search-client`, data)
+  const response = await axios.post(`/api/clients/post-search-client`, data)
   return response.data
 }
 
 export const httpPostPropertyReport = async({data}:{data:{}}) => {
-  const response = await axios.post(`${BASE_URL}/api/reports/post-property-report`, data)
+  const response = await axios.post(`/api/reports/post-property-report`, data)
   return response
 }
