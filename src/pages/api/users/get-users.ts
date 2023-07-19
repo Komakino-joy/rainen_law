@@ -15,7 +15,9 @@ export default async function handler(
             ${dbRef.users.l_name} , 
             ${dbRef.users.username} , 
             ${dbRef.users.password}  
-          FROM ${dbRef.table_names.users};
+          FROM ${dbRef.table_names.users}
+          WHERE ${dbRef.users.username} != 'admin'
+          ;
         `
         const result = await conn.query(selectQuery)
   
