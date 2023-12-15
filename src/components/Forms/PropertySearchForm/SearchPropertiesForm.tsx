@@ -1,10 +1,7 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
 
-import { 
-  useForm, 
-  Controller 
-} from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 
 import dbRef from "@/constants/dbRefs";
 import Button from "@/components/Button/Button";
@@ -12,294 +9,283 @@ import { useClientsContext } from "@/context/Clients";
 import { usePropertiesContext } from "@/context/Properties";
 
 import FormInput from "../Common/FormInput/FormInput";
-import styles from './SearchPropertiesForm.module.scss'
 import { CITY_HUB } from "@/constants";
+import toast from "react-hot-toast";
 
-interface SearchPropertiesFormProps {
-  onSubmit: any;
-}
+const SearchPropertiesForm = () => {
+  const router = useRouter();
 
-const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
-  onSubmit
-}) => {
-  const router = useRouter()
+  const { propertiesSelectOptions } = usePropertiesContext();
+  const { clientSelectOptions } = useClientsContext();
 
-  const { propertiesSelectOptions} = usePropertiesContext()
-  const { clientSelectOptions } = useClientsContext()
+  const [clearSelectInputBoxes, setClearSelectInputBoxes] = useState(false);
 
-  const [clearSelectInputBoxes, setClearSelectInputBoxes] = useState(false)
-
-  const { 
-    register, 
+  const {
+    register,
     getValues,
     reset,
     control,
-    formState: { errors, dirtyFields }
+    formState: { errors, dirtyFields },
   } = useForm();
 
-  const isDirtyAlt = !!Object.keys(dirtyFields).length === false
+  const isDirtyAlt = !!Object.keys(dirtyFields).length === false;
 
-  const handleViewAllClick = (e:any) => {
-    e.preventDefault()
-    router.push('/properties/1')
-  }
+  const onSubmit = async (data: any) => {
+    if (Object.values(data).every((v) => v === "" || !v)) {
+      toast.error("No search parameters were provided.");
+    } else {
+      document.cookie = `last-properties-search-filters=${encodeURIComponent(
+        JSON.stringify(data)
+      )}; path=/`;
+
+      router.push("/properties/1");
+    }
+  };
 
   return (
-    <div className='form-wrapper search-form'>
-        <header>
-          <span>Search For Properties</span>
-        </header>
+    <div className="form-wrapper search-form">
+      <header>
+        <span>Search For Properties</span>
+      </header>
       <form className="flex-y">
         <section className="flex-x gap-sm">
-          <FormInput 
+          <FormInput
             name={dbRef.properties.p_comp_ref}
             labelKey={dbRef.properties.p_comp_ref}
             labelText="CompRef"
-            type="text" 
+            type="text"
             isRequired={true}
-            register={register} 
+            register={register}
             errors={errors}
           />
-          <FormInput 
+          <FormInput
             name={dbRef.properties.p_file}
             labelKey={dbRef.properties.p_file}
             labelText="FileNumber"
-            type="text" 
+            type="text"
             isRequired={true}
-            register={register} 
+            register={register}
             errors={errors}
           />
-          <FormInput 
+          <FormInput
             name="inputStartDate"
             labelKey="inputStartDate"
             labelText="Input Start Date"
             type="date"
             isRequired={true}
-            register={register} 
+            register={register}
             errors={errors}
           />
 
-          <FormInput 
+          <FormInput
             name="inputEndDate"
             labelKey="inputEndDate"
             labelText="Input End Date"
             type="date"
             isRequired={true}
-            register={register} 
+            register={register}
             errors={errors}
           />
-          
-          <FormInput 
+
+          <FormInput
             name="requestStartDate"
             labelKey="requestStartDate"
             labelText="Request Start Date"
             type="date"
             isRequired={true}
-            register={register} 
+            register={register}
             errors={errors}
           />
 
-          <FormInput 
+          <FormInput
             name="requestEndDate"
             labelKey="requestEndDate"
             labelText="Request End Date"
             type="date"
             isRequired={true}
-            register={register} 
+            register={register}
             errors={errors}
           />
         </section>
         <section className="flex-x gap-sm">
-          { clientSelectOptions.c_name && clientSelectOptions.c_name.length > 0 &&
-            <Controller 
-              name={dbRef.clients.c_name} 
-              control={control} 
-              defaultValue={''}
-              render={({
-                field: { onChange},
-              }) => {
-                return (
-                  <FormInput 
-                    key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
-                    name={dbRef.clients.c_name} 
-                    labelKey={dbRef.clients.c_name} 
-                    labelText="Client"
-                    type="select" 
-                    customClass="f-100"
-                    selectOnChange={onChange}
-                    options={clientSelectOptions.c_name}
-                    isRequired={false}
-                    register={register} 
-                    errors={errors}
-                    defaultValue={''}
-                  />
-                ) 
-              }}
-            />
-          }
+          {clientSelectOptions.c_name &&
+            clientSelectOptions.c_name.length > 0 && (
+              <Controller
+                name={dbRef.clients.c_name}
+                control={control}
+                defaultValue={""}
+                render={({ field: { onChange } }) => {
+                  return (
+                    <FormInput
+                      key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
+                      name={dbRef.clients.c_name}
+                      labelKey={dbRef.clients.c_name}
+                      labelText="Client"
+                      type="select"
+                      customClass="f-100"
+                      selectOnChange={onChange}
+                      options={clientSelectOptions.c_name}
+                      isRequired={false}
+                      register={register}
+                      errors={errors}
+                      defaultValue={""}
+                    />
+                  );
+                }}
+              />
+            )}
 
-          { propertiesSelectOptions.p_type && propertiesSelectOptions.p_type.length > 0 &&
-            <Controller 
-              name={dbRef.properties.p_type}  
-              control={control} 
-              defaultValue={''}
-              render={({
-                field: { onChange},
-              }) => {
-                return (
-                  <FormInput 
-                    key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
-                    name={dbRef.properties.p_type}  
-                    labelKey={dbRef.properties.p_type}  
-                    labelText="Type"
-                    type="select" 
-                    customClass="f-25"
-                    selectOnChange={onChange}
-                    options={propertiesSelectOptions.p_type}
-                    isRequired={false}
-                    register={register} 
-                    errors={errors}
-                    defaultValue={''}
-                  />
-                ) 
-              }}
-            />
-          }
-          
-          { propertiesSelectOptions.p_status && propertiesSelectOptions.p_status.length > 0 &&
-            <Controller 
-              name={dbRef.properties.p_status}    
-              control={control} 
-              defaultValue={''}
-              render={({
-                field: { onChange},
-              }) => {
-                return (
-                  <FormInput 
-                    key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
-                    name={dbRef.properties.p_status} 
-                    labelKey={dbRef.properties.p_status} 
-                    labelText="Status"
-                    type="select" 
-                    customClass="f-25"
-                    selectOnChange={onChange}
-                    options={propertiesSelectOptions.p_status}
-                    isRequired={false}
-                    register={register} 
-                    errors={errors}
-                    defaultValue={''}
-                  />
-                ) 
-              }}
-            />
-          }
+          {propertiesSelectOptions.p_type &&
+            propertiesSelectOptions.p_type.length > 0 && (
+              <Controller
+                name={dbRef.properties.p_type}
+                control={control}
+                defaultValue={""}
+                render={({ field: { onChange } }) => {
+                  return (
+                    <FormInput
+                      key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
+                      name={dbRef.properties.p_type}
+                      labelKey={dbRef.properties.p_type}
+                      labelText="Type"
+                      type="select"
+                      customClass="f-25"
+                      selectOnChange={onChange}
+                      options={propertiesSelectOptions.p_type}
+                      isRequired={false}
+                      register={register}
+                      errors={errors}
+                      defaultValue={""}
+                    />
+                  );
+                }}
+              />
+            )}
 
+          {propertiesSelectOptions.p_status &&
+            propertiesSelectOptions.p_status.length > 0 && (
+              <Controller
+                name={dbRef.properties.p_status}
+                control={control}
+                defaultValue={""}
+                render={({ field: { onChange } }) => {
+                  return (
+                    <FormInput
+                      key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
+                      name={dbRef.properties.p_status}
+                      labelKey={dbRef.properties.p_status}
+                      labelText="Status"
+                      type="select"
+                      customClass="f-25"
+                      selectOnChange={onChange}
+                      options={propertiesSelectOptions.p_status}
+                      isRequired={false}
+                      register={register}
+                      errors={errors}
+                      defaultValue={""}
+                    />
+                  );
+                }}
+              />
+            )}
         </section>
         <section className="flex-x gap-sm">
-        { propertiesSelectOptions.p_city && propertiesSelectOptions.p_city.length > 0 &&
-            <Controller 
-              name={dbRef.properties.p_city}  
-              control={control} 
-              defaultValue={''}
-              render={({
-                field: {onChange},
-              }) => {
-                return (
-                  <FormInput 
-                    key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
-                    name={dbRef.properties.p_city}
-                    labelKey={dbRef.properties.p_city}
-                    labelText="City"
-                    type="select" 
-                    customClass="f-100"
-                    selectOnChange={onChange}
-                    options={[{label: CITY_HUB, value: CITY_HUB}, ...propertiesSelectOptions.p_city]}
-                    isRequired={false}
-                    register={register} 
-                    errors={errors}
-                    defaultValue={''}
-                  />
-                ) 
-              }}
-            />
-          }
+          {propertiesSelectOptions.p_city &&
+            propertiesSelectOptions.p_city.length > 0 && (
+              <Controller
+                name={dbRef.properties.p_city}
+                control={control}
+                defaultValue={""}
+                render={({ field: { onChange } }) => {
+                  return (
+                    <FormInput
+                      key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
+                      name={dbRef.properties.p_city}
+                      labelKey={dbRef.properties.p_city}
+                      labelText="City"
+                      type="select"
+                      customClass="f-100"
+                      selectOnChange={onChange}
+                      options={[
+                        { label: CITY_HUB, value: CITY_HUB },
+                        ...propertiesSelectOptions.p_city,
+                      ]}
+                      isRequired={false}
+                      register={register}
+                      errors={errors}
+                      defaultValue={""}
+                    />
+                  );
+                }}
+              />
+            )}
 
-          <FormInput 
+          <FormInput
             name={dbRef.properties.p_street}
             labelKey={dbRef.properties.p_street}
             labelText="Street"
-            customClass='f-100'
-            type="text" 
+            customClass="f-100"
+            type="text"
             isRequired={false}
-            register={register} 
+            register={register}
             errors={errors}
           />
-
         </section>
 
         <section className="flex-x gap-sm">
-          <FormInput 
+          <FormInput
             name={dbRef.properties.p_condo}
             labelKey={dbRef.properties.p_condo}
             labelText="Condo"
-            customClass='f-50'
-            type="text" 
+            customClass="f-50"
+            type="text"
             isRequired={false}
-            register={register} 
+            register={register}
             errors={errors}
           />
 
-          <FormInput 
+          <FormInput
             name={dbRef.properties.p_lot}
             labelKey={dbRef.properties.p_lot}
             labelText="Lot"
-            customClass='f-50'
-            type="text" 
+            customClass="f-50"
+            type="text"
             isRequired={false}
-            register={register} 
+            register={register}
             errors={errors}
           />
 
-          <FormInput 
+          <FormInput
             name={dbRef.properties.p_instructions}
             labelKey={dbRef.properties.p_instructions}
             labelText="Instructions"
-            type="text" 
-            customClass='f-100'
+            type="text"
+            customClass="f-100"
             isRequired={false}
-            register={register} 
+            register={register}
             errors={errors}
           />
         </section>
 
-        <section className='flex-x submit-button-section'>
-          <Button 
-            isDisabled={false} 
-            type='button'
-            onClick={handleViewAllClick} 
-          >
-            View All
-          </Button>
-          <Button  
-            isDisabled={isDirtyAlt} 
-            type='button'            
+        <section className="flex-x submit-button-section">
+          <Button
+            isDisabled={isDirtyAlt}
+            type="button"
             onClick={(e) => {
-              e.preventDefault()
-              const data = getValues()
-              onSubmit(data)
-              setClearSelectInputBoxes(!clearSelectInputBoxes)
-              reset()
+              e.preventDefault();
+              const data = getValues();
+              onSubmit(data);
             }}
           >
             Submit Search
           </Button>
-          <Button 
-            isDisabled={isDirtyAlt} 
-            type='button'
+          <Button
+            isDisabled={isDirtyAlt}
+            type="button"
             onClick={() => {
-              reset()
-              setClearSelectInputBoxes(!clearSelectInputBoxes)
-            }} 
+              reset();
+              setClearSelectInputBoxes(!clearSelectInputBoxes);
+            }}
             redVariant
           >
             Clear Form
@@ -308,6 +294,6 @@ const SearchPropertiesForm:React.FC<SearchPropertiesFormProps> = ({
       </form>
     </div>
   );
-}
+};
 
-export default SearchPropertiesForm
+export default SearchPropertiesForm;

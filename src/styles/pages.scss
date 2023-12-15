@@ -29,7 +29,25 @@
   }
 }
 
-
 .all-records-view-page {
   width: fit-content;
+
+  header {
+    display: flex;
+    align-items: flex-end;
+    margin-bottom: 10px;
+    position: relative;
+
+    h1 {
+      line-height: 12px;
+    }
+
+    a {
+      text-decoration: underline;
+      font-weight: bold;
+      color: rgb(44, 44, 204);
+      position: absolute;
+      right: 0;
+    }
+  }
 }

@@ -5,15 +5,14 @@ import { SelectDropDownsContextProvider } from "@/context/SelectDropDowns";
 import { CountiesContextProvider } from "@/context/Counties";
 import { ExaminersContextProvider } from "@/context/Examiners";
 import { UsersContextProvider } from "@/context/Users";
-import { useAuth } from '../context/AuthContext'
+import { useAuth } from "../context/AuthContext";
 import AuthPage from "@/pages/auth";
 
 export default function Layout({ children }) {
+  const { user, isLoadingAuthContext } = useAuth();
 
-  const { user, isLoadingAuthContext } = useAuth()
-
-  if(isLoadingAuthContext) {
-    return <div></div>
+  if (isLoadingAuthContext) {
+    return <div></div>;
   }
 
   if (!user) {
@@ -21,7 +20,7 @@ export default function Layout({ children }) {
       <>
         <AuthPage />
       </>
-    )
+    );
   }
   if (user) {
     return (
@@ -41,7 +40,6 @@ export default function Layout({ children }) {
           </ExaminersContextProvider>
         </UsersContextProvider>
       </div>
-    )
+    );
   }
-
 }

@@ -1,31 +1,32 @@
-import { Client } from '@/types/common';
+import { Client } from "@/types/common";
 
-import React, { useEffect, useState } from 'react'
-import { useRouter } from 'next/router';
-import toast from 'react-hot-toast';
-import { confirmAlert } from 'react-confirm-alert';
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import toast from "react-hot-toast";
+import { confirmAlert } from "react-confirm-alert";
 
-import conn from '../../lib/db'
+import conn from "../../lib/db";
 
-import dbRef from '@/constants/dbRefs';
-import Modal from '@/components/Modal/Modal';
-import Spinner from '@/components/Spinner/Spinner';
-import Pagination from '@/components/Pagination/Pagination'
-import ClientsTable from '@/components/Tables/Clients/ClientsTable';
-import EditClientForm from '@/components/Forms/ClientEditForm/EditClientForm';
+import dbRef from "@/constants/dbRefs";
+import Modal from "@/components/Modal/Modal";
+import Spinner from "@/components/Spinner/Spinner";
+import Pagination from "@/components/Pagination/Pagination";
+import ClientsTable from "@/components/Tables/Clients/ClientsTable";
+import EditClientForm from "@/components/Forms/ClientEditForm/EditClientForm";
 
-export async function getServerSideProps(context:any) {
-  const { page } = context.query
-  const pageSize = 100
-  const pageOffset = pageSize * (page - 1)
+export async function getServerSideProps(context: any) {
+  const { page } = context.query;
+  const pageSize = 100;
+  const pageOffset = pageSize * (page - 1);
 
   const totalRecordsQuery = `
     SELECT 
       COUNT(*)
     FROM ${dbRef.table_names.clients}
-  `
-  const totalRecordsResult = (await conn.query(totalRecordsQuery)).rows[0].count;
-  
+  `;
+  const totalRecordsResult = (await conn.query(totalRecordsQuery)).rows[0]
+    .count;
+
   const allClients = `
       SELECT 
           c.${dbRef.clients.id},
@@ -59,17 +60,19 @@ export async function getServerSideProps(context:any) {
       c.${dbRef.clients.c_number}, 
       c.${dbRef.clients.c_name}
     OFFSET $1 LIMIT ${pageSize};
-  `
-  const clientsResults = JSON.parse(JSON.stringify((await conn.query(allClients, [pageOffset])).rows));
-  
-  return { 
+  `;
+  const clientsResults = JSON.parse(
+    JSON.stringify((await conn.query(allClients, [pageOffset])).rows)
+  );
+
+  return {
     props: {
       clients: clientsResults,
       totalRecords: Number(totalRecordsResult),
-      pageSize, 
-      currentPage: Number(page)
-    } 
-  }
+      pageSize,
+      currentPage: Number(page),
+    },
+  };
 }
 
 interface ClientsProps {
@@ -79,106 +82,106 @@ interface ClientsProps {
   currentPage: number;
 }
 
-const Clients:React.FC<ClientsProps> = ({
-  clients, 
-  totalRecords, 
-  pageSize, 
-  currentPage
-}) =>  {
-  const router = useRouter()
+const Clients: React.FC<ClientsProps> = ({
+  clients,
+  totalRecords,
+  pageSize,
+  currentPage,
+}) => {
+  const router = useRouter();
 
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [tableData, setTableData] = useState<Client[] | null>(null)
-  const [selectedClientId, setSelectedClientId] = useState<string|null>(null)
-  const [shouldReload, setShouldReload] = useState(false)
-  
-  const handleModalOpen =(e: React.SyntheticEvent, clientId: string) => {
-    e.preventDefault()
+  const [tableData, setTableData] = useState<Client[] | null>(null);
+  const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
+  const [shouldReload, setShouldReload] = useState(false);
+
+  const handleModalOpen = (e: React.SyntheticEvent, clientId: string) => {
+    e.preventDefault();
     confirmAlert({
-      message: 'Are you sure to edit this record?',
+      message: "Are you sure you want to edit this record?",
       buttons: [
         {
-          label: 'Yes',
+          label: "Yes",
           onClick: () => {
-            setSelectedClientId(clientId)
-            setShowModal(true)
-          }
+            setSelectedClientId(clientId);
+            setShowModal(true);
+          },
         },
         {
-          label: 'No',
-          onClick: () => toast.error('Operation Cancelled.', {
-            id: 'edit-client'
-          })
-        }
-      ]
-    })
-  }
+          label: "No",
+          onClick: () =>
+            toast.error("Operation Cancelled.", {
+              id: "edit-client",
+            }),
+        },
+      ],
+    });
+  };
 
   const handleModalClose = () => {
-    setSelectedClientId(null)
-    setShowModal(false)
+    setSelectedClientId(null);
+    setShowModal(false);
 
-    if(shouldReload) {
-      router.reload()
+    if (shouldReload) {
+      router.reload();
     }
-  }
+  };
 
   const handleAfterSubmit = (clientId: string) => {
-    setShouldReload(true)
-  }
+    setShouldReload(true);
+  };
 
   useEffect(() => {
-    setTableData(clients)
-  },[clients])
+    setTableData(clients);
+  }, [clients]);
 
-  const totalPages = Math.floor(totalRecords/pageSize)
+  const totalPages = Math.floor(totalRecords / pageSize);
 
   return (
     <>
-      { tableData ? 
-        <div className='all-records-view-page'>
+      {tableData ? (
+        <div className="all-records-view-page">
           <h1>
-            All Clients 
-            { totalPages > 0 &&
-              <span className='italicized-record-count'>
+            All Clients
+            {totalPages > 0 && (
+              <span className="italicized-record-count">
                 page ({currentPage}/{totalPages})
               </span>
-            }
+            )}
           </h1>
 
-          <ClientsTable 
-            tableData={tableData} 
+          <ClientsTable
+            tableData={tableData}
             handleModalOpen={handleModalOpen}
             setTableData={setTableData}
           />
 
-          { totalPages > 0 &&
-            <Pagination 
-              href={'clients'} 
-              totalRecords={totalRecords} 
-              pageSize={pageSize} 
-              currentPage={currentPage} 
+          {totalPages > 0 && (
+            <Pagination
+              href={"clients"}
+              totalRecords={totalRecords}
+              pageSize={pageSize}
+              currentPage={currentPage}
             />
-          }
+          )}
         </div>
-        : <div className='page-spinner'><Spinner/></div> 
-      }
+      ) : (
+        <div className="page-spinner">
+          <Spinner />
+        </div>
+      )}
 
-      <Modal
-        onClose={handleModalClose}
-        show={showModal}
-        title={''}
-      >
-        { selectedClientId && 
-          <EditClientForm 
+      <Modal onClose={handleModalClose} show={showModal} title={""}>
+        {selectedClientId && (
+          <EditClientForm
             clientId={selectedClientId}
-            queryType='update'
+            queryType="update"
             handleAfterSubmit={handleAfterSubmit}
           />
-        }
+        )}
       </Modal>
-    </>  
-  )
-}
+    </>
+  );
+};
 
-export default Clients
+export default Clients;
