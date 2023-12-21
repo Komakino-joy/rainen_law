@@ -1,15 +1,14 @@
-import dbRef from '@/constants/dbRefs';
-import type { NextApiRequest, NextApiResponse } from 'next'
-import conn from '../../../lib/db'
+import dbRef from "@/constants/dbRefs";
+import type { NextApiRequest, NextApiResponse } from "next";
+import conn from "../../../lib/db";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse,
+  res: NextApiResponse
 ) {
-    if (req.method === "GET") { 
-      
-      try {    
-        const allProperties = `
+  if (req.method === "GET") {
+    try {
+      const allProperties = `
           SELECT 
             c.${dbRef.clients.c_name},
             p.${dbRef.properties.p_input_date},
@@ -33,15 +32,13 @@ export default async function handler(
             p.${dbRef.properties.p_input_date} DESC,
             p.${dbRef.properties.id}
           LIMIT 10
-        `
-        const propertiesResults = (await conn.query(allProperties)).rows;
-    
-        res.status(200).send(propertiesResults)
-        
-      } catch ( error ) {
-          console.log( error );
-          res.status(400).send({message: 'Failed to get properties'})
-      }
-    }
-}
+        `;
+      const propertiesResults = (await conn.query(allProperties)).rows;
 
+      res.status(200).send(propertiesResults);
+    } catch (error) {
+      console.log(error);
+      res.status(400).send({ message: "Failed to get properties" });
+    }
+  }
+}

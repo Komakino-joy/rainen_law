@@ -31,13 +31,13 @@ import { timestampToDate, abbreviatedStatesLabelValuePair } from "@/utils";
 import styles from "./EditPropertyForm.module.scss";
 import { confirmAlert } from "react-confirm-alert";
 
-interface EditPropertyFormProps {
+interface OwnProps {
   propertyId: string | null;
   queryType: "update" | "insert";
   handleAfterSubmit?: (id: string) => void;
 }
 
-const EditPropertyForm: React.FC<EditPropertyFormProps> = ({
+const EditPropertyForm: React.FC<OwnProps> = ({
   propertyId,
   queryType,
   handleAfterSubmit = () => {},

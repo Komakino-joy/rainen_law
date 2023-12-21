@@ -1,4 +1,3 @@
-
 .code-type-section {
   gap: 10px;
 
@@ -6,22 +5,11 @@
   .type {
     flex: 1;
   }
-
 }
 
 .comp-active-section {
   gap: 10px;
-  .comp{
+  .comp {
     flex: 1;
   }
-
-  .active {
-    flex: .3;
-    display: flex;
-    justify-content: center;
-  }
 }
-
-
-
-

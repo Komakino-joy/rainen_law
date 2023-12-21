@@ -20,6 +20,7 @@ import { AuthContext } from "@/context/AuthContext";
 import { httpPostDeleteProperty } from "@/services/http";
 import { confirmAlert } from "react-confirm-alert";
 import toast from "react-hot-toast";
+import InfoCard from "@/components/InfoCard/InfoCard";
 
 interface OwnProps {
   tableData: any;
@@ -40,6 +41,12 @@ const PropertiesTable: React.FC<OwnProps> = ({
   setTableData,
   tableData,
 }) => {
+  if (tableData.length === 0) {
+    return (
+      <InfoCard line1="No Records Found" customStyles={{ width: "80vw" }} />
+    );
+  }
+
   const { user } = useContext(AuthContext);
   const [labelsToPrint, setLabelsToPrint] = useState<Property[]>([]);
 

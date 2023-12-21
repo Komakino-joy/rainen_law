@@ -1,8 +1,6 @@
 import { Property } from "@/types/common";
-
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-
 import Pagination from "@/components/Pagination/Pagination";
 import PropertiesTable from "@/components/Tables/Properties/PropertiesTable";
 import conn from "../../lib/db";
@@ -13,12 +11,18 @@ import { CITY_HUB } from "@/constants";
 import { timestampToDate } from "@/utils";
 import pgPromise from "pg-promise";
 import Link from "next/link";
+import { andEquals, andLike, andBetweenDate } from "@/constants/dbClauses";
 
 export async function getServerSideProps(context: any) {
   try {
     const { page } = context.query;
     const pageSize = 50;
     const pageOffset = pageSize * (page - 1);
+    const {
+      clients: C_tableRef,
+      properties: P_tableRef,
+      table_names: tablesNames,
+    } = dbRef;
 
     const encodedData = context.req.headers.cookie
       ?.split(";")
@@ -47,101 +51,41 @@ export async function getServerSideProps(context: any) {
     } = decodeData;
 
     if (inputStartDate !== "" && inputEndDate === "") {
-      inputEndDate = timestampToDate(Date(), "mmDDyyyy").date;
+      inputEndDate = timestampToDate(Date(), "yyyyMMdd").date;
     }
-
     if (requestStartDate !== "" && requestEndDate === "") {
-      requestEndDate = timestampToDate(Date(), "mmDDyyyy").date;
+      requestEndDate = timestampToDate(Date(), "yyyyMMdd").date;
     }
 
-    const andLikeClause = (table: string, field: string, paramNum: string) => {
-      return `AND LOWER(${table}."${field}") LIKE '%' || $${paramNum} || '%'`;
-    };
-
-    const andEqualsClause = (
-      table: string,
-      field: string,
-      paramNum: string
-    ) => {
-      return `AND ${table}."${field}" = $${paramNum}`;
-    };
-
-    const andBetweenClause = (
-      table: string,
-      field: string,
-      startParam: string,
-      endParam: string
-    ) => {
-      return `AND ${table}."${field}" BETWEEN DATE($${startParam}) AND DATE($${endParam})`;
-    };
-
-    let p_city_param = "";
-    if (p_city !== "" && p_city === CITY_HUB) {
-      p_city_param = `AND LOWER(p_city) IN (
-        'allston',
-        'brighton',
-        'boston',
-        'charlestown',
-        'dorchester',
-        'east boston',
-        'hyde park',
-        'jamaica plain',
-        'mattapan',
-        'roslindale',
-        'roxbury',
-        'south boston',
-        'west roxbury'
-      )`;
-    } else if (p_city !== "") {
-      p_city_param = andEqualsClause("p", dbRef.properties.p_city, "1");
-    }
-
-    const param = {
-      p_city: p_city_param,
-      p_street:
-        p_street !== ""
-          ? andLikeClause("p", dbRef.properties.p_street, "2")
-          : "",
-      p_lot:
-        p_lot !== "" ? andLikeClause("p", dbRef.properties.p_lot, "3") : "",
-      p_condo:
-        p_condo !== "" ? andLikeClause("p", dbRef.properties.p_condo, "4") : "",
-      p_instructions:
-        p_instructions !== ""
-          ? andLikeClause("p", dbRef.properties.p_instructions, "5")
-          : "",
-      c_number: "",
-      p_type:
-        p_type !== "" ? andEqualsClause("p", dbRef.properties.p_type, "7") : "",
-      p_status:
-        p_status !== ""
-          ? andEqualsClause("p", dbRef.properties.p_status, "8")
-          : "",
-      p_comp_ref:
-        p_comp_ref !== ""
-          ? andEqualsClause("p", dbRef.properties.p_comp_ref, "9")
-          : "",
-      p_file:
-        p_file !== ""
-          ? andEqualsClause("p", dbRef.properties.p_file, "10")
-          : "",
-      inputDateRange:
-        inputStartDate !== "" && inputEndDate !== ""
-          ? andBetweenClause("p", dbRef.properties.p_input_date, "11", "12")
-          : "",
-      requestDateRange:
-        requestStartDate !== "" && requestEndDate !== ""
-          ? andBetweenClause("p", dbRef.properties.p_input_date, "13", "14")
-          : "",
-    };
+    const p_city_param =
+      p_city !== "" && p_city === CITY_HUB
+        ? `AND LOWER(${P_tableRef.p_city}) IN (
+          'allston',
+          'brighton',
+          'boston',
+          'charlestown',
+          'dorchester',
+          'east boston',
+          'hyde park',
+          'jamaica plain',
+          'mattapan',
+          'roslindale',
+          'roxbury',
+          'south boston',
+          'west roxbury'
+        )`
+        : p_city !== ""
+        ? andEquals("p", P_tableRef.p_city, "1")
+        : "";
 
     let c_number = "";
+
     if (c_name) {
       const clientNumberQuery = pgPromise.as.format(
         `
-          SELECT ${dbRef.clients.c_number} 
-          FROM ${dbRef.table_names.clients}
-          WHERE ${dbRef.clients.c_name} = $1 
+          SELECT ${C_tableRef.c_number} 
+          FROM ${tablesNames.clients}
+          WHERE ${C_tableRef.c_name} = $1 
         `,
         [c_name]
       );
@@ -149,63 +93,76 @@ export async function getServerSideProps(context: any) {
       const clientNumberResult = (await conn.query(clientNumberQuery)).rows;
 
       c_number = clientNumberResult[0].c_number;
-      param.c_number = andEqualsClause("c", "c_number", "6");
     }
 
     const propertiesQuery = pgPromise.as.format(
       `
         SELECT
-          c.${dbRef.clients.c_name},  
-          c.${dbRef.clients.c_number},
-          p.${dbRef.properties.id},
-          p.${dbRef.properties.p_city},
-          p.${dbRef.properties.p_street},
-          p.${dbRef.properties.p_lot},
-          p.${dbRef.properties.p_condo},
-          p.${dbRef.properties.p_unit},
-          p.${dbRef.properties.p_state},
-          p.${dbRef.properties.p_zip},
-          p.${dbRef.properties.p_status},
-          p.${dbRef.properties.p_type},
-          p.${dbRef.properties.p_assign},
-          p.${dbRef.properties.p_comp_ref},
-          p.${dbRef.properties.p_instructions},
-          p.${dbRef.properties.p_number},
-          p.${dbRef.properties.p_requester},
-          p.${dbRef.properties.p_input_date},
-          p.${dbRef.properties.p_request_date},
-          p.${dbRef.properties.p_closed_date},
-          p.${dbRef.properties.p_file},
-          p.${dbRef.properties.c_file},
-          p.${dbRef.properties.p_book_1},
-          p.${dbRef.properties.p_book_2},
-          p.${dbRef.properties.p_page_1},
-          p.${dbRef.properties.p_page_2},
-          p.${dbRef.properties.p_cert_1},
+          c.${C_tableRef.c_name},  
+          c.${C_tableRef.c_number},
+          p.${P_tableRef.id},
+          p.${P_tableRef.p_city},
+          p.${P_tableRef.p_street},
+          p.${P_tableRef.p_lot},
+          p.${P_tableRef.p_condo},
+          p.${P_tableRef.p_unit},
+          p.${P_tableRef.p_state},
+          p.${P_tableRef.p_zip},
+          p.${P_tableRef.p_status},
+          p.${P_tableRef.p_type},
+          p.${P_tableRef.p_assign},
+          p.${P_tableRef.p_comp_ref},
+          p.${P_tableRef.p_instructions},
+          p.${P_tableRef.p_number},
+          p.${P_tableRef.p_requester},
+          p.${P_tableRef.p_input_date},
+          p.${P_tableRef.p_request_date},
+          p.${P_tableRef.p_closed_date},
+          p.${P_tableRef.p_file},
+          p.${P_tableRef.c_file},
+          p.${P_tableRef.p_book_1},
+          p.${P_tableRef.p_book_2},
+          p.${P_tableRef.p_page_1},
+          p.${P_tableRef.p_page_2},
+          p.${P_tableRef.p_cert_1},
           COUNT(*) OVER() AS total_count
-        FROM ${dbRef.table_names.properties} p
-        LEFT JOIN ${dbRef.table_names.clients} c ON c.${dbRef.clients.c_number} = p.${dbRef.properties.p_number}
+        FROM ${tablesNames.properties} p
+        LEFT JOIN ${tablesNames.clients} c ON c.${C_tableRef.c_number} = p.${
+        P_tableRef.p_number
+      }
         WHERE 
-          p.${dbRef.properties.id} IS NOT NULL
-          ${param.p_city}
-          ${param.p_street}
-          ${param.p_lot}
-          ${param.p_condo}
-          ${param.p_instructions}
-          ${param.c_number}
-          ${param.p_type}
-          ${param.p_status}
-          ${param.p_comp_ref}
-          ${param.p_file}
-          ${param.inputDateRange}
-          ${param.requestDateRange}
+          p.${P_tableRef.id} IS NOT NULL
+          ${p_city_param}
+          ${p_street ? andLike("p", P_tableRef.p_street, "2") : ""}
+          ${p_lot ? andLike("p", P_tableRef.p_lot, "3") : ""}
+          ${p_condo ? andLike("p", P_tableRef.p_condo, "4") : ""}
+          ${p_instructions ? andLike("p", P_tableRef.p_instructions, "5") : ""}
+          ${c_name ? andEquals("c", "c_number", "6") : ""}
+          ${p_type ? andEquals("p", P_tableRef.p_type, "7") : ""}
+          ${p_status ? andEquals("p", P_tableRef.p_status, "8") : ""}
+          ${p_comp_ref ? andEquals("p", P_tableRef.p_comp_ref, "9") : ""}
+          ${p_file ? andEquals("p", P_tableRef.p_file, "10") : ""}
+          ${
+            inputStartDate
+              ? andBetweenDate("p", P_tableRef.p_input_date, "11", "12")
+              : ""
+          }
+          ${
+            requestStartDate
+              ? andBetweenDate("p", P_tableRef.p_input_date, "13", "14")
+              : ""
+          }
         ORDER BY 
-        p.${dbRef.properties.p_street},
+        p.${P_tableRef.p_street},
         CASE
-          WHEN POSITION('-' IN p.${dbRef.properties.p_lot}) > 0 THEN 
-            COALESCE(CAST(NULLIF(SUBSTRING(p.${dbRef.properties.p_lot} FROM '^[0-9]+'), '') AS INTEGER),0)
+          WHEN POSITION('-' IN p.${P_tableRef.p_lot}) > 0 THEN 
+            COALESCE(CAST(NULLIF(SUBSTRING(p.${
+              P_tableRef.p_lot
+            } FROM '^[0-9]+'), '') AS INTEGER),0)
           ELSE 
-            COALESCE(CAST(NULLIF(SUBSTRING(p.${dbRef.properties.p_lot} FROM '^[0-9]+'), '') AS INTEGER), 0)
+            COALESCE(CAST(NULLIF(SUBSTRING(p.${
+              P_tableRef.p_lot
+            } FROM '^[0-9]+'), '') AS INTEGER), 0)
         END
         OFFSET ${pageOffset} 
         LIMIT ${pageSize};
@@ -233,10 +190,15 @@ export async function getServerSideProps(context: any) {
       JSON.stringify((await conn.query(propertiesQuery)).rows)
     );
 
+    const totalRecords =
+      propertiesResults.length === 0
+        ? 0
+        : Number(propertiesResults[0].total_count);
+
     return {
       props: {
         properties: propertiesResults,
-        totalRecords: Number(propertiesResults[0].total_count),
+        totalRecords,
         pageSize,
         currentPage: Number(page),
       },
@@ -294,7 +256,7 @@ const Properties: React.FC<PropertiesProps> = ({
 
   return (
     <>
-      {tableData ? (
+      {tableData && (
         <div className="all-records-view-page">
           <header>
             <h1>Properties</h1>
@@ -306,6 +268,7 @@ const Properties: React.FC<PropertiesProps> = ({
             </div>
             <Link href={"/properties/search"}>{"<- Back to search"}</Link>
           </header>
+
           <PropertiesTable
             tableData={tableData}
             handleModalOpen={handleModalOpen}
@@ -319,19 +282,14 @@ const Properties: React.FC<PropertiesProps> = ({
             currentPage={currentPage}
           />
         </div>
-      ) : (
-        <InfoCard
-          customStyles={{ marginTop: "100px", border: "none" }}
-          line1="No Data to Show"
-        />
       )}
 
       <EditPropertyModal
+        handleAfterSubmit={handleAfterSubmit}
         handleModalClose={handleModalClose}
+        selectedId={selectedId}
         showModal={showModal}
         title={""}
-        selectedId={selectedId}
-        handleAfterSubmit={handleAfterSubmit}
       />
     </>
   );

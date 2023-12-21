@@ -1,55 +1,57 @@
-import dbRef from '@/constants/dbRefs'
-import type { NextApiRequest, NextApiResponse } from 'next'
-import pgPromise from 'pg-promise'
-import conn from '../../../lib/db'
+import dbRef from "@/constants/dbRefs";
+import type { NextApiRequest, NextApiResponse } from "next";
+import pgPromise from "pg-promise";
+import conn from "../../../lib/db";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse,
+  res: NextApiResponse
 ) {
-    if (req.method === "POST") { 
-      const {
-        clientName,
-        p_city, 
-        p_street, 
-        p_lot, 
-        p_condo, 
-        p_unit, 
-        p_book_1,
-        p_book_2,
-        p_page_1,
-        p_page_2,
-        p_cert_1,
-        p_requester, 
-        p_file, 
-        p_type, 
-        p_status,
-        p_assign,
-        p_comp_ref,
-        p_instructions,
-        c_file,
-        p_state,
-        p_zip,
-        buyer_1,
-        buyer_2,
-        seller_1,
-        seller_2,
-        seller_3,
-        seller_4,
-        p_request_date,
-        p_closed_date,
-        id,
-        username,
-      } = req.body
+  if (req.method === "POST") {
+    const {
+      clientName,
+      p_city,
+      p_street,
+      p_lot,
+      p_condo,
+      p_unit,
+      p_book_1,
+      p_book_2,
+      p_page_1,
+      p_page_2,
+      p_cert_1,
+      p_requester,
+      p_file,
+      p_type,
+      p_status,
+      p_assign,
+      p_comp_ref,
+      p_instructions,
+      c_file,
+      p_state,
+      p_zip,
+      buyer_1,
+      buyer_2,
+      seller_1,
+      seller_2,
+      seller_3,
+      seller_4,
+      p_request_date,
+      p_closed_date,
+      id,
+      username,
+    } = req.body;
 
-      try {
-        await conn.query('BEGIN')
+    try {
+      await conn.query("BEGIN");
 
-        // We need to get the Client Number from our DB since there is no reference to it in the properties table
-        const clientIDQuery = 'SELECT cm.c_number FROM ${dbRefs.table_names.clients} cm WHERE cm.c_name = ($1)'
-        const clientIdResponse = await conn.query(clientIDQuery, [clientName])
+      // We need to get the Client Number from our DB since there is no reference to it in the properties table
+      const clientIDQuery =
+        "SELECT cm.c_number FROM ${dbRefs.table_names.clients} cm WHERE cm.c_name = ($1)";
+      const clientIdResponse = await conn.query(clientIDQuery, [clientName]);
 
-        const updateBuySellQuery = pgPromise.as.format(`
+      const updateBuySellQuery = pgPromise.as.format(
+        `
         UPDATE ${dbRef.table_names.buyer_seller} bs
         SET 
           ${dbRef.buyer_seller.seller_1}=$1,
@@ -63,7 +65,8 @@ export default async function handler(
 
           RETURNING *
         ;
-      `,[
+      `,
+        [
           seller_1,
           seller_2,
           seller_3,
@@ -72,9 +75,10 @@ export default async function handler(
           buyer_2,
           Number(p_comp_ref),
         ]
-      )
+      );
 
-        const updatePropertyQuery = pgPromise.as.format(`
+      const updatePropertyQuery = pgPromise.as.format(
+        `
           UPDATE ${dbRef.table_names.properties} pm
           SET
             ${dbRef.properties.p_input_date} = $1,
@@ -108,59 +112,57 @@ export default async function handler(
 
             RETURNING *
           ;
-        `,[
-            new Date(),
-            p_city,
-            p_street,
-            p_lot,
-            p_condo,
-            p_unit,
-            p_book_1,
-            p_book_2,
-            p_page_1,
-            p_page_2,
-            p_cert_1,
-            Number(clientIdResponse.rows[0].c_number),
-            p_requester,
-            Number(p_file) || null,
-            p_type,
-            p_status,
-            p_assign,
-            Number(p_comp_ref),
-            p_instructions,
-            c_file,
-            p_state,
-            p_zip,
-            p_request_date === '' ? null : p_request_date,
-            p_closed_date === '' ? null : p_closed_date,
-            username,
-            new Date(),
-            id,
-          ]
-        )
+        `,
+        [
+          new Date(),
+          p_city,
+          p_street,
+          p_lot,
+          p_condo,
+          p_unit,
+          p_book_1,
+          p_book_2,
+          p_page_1,
+          p_page_2,
+          p_cert_1,
+          Number(clientIdResponse.rows[0].c_number),
+          p_requester,
+          Number(p_file) || null,
+          p_type,
+          p_status,
+          p_assign,
+          Number(p_comp_ref),
+          p_instructions,
+          c_file,
+          p_state,
+          p_zip,
+          p_request_date === "" ? null : p_request_date,
+          p_closed_date === "" ? null : p_closed_date,
+          username,
+          new Date(),
+          id,
+        ]
+      );
 
-        
-        const updatedBuySellRecord = await conn.query(updateBuySellQuery)
-        const updatedPropertyRecord = await conn.query(updatePropertyQuery)
-        await conn.query('COMMIT')
+      const updatedBuySellRecord = await conn.query(updateBuySellQuery);
+      const updatedPropertyRecord = await conn.query(updatePropertyQuery);
+      await conn.query("COMMIT");
 
-        res.status(200).json({
-          updatedRecord: {
-            ...updatedPropertyRecord.rows[0],
-            ...updatedBuySellRecord.rows[0]
-          },
-          message: 'Record updated',
-          status: 'success'
-        })
-        
-      } catch ( error ) {
-        await conn.query('ROLLBACK')
-        console.log( error );
-        res.status(400).json({
-          message: 'Failed to update record',
-          status: 'error'
-        })
-      } 
+      res.status(200).json({
+        updatedRecord: {
+          ...updatedPropertyRecord.rows[0],
+          ...updatedBuySellRecord.rows[0],
+        },
+        message: "Record updated",
+        status: "success",
+      });
+    } catch (error) {
+      await conn.query("ROLLBACK");
+      console.log(error);
+      res.status(400).json({
+        message: "Failed to update record",
+        status: "error",
+      });
     }
+  }
 }
-

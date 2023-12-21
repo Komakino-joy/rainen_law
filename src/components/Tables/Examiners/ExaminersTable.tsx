@@ -5,7 +5,7 @@ import { Examiner, TableRefs } from "@/types/common";
 import { useMemo } from "react";
 import { useTable, useFilters } from "react-table";
 
-interface ExaminersTableProps {
+interface OwnProps {
   tableData: any[];
   selectionType: TableRefs | "";
   tableClassName: string;
@@ -18,7 +18,7 @@ interface ExaminersTableProps {
   ) => void;
 }
 
-const ExaminersTable: React.FC<ExaminersTableProps> = ({
+const ExaminersTable: React.FC<OwnProps> = ({
   tableData,
   selectionType,
   tableClassName,

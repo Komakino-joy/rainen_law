@@ -2,21 +2,22 @@ import React from "react";
 import styles from "./Pagination.module.scss";
 import Link from "next/link";
 
-interface PaginationProps {
+interface OwnProps {
   totalRecords: number;
   pageSize: number;
   currentPage: number;
   href: string;
 }
 
-const Pagination: React.FC<PaginationProps> = ({
+const Pagination: React.FC<OwnProps> = ({
   totalRecords,
   pageSize,
   currentPage,
   href,
 }) => {
-  const totalPages = Math.floor(totalRecords / pageSize) || 1;
+  if (totalRecords < pageSize) return null;
 
+  const totalPages = Math.floor(totalRecords / pageSize) || 1;
   const siblingCount = 5;
   const leftHandSiblings = Array.from(
     { length: siblingCount },

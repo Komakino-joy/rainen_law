@@ -27,13 +27,13 @@ import dbRef from "@/constants/dbRefs";
 import { confirmAlert } from "react-confirm-alert";
 import toast from "react-hot-toast";
 
-interface EditClientFormProps {
+interface OwnProps {
   clientId: string | null;
   queryType: "update" | "insert";
   handleAfterSubmit?: (id: string) => void;
 }
 
-const ClientForm: React.FC<EditClientFormProps> = ({
+const ClientForm: React.FC<OwnProps> = ({
   clientId,
   queryType,
   handleAfterSubmit = () => {},

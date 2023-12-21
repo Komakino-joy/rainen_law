@@ -163,14 +163,14 @@ export async function getServerSideProps(context: any) {
   }
 }
 
-interface ClientsProps {
+interface OwnProps {
   clients: [];
   totalRecords: number;
   pageSize: number;
   currentPage: number;
 }
 
-const Clients: React.FC<ClientsProps> = ({
+const Clients: React.FC<OwnProps> = ({
   clients,
   totalRecords,
   pageSize,

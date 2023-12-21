@@ -9,7 +9,7 @@ import {
 import { LabelValuePair } from "@/types/common";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 
-interface PropertiesContextProps {
+interface OwnProps {
   isLoadingPropertyContext: boolean;
   propertiesSelectOptions: {
     p_city: LabelValuePair[];
@@ -26,7 +26,7 @@ interface propertiesSelectOptions {
   p_assign: [];
 }
 
-const PropertiesContext = createContext<PropertiesContextProps>({
+const PropertiesContext = createContext<OwnProps>({
   isLoadingPropertyContext: false,
   propertiesSelectOptions: {
     p_city: [],

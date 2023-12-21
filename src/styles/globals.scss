@@ -101,6 +101,13 @@ h2 {
   border-radius: 5px;
 }
 
+.checkbox {
+  flex: 0.3;
+  min-width: 40px;
+  display: flex;
+  justify-content: center;
+}
+
 @media print {
   html,
   body {

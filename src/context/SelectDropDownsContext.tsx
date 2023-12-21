@@ -10,7 +10,7 @@ import {
 } from "@/types/common";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 
-interface SelectDropDownsContextProps {
+interface OwnProps {
   isLoadingSelectDropDownsContext: boolean;
   clientStatusList: ClientStatus[];
   propertyStatusList: PropertyStatus[];
@@ -23,7 +23,7 @@ interface SelectDropDownsContextProps {
   countyDropDownOptions: LabelValuePair[];
 }
 
-const SelectDropDownsContext = createContext<SelectDropDownsContextProps>({
+const SelectDropDownsContext = createContext<OwnProps>({
   isLoadingSelectDropDownsContext: false,
   clientStatusList: [],
   propertyStatusList: [],

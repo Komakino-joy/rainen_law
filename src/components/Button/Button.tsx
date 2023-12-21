@@ -1,7 +1,7 @@
-import React from 'react'
-import styles from './Button.module.scss'
+import React from "react";
+import styles from "./Button.module.scss";
 
-interface ButtonProps {
+interface OwnProps {
   children: React.ReactElement | string;
   isDisabled: boolean;
   onClick?: (e: React.SyntheticEvent) => void;
@@ -11,28 +11,28 @@ interface ButtonProps {
   redVariant?: boolean;
 }
 
-const Button:React.FC<ButtonProps> = ({
+const Button: React.FC<OwnProps> = ({
   children,
   isDisabled,
   onClick,
   type,
   customClass,
   inlineStyles,
-  redVariant
+  redVariant,
 }) => (
-  <button 
+  <button
     className={`
       ${customClass}
-      ${styles['base-styles']} 
-      ${redVariant ? styles['red-variant'] : ''}
-      ${isDisabled ? styles.disabled : ''} 
+      ${styles["base-styles"]} 
+      ${redVariant ? styles["red-variant"] : ""}
+      ${isDisabled ? styles.disabled : ""} 
     `}
     onClick={isDisabled ? () => {} : onClick}
     type={type}
-    style={{...inlineStyles}}
+    style={{ ...inlineStyles }}
   >
     {children}
   </button>
-)
+);
 
-export default Button
+export default Button;

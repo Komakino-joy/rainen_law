@@ -1,3 +1,4 @@
+import { User } from "@/context/AuthContext";
 import { Client, Examiner, INSTitle, Property } from "../types/common";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -418,7 +419,7 @@ export const httpPostDeleteUser = async ({
   return response;
 };
 
-export const httpPostLogin = async ({ data }: { data: {} }) => {
+export const httpPostLogin = async ({ data }: { data: User }) => {
   const response = await axios.post(`/api/auth/post-login`, { ...data });
   return response;
 };

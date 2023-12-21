@@ -1,4 +1,16 @@
-const links = {
+interface Link {
+  href: string;
+  ctaText: string;
+}
+
+interface Links {
+  properties?: Link[];
+  clients?: Link[];
+  reports?: Link[];
+  management?: Link[];
+}
+
+const links: Links = {
   properties: [
     {
       href: "/properties/add-new",

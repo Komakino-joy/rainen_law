@@ -1,3 +1,7 @@
+import React, { useState } from "react";
+import { useUsersContext } from "@/context/Users";
+import { useExaminersContext } from "@/context/Examiners";
+import { useSelectDropDownsContext } from "@/context/SelectDropDownsContext";
 import {
   City,
   ClientStatus,
@@ -7,10 +11,7 @@ import {
   TableRefs,
   User,
 } from "@/types/common";
-import React, { useState } from "react";
-import { useUsersContext } from "@/context/Users";
-import { useExaminersContext } from "@/context/Examiners";
-import { useSelectDropDownsContext } from "@/context/SelectDropDownsContext";
+import { PencilIcon, PlusCircleIcon } from "../Icons/Icons";
 import EditUserForm from "../Forms/UserEditForm/EditUserForm";
 import EditExaminerForm from "../Forms/ExaminerEditForm/EditExaminerForm";
 import EditStatusCodeForm from "../Forms/StatusCodeEditForm/EditStatusCodeForm";
@@ -20,9 +21,8 @@ import ExaminersTable from "../Tables/Examiners/ExaminersTable";
 import Modal from "../Modal/Modal";
 import Spinner from "../Spinner/Spinner";
 import InfoCard from "../InfoCard/InfoCard";
-import { PencilIcon, PlusCircleIcon } from "../Icons/Icons";
-import styles from "./ManagementCard.module.scss";
 import CitiesTable from "../Tables/Cities/CitiesTable";
+import styles from "./ManagementCard.module.scss";
 
 const ManageSelectionFieldsCard = () => {
   const { examinersList, isLoadingExaminerscontext } = useExaminersContext();

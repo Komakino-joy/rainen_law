@@ -46,10 +46,8 @@ const FormInput: React.FC<FormInput> = ({
   autoComplete,
   checked,
 }) => {
-  // errors[labelKey] && isRequired ?
-
   const isError = errors[labelKey] && isRequired;
-  console.log(errors);
+
   return (
     <div className={`form-input-group ${customClass}`}>
       <label htmlFor={labelKey}>
