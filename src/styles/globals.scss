@@ -96,6 +96,11 @@ h2 {
   font-family: "Courier New", Courier, monospace;
 }
 
+.border-red {
+  border: 1px solid rgb(250, 0, 0) !important;
+  border-radius: 5px;
+}
+
 @media print {
   html,
   body {

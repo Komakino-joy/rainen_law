@@ -179,8 +179,8 @@ export const httpPostUpdateExaminer = async ({
 };
 
 // ---------------- County http requests
-export const httpGetCounties = async () => {
-  const response = await axios.get(`/api/counties/get-counties`);
+export const httpGetCities = async () => {
+  const response = await axios.get(`/api/counties/get-cities`);
   return response.data;
 };
 
@@ -421,11 +421,6 @@ export const httpPostDeleteUser = async ({
 export const httpPostLogin = async ({ data }: { data: {} }) => {
   const response = await axios.post(`/api/auth/post-login`, { ...data });
   return response;
-};
-
-export const httpPostSearchClient = async ({ data }: { data: {} }) => {
-  const response = await axios.post(`/api/clients/post-search-client`, data);
-  return response.data;
 };
 
 export const httpPostPropertyReport = async ({ data }: { data: {} }) => {

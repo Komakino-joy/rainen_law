@@ -11,10 +11,9 @@
   }
 
   &.custom-select__option--is-selected {
-    background: #2684FF;
+    background: #2684ff;
   }
 }
-
 
 .react-virtualized-menu-placeholder {
   margin-top: 12px;
@@ -24,4 +23,9 @@
 
 .react-virtualized-list-wrapper li {
   list-style: none;
+}
+
+.select-container {
+  border: 1px solid #9e9e9e;
+  border-radius: 4px;
 }

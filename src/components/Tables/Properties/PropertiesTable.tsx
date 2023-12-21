@@ -1,13 +1,14 @@
 /* eslint react/jsx-key: 0 */
 import { ModalType, Property } from "@/types/common";
 
-import { useMemo, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { useTable, useFilters, useSortBy } from "react-table";
 
 import {
   DownArrowIcon,
   PencilIcon,
   SortIcon,
+  TrashIcon,
   UpArrowIcon,
 } from "@/components/Icons/Icons";
 import { timestampToDate } from "@/utils";
@@ -15,8 +16,12 @@ import PrintPropertyMultiple from "@/components/PrintPropertyMultiple/PrintPrope
 
 import styles from "./PropertiesTable.module.scss";
 import dbRef from "@/constants/dbRefs";
+import { AuthContext } from "@/context/AuthContext";
+import { httpPostDeleteProperty } from "@/services/http";
+import { confirmAlert } from "react-confirm-alert";
+import toast from "react-hot-toast";
 
-interface PropertiesTableProps {
+interface OwnProps {
   tableData: any;
   handleModalOpen: (
     e: React.SyntheticEvent,
@@ -28,15 +33,53 @@ interface PropertiesTableProps {
   isHomePreviewTable?: boolean;
 }
 
-const PropertiesTable: React.FC<PropertiesTableProps> = ({
-  tableData,
+const PropertiesTable: React.FC<OwnProps> = ({
   handleModalOpen,
   hiddenColumns = [""],
   isHomePreviewTable,
+  setTableData,
+  tableData,
 }) => {
+  const { user } = useContext(AuthContext);
   const [labelsToPrint, setLabelsToPrint] = useState<Property[]>([]);
 
   const data = useMemo(() => tableData, [tableData]);
+
+  const handleDelete = (e: React.SyntheticEvent, id: string) => {
+    e.preventDefault();
+
+    confirmAlert({
+      title: "Confirm to Delete",
+      message: "Are you sure to delete this record?",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: async () => {
+            const response = await httpPostDeleteProperty({ id });
+            if (response.data.status === "success") {
+              toast.success(response.data.message, { id: "delete-property" });
+
+              const filteredArray = tableData.filter(
+                (row: Property) => row.id !== id
+              );
+              setTableData(filteredArray);
+            }
+
+            if (response.data.status === "error") {
+              toast.error(response.data.message, { id: "delete-property" });
+            }
+          },
+        },
+        {
+          label: "No",
+          onClick: () =>
+            toast.error("Operation Cancelled.", {
+              id: "delete-property",
+            }),
+        },
+      ],
+    });
+  };
 
   const columns = useMemo(
     () => [
@@ -107,6 +150,19 @@ const PropertiesTable: React.FC<PropertiesTableProps> = ({
             <PencilIcon />
           </span>
         ),
+      },
+      {
+        Header: "Delete",
+        accessor: (d: any) => d.id,
+        Cell: ({ value }: { value: any }) =>
+          user.isAdmin ? (
+            <span
+              title={`Delete Property: ${value}`}
+              onClick={(e) => handleDelete(e, value)}
+            >
+              <TrashIcon />
+            </span>
+          ) : null,
       },
     ],
     [tableData]

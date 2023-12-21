@@ -1,8 +1,8 @@
 import NavBar from "./NavBar/NavBar";
 import { PropertiesContextProvider } from "@/context/Properties";
 import { ClientsContextProvider } from "@/context/Clients";
-import { SelectDropDownsContextProvider } from "@/context/SelectDropDowns";
-import { CountiesContextProvider } from "@/context/Counties";
+import { SelectDropDownsContextProvider } from "@/context/SelectDropDownsContext";
+import { CitiesProvider } from "@/context/CitiesContext";
 import { ExaminersContextProvider } from "@/context/Examiners";
 import { UsersContextProvider } from "@/context/Users";
 import { useAuth } from "../context/AuthContext";
@@ -16,11 +16,7 @@ export default function Layout({ children }) {
   }
 
   if (!user) {
-    return (
-      <>
-        <AuthPage />
-      </>
-    );
+    return <AuthPage />;
   }
   if (user) {
     return (
@@ -29,13 +25,13 @@ export default function Layout({ children }) {
         <UsersContextProvider>
           <ExaminersContextProvider>
             <SelectDropDownsContextProvider>
-              <CountiesContextProvider>
+              <CitiesProvider>
                 <ClientsContextProvider>
                   <PropertiesContextProvider>
                     <main>{children}</main>
                   </PropertiesContextProvider>
                 </ClientsContextProvider>
-              </CountiesContextProvider>
+              </CitiesProvider>
             </SelectDropDownsContextProvider>
           </ExaminersContextProvider>
         </UsersContextProvider>

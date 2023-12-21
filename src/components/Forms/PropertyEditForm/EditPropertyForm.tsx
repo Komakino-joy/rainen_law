@@ -25,7 +25,7 @@ import { FORM_BUTTON_TEXT } from "@/constants";
 import { useAuth } from "@/context/AuthContext";
 import { useClientsContext } from "@/context/Clients";
 import { useExaminersContext } from "@/context/Examiners";
-import { useSelectDropDownsContext } from "@/context/SelectDropDowns";
+import { useSelectDropDownsContext } from "@/context/SelectDropDownsContext";
 import { timestampToDate, abbreviatedStatesLabelValuePair } from "@/utils";
 
 import styles from "./EditPropertyForm.module.scss";
@@ -45,18 +45,24 @@ const EditPropertyForm: React.FC<EditPropertyFormProps> = ({
   const { user } = useAuth();
   const { examinersDropDownOptions } = useExaminersContext();
   const { clientSelectOptions } = useClientsContext();
-  const { propertyStatusDropDownOptions, propertyTypeDropDownOptions } =
-    useSelectDropDownsContext();
+  const {
+    propertyStatusDropDownOptions,
+    propertyTypeDropDownOptions,
+    cityDropDownOptions,
+    countyDropDownOptions,
+  } = useSelectDropDownsContext();
   const { c_name: clientNames } = clientSelectOptions;
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [printLabelInfo, setPrintLabelInfo] = useState({});
   const [defaultSelectValues, setDefaultSelectValues] = useState({
+    assigned: "",
+    city: "",
+    clientName: "",
+    county: "",
     state: "MA",
     status: "",
     type: "",
-    assigned: "",
-    clientName: "",
   });
 
   const [propertyInfoSnippet, setPropertyInfoSnippet] = useState<{
@@ -102,6 +108,7 @@ const EditPropertyForm: React.FC<EditPropertyFormProps> = ({
           p_cert_1 = "",
           p_lot = "",
           p_condo = "",
+          p_county = "",
           p_unit = "",
           p_status = "",
           p_type = "",
@@ -164,11 +171,13 @@ const EditPropertyForm: React.FC<EditPropertyFormProps> = ({
         setIsLoading(false);
 
         setDefaultSelectValues({
+          assigned: p_assign || "",
+          city: p_city || "",
+          clientName: c_name || "",
+          county: p_county || "",
           state: p_state || "",
           status: p_status || "",
           type: p_type || "",
-          assigned: p_assign || "",
-          clientName: c_name || "",
         });
 
         return {
@@ -187,6 +196,7 @@ const EditPropertyForm: React.FC<EditPropertyFormProps> = ({
           p_street,
           p_lot,
           p_condo,
+          p_county,
           p_unit,
           p_comp_ref,
           p_file,
@@ -277,22 +287,11 @@ const EditPropertyForm: React.FC<EditPropertyFormProps> = ({
         <form onSubmit={handleSubmit(onSubmit)}>
           <section className={`flex-x ${styles["top-section"]}`}>
             <div className={`flex-y ${styles["column-1"]}`}>
-              <div className={`flex-x ${styles["city-state-zip-section"]}`}>
-                <FormInput
-                  name={dbRef.properties.p_city}
-                  labelKey={dbRef.properties.p_city}
-                  labelText="City"
-                  customClass={styles.city}
-                  type="text"
-                  isRequired={true}
-                  register={register}
-                  errors={errors}
-                />
-
+              <div className={`flex-x ${styles["city-state-section"]}`}>
                 <Controller
                   name={dbRef.properties.p_state}
                   control={control}
-                  defaultValue={defaultSelectValues.state}
+                  rules={{ required: true }}
                   render={({ field: { onChange } }) => {
                     return (
                       <FormInput
@@ -304,7 +303,7 @@ const EditPropertyForm: React.FC<EditPropertyFormProps> = ({
                         customClass={styles.state}
                         selectOnChange={onChange}
                         options={abbreviatedStatesLabelValuePair}
-                        isRequired={false}
+                        isRequired={true}
                         register={register}
                         errors={errors}
                       />
@@ -312,6 +311,54 @@ const EditPropertyForm: React.FC<EditPropertyFormProps> = ({
                   }}
                 />
 
+                <Controller
+                  name={dbRef.properties.p_city}
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { onChange } }) => {
+                    return (
+                      <FormInput
+                        name={dbRef.properties.p_city}
+                        labelKey={dbRef.properties.p_city}
+                        labelText="City"
+                        type="select"
+                        defaultValue={defaultSelectValues.city}
+                        customClass={styles.city}
+                        selectOnChange={onChange}
+                        options={cityDropDownOptions}
+                        isRequired={true}
+                        register={register}
+                        errors={errors}
+                      />
+                    );
+                  }}
+                />
+
+                <Controller
+                  name={dbRef.properties.p_county}
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { onChange } }) => {
+                    return (
+                      <FormInput
+                        name={dbRef.properties.p_county}
+                        labelKey={dbRef.properties.p_county}
+                        labelText="County"
+                        type="select"
+                        defaultValue={defaultSelectValues.county}
+                        customClass={styles.county}
+                        selectOnChange={onChange}
+                        options={countyDropDownOptions}
+                        isRequired={true}
+                        register={register}
+                        errors={errors}
+                      />
+                    );
+                  }}
+                />
+              </div>
+
+              <div className={`flex-x ${styles["zip-street-section"]}`}>
                 <FormInput
                   name={dbRef.properties.p_zip}
                   labelKey={dbRef.properties.p_zip}
@@ -322,24 +369,24 @@ const EditPropertyForm: React.FC<EditPropertyFormProps> = ({
                   register={register}
                   errors={errors}
                 />
-              </div>
 
-              <FormInput
-                name={dbRef.properties.p_street}
-                labelKey={dbRef.properties.p_street}
-                labelText="Street"
-                customClass={styles.street}
-                type="text"
-                isRequired={true}
-                register={register}
-                errors={errors}
-              />
+                <FormInput
+                  name={dbRef.properties.p_street}
+                  labelKey={dbRef.properties.p_street}
+                  labelText="Street"
+                  customClass={styles.street}
+                  type="text"
+                  isRequired={true}
+                  register={register}
+                  errors={errors}
+                />
+              </div>
 
               <div className={`flex-x ${styles["lot-condo-unit-section"]}`}>
                 <FormInput
                   name={dbRef.properties.p_lot}
                   labelKey={dbRef.properties.p_lot}
-                  labelText="Lot"
+                  labelText="Lot / Number"
                   customClass={styles.lot}
                   type="text"
                   isRequired={true}
@@ -434,6 +481,7 @@ const EditPropertyForm: React.FC<EditPropertyFormProps> = ({
                   <Controller
                     name={dbRef.properties.p_status}
                     control={control}
+                    rules={{ required: true }}
                     render={({ field: { onChange } }) => {
                       return (
                         <FormInput
@@ -444,7 +492,7 @@ const EditPropertyForm: React.FC<EditPropertyFormProps> = ({
                           type="select"
                           selectOnChange={onChange}
                           options={propertyStatusDropDownOptions}
-                          isRequired={false}
+                          isRequired={true}
                           register={register}
                           errors={errors}
                         />
@@ -457,6 +505,7 @@ const EditPropertyForm: React.FC<EditPropertyFormProps> = ({
                   <Controller
                     name={dbRef.properties.p_type}
                     control={control}
+                    rules={{ required: true }}
                     render={({ field: { onChange } }) => {
                       return (
                         <FormInput
@@ -467,7 +516,7 @@ const EditPropertyForm: React.FC<EditPropertyFormProps> = ({
                           type="select"
                           selectOnChange={onChange}
                           options={propertyTypeDropDownOptions}
-                          isRequired={false}
+                          isRequired={true}
                           register={register}
                           errors={errors}
                         />

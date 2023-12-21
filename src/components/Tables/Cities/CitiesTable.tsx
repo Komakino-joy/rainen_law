@@ -1,15 +1,15 @@
 /* eslint react/jsx-key: 0 */
 import { PencilIcon } from "@/components/Icons/Icons";
 import dbRef from "@/constants/dbRefs";
-import { Examiner, TableRefs } from "@/types/common";
+import { City, TableRefs } from "@/types/common";
 import { useMemo } from "react";
 import { useTable, useFilters } from "react-table";
 
-interface ExaminersTableProps {
+interface OwnProps {
   tableData: any[];
   selectionType: TableRefs | "";
   tableClassName: string;
-  setTableData: (tableData: Examiner[]) => void;
+  setTableData: (tableData: City[]) => void;
   handleModalOpen: (
     e: React.SyntheticEvent,
     selectedRecordId: string,
@@ -18,7 +18,7 @@ interface ExaminersTableProps {
   ) => void;
 }
 
-const ExaminersTable: React.FC<ExaminersTableProps> = ({
+const CitiesTable: React.FC<OwnProps> = ({
   tableData,
   selectionType,
   tableClassName,
@@ -30,36 +30,24 @@ const ExaminersTable: React.FC<ExaminersTableProps> = ({
     () => [
       {
         Header: "ID",
-        accessor: (d: Examiner) => d[dbRef.examiners.id as keyof Examiner],
+        accessor: (d: City) => d[dbRef.cities.id as keyof City],
       },
       {
-        Header: "Name",
-        accessor: (d: Examiner) =>
-          d[dbRef.examiners.name as keyof Examiner] || "N/A",
+        Header: "City",
+        accessor: (d: City) => d[dbRef.cities.city as keyof City] || "N/A",
       },
       {
-        Header: "Code",
-        accessor: (d: Examiner) =>
-          d[dbRef.examiners.code as keyof Examiner] || "N/A",
+        Header: "County",
+        accessor: (d: City) => d[dbRef.cities.county as keyof City] || "N/A",
       },
       {
-        Header: "Type",
-        accessor: (d: Examiner) =>
-          d[dbRef.examiners.type as keyof Examiner] || "N/A",
-      },
-      {
-        Header: "Compensation",
-        accessor: (d: Examiner) =>
-          d[dbRef.examiners.compensate as keyof Examiner] || "N/A",
-      },
-      {
-        Header: "Is Active ?",
-        accessor: (d: Examiner) =>
-          d[dbRef.examiners.is_active as keyof Examiner].toString() || "N/A",
+        Header: "State",
+        accessor: (d: City) =>
+          d[dbRef.cities.state_abbrv as keyof City] || "N/A",
       },
       {
         Header: "View / Edit",
-        accessor: (d: Examiner) => d[dbRef.examiners.id as keyof Examiner],
+        accessor: (d: City) => d[dbRef.cities.id as keyof City],
         Cell: ({ value }: { value: any }) => (
           <span
             title={`Edit ${selectionType}: ${value}`}
@@ -110,4 +98,4 @@ const ExaminersTable: React.FC<ExaminersTableProps> = ({
   );
 };
 
-export default ExaminersTable;
+export default CitiesTable;

@@ -1,6 +1,7 @@
 const dbRef = {
   table_names: {
     city: "city",
+    cities: "cities",
     users: "users",
     clients: "clients",
     counties: "counties",
@@ -13,20 +14,27 @@ const dbRef = {
     client_status: "client_status",
     insurance_titles: "insurance_titles",
   },
+  cities: {
+    id: "id",
+    city: "city",
+    county: "county",
+    state_abbrv: "state_abbrv",
+  },
   city: {
     city: "city",
-    county: "county"
+    county: "county",
   },
   counties: {
     id: "id",
     code: "code",
-    county: "county"
+    county: "county",
   },
   properties: {
     id: "id",
-    p_number: 'p_number',
+    p_number: "p_number",
     p_input_date: "p_input_date",
     p_city: "p_city",
+    p_county: "p_county",
     p_street: "p_street",
     p_lot: "p_lot",
     p_condo: "p_condo",
@@ -37,7 +45,7 @@ const dbRef = {
     p_page_2: "p_page_2",
     p_cert_1: "p_cert_1",
     p_requester: "p_requester",
-    p_file: "p_file", 
+    p_file: "p_file",
     p_type: "p_type",
     p_status: "p_status",
     p_assign: "p_assign",
@@ -53,7 +61,7 @@ const dbRef = {
     created_by: "created_by",
     last_updated_by: "last_updated_by",
     last_updated: "last_updated",
-    created_at: "created_at"
+    created_at: "created_at",
   },
 
   buyer_seller: {
@@ -64,7 +72,7 @@ const dbRef = {
     seller_3: "seller_3",
     seller_4: "seller_4",
     buyer_1: "buyer_1",
-    buyer_2: "buyer_2"
+    buyer_2: "buyer_2",
   },
 
   clients: {
@@ -86,10 +94,10 @@ const dbRef = {
     created_by: "created_by",
     last_updated_by: "last_updated_by",
     last_updated: "last_updated",
-    created_at: "created_at"
+    created_at: "created_at",
   },
 
-  insurance_titles :{
+  insurance_titles: {
     id: "id",
     i_number: "i_number",
     i_file: "i_file",
@@ -122,12 +130,13 @@ const dbRef = {
 
   users: {
     id: "id",
+    is_admin: "is_admin",
     f_name: "f_name",
     l_name: "l_name",
     username: "username",
     password: "password",
     created_at: "created_at",
-    last_updated: "last_updated"
+    last_updated: "last_updated",
   },
 
   examiners: {
@@ -140,8 +149,8 @@ const dbRef = {
     created_at: "created_at",
     created_by: "created_by",
     last_updated: "last_updated",
-    last_updated_by: "last_updated_by"
-  }
-}
+    last_updated_by: "last_updated_by",
+  },
+};
 
-export default dbRef
+export default dbRef;

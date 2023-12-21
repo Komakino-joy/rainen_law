@@ -1,18 +1,15 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
-
 import { useForm, Controller } from "react-hook-form";
-
 import dbRef from "@/constants/dbRefs";
 import Button from "@/components/Button/Button";
 import { useClientsContext } from "@/context/Clients";
 import { usePropertiesContext } from "@/context/Properties";
-
 import FormInput from "../Common/FormInput/FormInput";
 import { CITY_HUB } from "@/constants";
 import toast from "react-hot-toast";
 
-const SearchPropertiesForm = () => {
+const PropertySearchForm = () => {
   const router = useRouter();
 
   const { propertiesSelectOptions } = usePropertiesContext();
@@ -296,4 +293,4 @@ const SearchPropertiesForm = () => {
   );
 };
 
-export default SearchPropertiesForm;
+export default PropertySearchForm;

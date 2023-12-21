@@ -1,14 +1,14 @@
-import Select from '@/components/Select/Select';
-import React from 'react';
+import Select from "@/components/Select/Select";
+import React from "react";
 
-// import styles from './FormInput.module.scss';
+import "../../../../../src/styles/home.module.scss";
 
 interface FormInput {
   customClass?: string;
   labelKey: string;
   labelText: string;
   isRequired: boolean;
-  type:string;
+  type: string;
   register: any;
   errors: any;
   options?: any[];
@@ -16,79 +16,81 @@ interface FormInput {
   step?: string;
   max?: string;
   defaultValue?: any;
-  name:string;
-  disabled?:boolean;
+  name: string;
+  disabled?: boolean;
   selectOnChange?: any;
   validate?: any;
-  autoComplete?: 'off' | 'new-password' | 'on' | null;
-  checked?:boolean;
+  autoComplete?: "off" | "new-password" | "on" | null;
+  checked?: boolean;
 }
 
-const Required:React.FC = () => (
-  <span className='required'>*</span>
-)
+const Required: React.FC = () => <span className="required">*</span>;
 
-const FormInput:React.FC<FormInput> = ({ 
+const FormInput: React.FC<FormInput> = ({
   name,
-  customClass='', 
-  labelKey, 
-  labelText, 
-  isRequired, 
-  type='',
+  customClass = "",
+  labelKey,
+  labelText,
+  isRequired,
+  type = "",
   register,
   errors,
   options,
-  min='',
-  step='',
-  max='',
-  defaultValue='',
-  disabled=false,
+  min = "",
+  step = "",
+  max = "",
+  defaultValue = "",
+  disabled = false,
   selectOnChange,
-  validate=null,
+  validate = null,
   autoComplete,
-  checked
+  checked,
 }) => {
+  // errors[labelKey] && isRequired ?
 
-  return(
-    <div className={`form-input-group ${customClass}`}>            
-      <label htmlFor={labelKey}> 
-        {labelText} {errors[labelKey] && isRequired ? <Required /> : ''}
-      </label>  
-      {
-        type === 'select'  && options ? 
-          <Select 
-            onChange={selectOnChange} 
-            options={options}  
-            defaultValue={defaultValue}
-          /> 
-          
-        : type === 'textarea' 
-        ? <textarea 
-            name={name} 
-            defaultValue={defaultValue} 
-            {...register(labelKey, { 
-              required: isRequired, 
-              validate: validate
-            })} 
-          />
-        : <input 
-            name={name}
-            type={type}
-            checked={checked} 
-            min={min}
-            step={step || 'any'}
-            max={max}
-            defaultValue={defaultValue}
-            disabled={disabled}
-            autoComplete={autoComplete}
-            {...register(labelKey, { 
-              required: isRequired, 
-              validate: validate
-            })} 
-          />
-      }
+  const isError = errors[labelKey] && isRequired;
+  console.log(errors);
+  return (
+    <div className={`form-input-group ${customClass}`}>
+      <label htmlFor={labelKey}>
+        {labelText} {isRequired ? <Required /> : ""}{" "}
+      </label>
+      {type === "select" && options ? (
+        <Select
+          onChange={selectOnChange}
+          options={options}
+          defaultValue={defaultValue}
+          isError={isError}
+        />
+      ) : type === "textarea" ? (
+        <textarea
+          name={name}
+          defaultValue={defaultValue}
+          {...register(labelKey, {
+            required: isRequired,
+            validate: validate,
+          })}
+        />
+      ) : (
+        <input
+          className={`${isError && "border-red"}`}
+          name={name}
+          type={type}
+          checked={checked}
+          min={min}
+          step={step || "any"}
+          max={max}
+          defaultValue={defaultValue}
+          disabled={disabled}
+          autoComplete={autoComplete}
+          {...register(labelKey, {
+            required: isRequired,
+            validate: validate,
+          })}
+        />
+      )}
     </div>
-  )
-}
+  );
+};
 
 export default FormInput;

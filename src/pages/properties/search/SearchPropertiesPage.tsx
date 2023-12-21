@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Spinner from "@/components/Spinner/Spinner";
-import SearchPropertiesForm from "@/components/Forms/PropertySearchForm/SearchPropertiesForm";
+import PropertySearchForm from "@/components/Forms/PropertySearchForm/PropertySearchForm";
 import { useClientsContext } from "@/context/Clients";
 import { usePropertiesContext } from "@/context/Properties";
 
@@ -15,7 +15,7 @@ const SearchPropertiesPage = () => {
       {isLoading ? (
         <Spinner containerClassName="page-spinner" />
       ) : (
-        <SearchPropertiesForm />
+        <PropertySearchForm />
       )}
     </div>
   );

@@ -9,10 +9,11 @@
 
 .column-2,
 .column-3 {
-  flex: .25;
+  flex: 0.25;
 }
 
-.city-state-zip-section,
+.city-state-section,
+.zip-street-section,
 .lot-condo-unit-section,
 .status-type-assigned-section,
 .comp-ref-file-num-section,
@@ -23,19 +24,23 @@
   align-items: center;
 
   .city,
+  .street,
+  .county,
   .clientName,
-  .assigned  {
+  .assigned {
     flex: 1;
   }
 
+  .state,
   .zip {
-    flex: .4;
+    flex: 0.25;
+    min-width: 82px;
   }
 
   .compRef,
   .fileNumber,
   .clientFileNumber {
-    flex: .5;
+    flex: 0.5;
   }
 }
 

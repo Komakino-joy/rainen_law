@@ -6,17 +6,11 @@ import Button from "@/components/Button/Button";
 import { useState } from "react";
 import dbRef from "@/constants/dbRefs";
 
-interface ClientSearchFormProps {
-  onSubmit: any;
-}
+const ClientSearchForm = () => {
+  const router = useRouter();
 
-const ClientSearchForm:React.FC<ClientSearchFormProps> = ({
-  onSubmit
-}) => {
-  const router = useRouter()
-
-  const {clientSelectOptions} = useClientsContext()
-  const [clearSelectInputBoxes, setClearSelectInputBoxes] = useState(false)
+  const { clientSelectOptions } = useClientsContext();
+  const [clearSelectInputBoxes, setClearSelectInputBoxes] = useState(false);
 
   const {
     c_name: clientNames,
@@ -29,352 +23,326 @@ const ClientSearchForm:React.FC<ClientSearchFormProps> = ({
     c_zip: clientZips,
     c_phone: clientPhones,
     c_fax: clientFaxes,
-    c_email: clientEmails
-  } = clientSelectOptions
+    c_email: clientEmails,
+  } = clientSelectOptions;
 
-  const { 
-    register, 
+  const {
+    register,
     getValues,
     reset,
     control,
-    formState: { errors, dirtyFields }
+    formState: { errors, dirtyFields },
   } = useForm();
 
-  const isDirtyAlt = !!Object.keys(dirtyFields).length === false
+  const isDirtyAlt = !!Object.keys(dirtyFields).length === false;
 
-  const handleViewAllClick = (e:any) => {
-    e.preventDefault()
-    router.push('/clients/1')
-  }
+  const onSubmit = async (data: any) => {
+    document.cookie = `last-clients-search-filters=${encodeURIComponent(
+      JSON.stringify(data)
+    )}; path=/`;
+
+    router.push("/clients/1");
+  };
 
   return (
-    <div className='form-wrapper search-form'>
-        <header>
-          <span>Search For Clients</span>
-        </header>
+    <div className="form-wrapper search-form">
+      <header>
+        <span>Search For Clients</span>
+      </header>
       <form className="flex-y">
         <section className="flex-x gap-sm">
-          { clientNames && clientNames.length > 0 &&
-            <Controller 
-              name={dbRef.clients.c_name}  
-              control={control} 
-              render={({
-                field: {onChange},
-              }) => {
+          {clientNames && clientNames.length > 0 && (
+            <Controller
+              name={dbRef.clients.c_name}
+              control={control}
+              render={({ field: { onChange } }) => {
                 return (
-                  <FormInput 
+                  <FormInput
                     key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
-                    name={dbRef.clients.c_name}  
-                    labelKey={dbRef.clients.c_name}  
+                    name={dbRef.clients.c_name}
+                    labelKey={dbRef.clients.c_name}
                     labelText="Name"
-                    type="select" 
+                    type="select"
                     customClass="f-100"
                     selectOnChange={onChange}
                     options={clientNames}
                     isRequired={false}
-                    register={register} 
+                    register={register}
                     errors={errors}
                   />
-                ) 
+                );
               }}
             />
-          }
+          )}
 
-          { clientNumbers && clientNumbers.length > 0 &&
-            <Controller 
-              name={dbRef.clients.c_number}    
-              control={control} 
-              render={({
-                field: {onChange},
-              }) => {
+          {clientNumbers && clientNumbers.length > 0 && (
+            <Controller
+              name={dbRef.clients.c_number}
+              control={control}
+              render={({ field: { onChange } }) => {
                 return (
-                  <FormInput 
+                  <FormInput
                     key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
-                    name={dbRef.clients.c_number} 
-                    labelKey={dbRef.clients.c_number} 
+                    name={dbRef.clients.c_number}
+                    labelKey={dbRef.clients.c_number}
                     labelText="Number"
-                    type="select" 
+                    type="select"
                     customClass="f-100"
                     selectOnChange={onChange}
                     options={clientNumbers}
                     isRequired={false}
-                    register={register} 
+                    register={register}
                     errors={errors}
                   />
-                ) 
+                );
               }}
             />
-          }
+          )}
 
-          { clientStats && clientStats.length > 0 &&
-            <Controller 
-              name={dbRef.clients.c_status}  
-              control={control} 
-              render={({
-                field: {onChange},
-              }) => {
+          {clientStats && clientStats.length > 0 && (
+            <Controller
+              name={dbRef.clients.c_status}
+              control={control}
+              render={({ field: { onChange } }) => {
                 return (
-                  <FormInput 
+                  <FormInput
                     key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
-                    name={dbRef.clients.c_status} 
-                    labelKey={dbRef.clients.c_status} 
+                    name={dbRef.clients.c_status}
+                    labelKey={dbRef.clients.c_status}
                     labelText="Status"
-                    type="select" 
+                    type="select"
                     customClass="f-50"
                     selectOnChange={onChange}
                     options={clientStats}
                     isRequired={false}
-                    register={register} 
+                    register={register}
                     errors={errors}
                   />
-                ) 
+                );
               }}
             />
-          }
+          )}
         </section>
 
         <section className="flex-x gap-sm">
-          { clientPhones && clientPhones.length > 0 &&
-            <Controller 
-              name={dbRef.clients.c_phone}   
-              control={control} 
-              render={({
-                field: {onChange},
-              }) => {
+          {clientPhones && clientPhones.length > 0 && (
+            <Controller
+              name={dbRef.clients.c_phone}
+              control={control}
+              render={({ field: { onChange } }) => {
                 return (
-                  <FormInput 
+                  <FormInput
                     key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
                     name={dbRef.clients.c_phone}
                     labelKey={dbRef.clients.c_phone}
                     labelText="Phone Number"
-                    type="select" 
+                    type="select"
                     customClass="f-100"
                     selectOnChange={onChange}
                     options={clientPhones}
                     isRequired={false}
-                    register={register} 
+                    register={register}
                     errors={errors}
                   />
-                ) 
+                );
               }}
             />
-          }
+          )}
 
-          { clientFaxes && clientFaxes.length > 0 &&
-            <Controller 
-              name={dbRef.clients.c_fax}  
-              control={control} 
-              render={({
-                field: {onChange},
-              }) => {
+          {clientFaxes && clientFaxes.length > 0 && (
+            <Controller
+              name={dbRef.clients.c_fax}
+              control={control}
+              render={({ field: { onChange } }) => {
                 return (
-                  <FormInput 
+                  <FormInput
                     key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
-                    name={dbRef.clients.c_fax}  
-                    labelKey={dbRef.clients.c_fax}  
+                    name={dbRef.clients.c_fax}
+                    labelKey={dbRef.clients.c_fax}
                     labelText="Fax Number"
-                    type="select" 
+                    type="select"
                     customClass="f-100"
                     selectOnChange={onChange}
                     options={clientFaxes}
                     isRequired={false}
-                    register={register} 
+                    register={register}
                     errors={errors}
                   />
-                ) 
+                );
               }}
             />
-          }
+          )}
 
-          { clientEmails && clientEmails.length > 0 &&
-            <Controller 
-              name={dbRef.clients.c_email}    
-              control={control} 
-              render={({
-                field: {onChange},
-              }) => {
+          {clientEmails && clientEmails.length > 0 && (
+            <Controller
+              name={dbRef.clients.c_email}
+              control={control}
+              render={({ field: { onChange } }) => {
                 return (
-                  <FormInput 
+                  <FormInput
                     key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
-                    name={dbRef.clients.c_email} 
-                    labelKey={dbRef.clients.c_email} 
+                    name={dbRef.clients.c_email}
+                    labelKey={dbRef.clients.c_email}
                     labelText="Email"
-                    type="select" 
+                    type="select"
                     customClass="f-100"
                     selectOnChange={onChange}
                     options={clientEmails}
                     isRequired={false}
-                    register={register} 
+                    register={register}
                     errors={errors}
                   />
-                ) 
+                );
               }}
             />
-          }
+          )}
         </section>
 
         <section className="flex-x gap-sm">
-          { clientContacts && clientContacts.length > 0 &&
-            <Controller 
-              name={dbRef.clients.c_contact}   
-              control={control} 
-              render={({
-                field: {onChange},
-              }) => {
+          {clientContacts && clientContacts.length > 0 && (
+            <Controller
+              name={dbRef.clients.c_contact}
+              control={control}
+              render={({ field: { onChange } }) => {
                 return (
-                  <FormInput 
+                  <FormInput
                     key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
-                    name={dbRef.clients.c_contact}  
-                    labelKey={dbRef.clients.c_contact}  
+                    name={dbRef.clients.c_contact}
+                    labelKey={dbRef.clients.c_contact}
                     labelText="Contact"
-                    type="select" 
+                    type="select"
                     customClass="f-100"
                     selectOnChange={onChange}
                     options={clientContacts}
                     isRequired={false}
-                    register={register} 
+                    register={register}
                     errors={errors}
                   />
-                ) 
+                );
               }}
             />
-          }
+          )}
 
-          { clientStattos && clientStattos.length > 0 &&
-            <Controller 
-              name={dbRef.clients.c_statement_addressee}    
-              control={control} 
-              render={({
-                field: {onChange},
-              }) => {
+          {clientStattos && clientStattos.length > 0 && (
+            <Controller
+              name={dbRef.clients.c_statement_addressee}
+              control={control}
+              render={({ field: { onChange } }) => {
                 return (
-                  <FormInput 
+                  <FormInput
                     key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
-                    name={dbRef.clients.c_statement_addressee} 
-                    labelKey={dbRef.clients.c_statement_addressee} 
+                    name={dbRef.clients.c_statement_addressee}
+                    labelKey={dbRef.clients.c_statement_addressee}
                     labelText="Statement Addressee"
-                    type="select" 
+                    type="select"
                     customClass="f-100"
                     selectOnChange={onChange}
                     options={clientStattos}
                     isRequired={false}
-                    register={register} 
+                    register={register}
                     errors={errors}
                   />
-                ) 
+                );
               }}
             />
-          }
+          )}
         </section>
 
         <section className="flex-x gap-sm">
-          { clientCities && clientCities.length > 0 &&
-            <Controller 
-              name={dbRef.clients.c_city}   
-              control={control} 
-              render={({
-                field: {onChange},
-              }) => {
+          {clientCities && clientCities.length > 0 && (
+            <Controller
+              name={dbRef.clients.c_city}
+              control={control}
+              render={({ field: { onChange } }) => {
                 return (
-                  <FormInput 
+                  <FormInput
                     key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
-                    name={dbRef.clients.c_city}   
-                    labelKey={dbRef.clients.c_city}   
+                    name={dbRef.clients.c_city}
+                    labelKey={dbRef.clients.c_city}
                     labelText="City"
-                    type="select" 
+                    type="select"
                     customClass="f-100"
                     selectOnChange={onChange}
                     options={clientCities}
                     isRequired={false}
-                    register={register} 
+                    register={register}
                     errors={errors}
                   />
-                ) 
+                );
               }}
             />
-          }
+          )}
 
-          { clientStates && clientStates.length > 0 &&
-            <Controller 
-              name={dbRef.clients.c_state}    
-              control={control} 
-              render={({
-                field: {onChange},
-              }) => {
+          {clientStates && clientStates.length > 0 && (
+            <Controller
+              name={dbRef.clients.c_state}
+              control={control}
+              render={({ field: { onChange } }) => {
                 return (
-                  <FormInput 
+                  <FormInput
                     key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
                     name={dbRef.clients.c_state}
                     labelKey={dbRef.clients.c_state}
                     labelText="State"
-                    type="select" 
+                    type="select"
                     customClass="f-50"
                     selectOnChange={onChange}
                     options={clientStates}
                     isRequired={false}
-                    register={register} 
+                    register={register}
                     errors={errors}
                   />
-                ) 
+                );
               }}
             />
-          }
+          )}
 
-          { clientZips && clientZips.length > 0 &&
-            <Controller 
-              name={dbRef.clients.c_zip}  
-              control={control} 
-              render={({
-                field: {onChange},
-              }) => {
+          {clientZips && clientZips.length > 0 && (
+            <Controller
+              name={dbRef.clients.c_zip}
+              control={control}
+              render={({ field: { onChange } }) => {
                 return (
-                  <FormInput 
+                  <FormInput
                     key={`my_unique_select_key_to_force_render__${clearSelectInputBoxes}`}
                     name={dbRef.clients.c_zip}
                     labelKey={dbRef.clients.c_zip}
                     labelText="Zip Code"
-                    type="select" 
+                    type="select"
                     customClass="f-100"
                     selectOnChange={onChange}
                     options={clientZips}
                     isRequired={false}
-                    register={register} 
+                    register={register}
                     errors={errors}
                   />
-                ) 
+                );
               }}
             />
-          }
+          )}
         </section>
 
-        <section className='flex-x submit-button-section'>
-          <Button 
-            isDisabled={false} 
-            type='button'
-            onClick={handleViewAllClick} 
-          >
-            View All
-          </Button>
-          <Button  
-            isDisabled={isDirtyAlt} 
-            type='button'            
+        <section className="flex-x submit-button-section">
+          <Button
+            isDisabled={false}
+            type="button"
             onClick={(e) => {
-              e.preventDefault()
-              const data = getValues()
-              onSubmit(data)
-              setClearSelectInputBoxes(!clearSelectInputBoxes)
-              reset()
+              e.preventDefault();
+              const data = getValues();
+              onSubmit(data);
+              setClearSelectInputBoxes(!clearSelectInputBoxes);
+              reset();
             }}
           >
             Submit Search
           </Button>
-          <Button 
-            isDisabled={isDirtyAlt} 
-            type='button'
+          <Button
+            isDisabled={isDirtyAlt}
+            type="button"
             onClick={() => {
-              setClearSelectInputBoxes(!clearSelectInputBoxes)
-              reset()
-            }} 
+              setClearSelectInputBoxes(!clearSelectInputBoxes);
+              reset();
+            }}
             redVariant
           >
             Clear Form
@@ -383,6 +351,6 @@ const ClientSearchForm:React.FC<ClientSearchFormProps> = ({
       </form>
     </div>
   );
-}
+};
 
-export default ClientSearchForm
+export default ClientSearchForm;
