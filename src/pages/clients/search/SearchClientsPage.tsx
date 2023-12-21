@@ -2,7 +2,7 @@
 
 import React from "react";
 import ClientSearchForm from "@/components/Forms/ClientSearchForm/ClientSearchForm";
-import { useClientsContext } from "@/context/Clients";
+import { useClientsContext } from "@/context/ClientsContext";
 import Spinner from "@/components/Spinner/Spinner";
 
 const SearchClientsPage = () => {

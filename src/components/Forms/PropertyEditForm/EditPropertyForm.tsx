@@ -1,35 +1,29 @@
 import { Property } from "@/types/common";
-
 import { useState } from "react";
+import { confirmAlert } from "react-confirm-alert";
 import { Controller, useForm } from "react-hook-form";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import toast from "react-hot-toast";
 import "react-tabs/style/react-tabs.css";
-
 import Button from "@/components/Button/Button";
 import Spinner from "@/components/Spinner/Spinner";
 import FormInput from "../Common/FormInput/FormInput";
 import PrintPropertyLabel from "@/components/PrintPropertyLabel/PrintPropertyLabel";
 import SubTableSellerBuyer from "@/components/Tables/SubTableSellerBuyer/SubTableSellerBuyer";
-
 import dbRef from "@/constants/dbRefs";
-
 import {
   httpGetPropertyCompRef,
   httpPostInsertProperty,
   httpPostSelectedProperty,
   httpPostUpdateProperty,
 } from "@/services/http";
-
 import { FORM_BUTTON_TEXT } from "@/constants";
-import { useAuth } from "@/context/AuthContext";
-import { useClientsContext } from "@/context/Clients";
-import { useExaminersContext } from "@/context/Examiners";
+import { useUser } from "@/context/AuthContext";
+import { useClientsContext } from "@/context/ClientsContext";
+import { useExaminersContext } from "@/context/ExaminersContext";
 import { useSelectDropDownsContext } from "@/context/SelectDropDownsContext";
 import { timestampToDate, abbreviatedStatesLabelValuePair } from "@/utils";
-
 import styles from "./EditPropertyForm.module.scss";
-import { confirmAlert } from "react-confirm-alert";
 
 interface OwnProps {
   propertyId: string | null;
@@ -42,7 +36,9 @@ const EditPropertyForm: React.FC<OwnProps> = ({
   queryType,
   handleAfterSubmit = () => {},
 }) => {
-  const { user } = useAuth();
+  const user = useUser();
+  if (!user) return null;
+
   const { examinersDropDownOptions } = useExaminersContext();
   const { clientSelectOptions } = useClientsContext();
   const {
@@ -51,8 +47,8 @@ const EditPropertyForm: React.FC<OwnProps> = ({
     cityDropDownOptions,
     countyDropDownOptions,
   } = useSelectDropDownsContext();
-  const { c_name: clientNames } = clientSelectOptions;
 
+  const { c_name: clientNames } = clientSelectOptions;
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [printLabelInfo, setPrintLabelInfo] = useState({});
   const [defaultSelectValues, setDefaultSelectValues] = useState({

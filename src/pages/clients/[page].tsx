@@ -4,27 +4,19 @@ import { useRouter } from "next/router";
 import conn from "../../lib/db";
 import dbRef from "@/constants/dbRefs";
 import Modal from "@/components/Modal/Modal";
-import Spinner from "@/components/Spinner/Spinner";
 import Pagination from "@/components/Pagination/Pagination";
 import ClientsTable from "@/components/Tables/Clients/ClientsTable";
 import EditClientForm from "@/components/Forms/ClientEditForm/EditClientForm";
 import pgPromise from "pg-promise";
 import Link from "next/link";
+import { andEquals } from "@/constants/dbClauses";
+import parseJSONCookie from "@/utils/parseJSONcookie";
 
 export async function getServerSideProps(context: any) {
   try {
     const { page } = context.query;
     const pageSize = 100;
     const pageOffset = pageSize * (page - 1);
-
-    const encodedData = context.req.headers.cookie
-      ?.split(";")
-      .find((cookie: string) =>
-        cookie.trim().startsWith("last-clients-search-filters=")
-      )
-      ?.split("=")[1];
-
-    const decodeData = JSON.parse(decodeURIComponent(encodedData));
 
     const {
       c_name = "",
@@ -38,47 +30,10 @@ export async function getServerSideProps(context: any) {
       c_state = "",
       c_statement_addressee = "",
       c_zip = "",
-    } = decodeData;
-
-    const andEqualsClause = (
-      table: string,
-      field: string,
-      paramNum: string
-    ) => {
-      return `AND ${table}."${field}" = $${paramNum}`;
-    };
-
-    const param = {
-      c_name:
-        c_name !== "" ? andEqualsClause("c", dbRef.clients.c_name, "1") : "",
-      c_number:
-        c_number !== ""
-          ? andEqualsClause("c", dbRef.clients.c_number, "2")
-          : "",
-      c_city:
-        c_city !== "" ? andEqualsClause("c", dbRef.clients.c_city, "3") : "",
-      c_contact:
-        c_contact !== ""
-          ? andEqualsClause("c", dbRef.clients.c_contact, "4")
-          : "",
-      c_email:
-        c_email !== "" ? andEqualsClause("c", dbRef.clients.c_email, "5") : "",
-      c_fax: c_fax !== "" ? andEqualsClause("c", dbRef.clients.c_fax, "6") : "",
-      c_phone:
-        c_phone !== "" ? andEqualsClause("c", dbRef.clients.c_phone, "7") : "",
-      c_status:
-        c_status !== ""
-          ? andEqualsClause("c", dbRef.clients.c_status, "8")
-          : "",
-      c_state:
-        c_state !== "" ? andEqualsClause("c", dbRef.clients.c_state, "9") : "",
-      c_statement_addressee:
-        c_statement_addressee !== ""
-          ? andEqualsClause("c", dbRef.clients.c_statement_addressee, "10")
-          : "",
-      c_zip:
-        c_zip !== "" ? andEqualsClause("c", dbRef.clients.c_zip, "11") : "",
-    };
+    } = parseJSONCookie({
+      cookies: context.req.headers.cookie,
+      targetCookie: "last-clients-search-filters",
+    });
 
     const clientsQuery = pgPromise.as.format(
       `
@@ -110,21 +65,27 @@ export async function getServerSideProps(context: any) {
               COUNT(*) AS titlescount 
             FROM ${dbRef.table_names.insurance_titles}
             GROUP BY ${dbRef.insurance_titles.i_number}
-          ) icount ON icount.${dbRef.insurance_titles.i_number} = c.${dbRef.clients.c_number}
+          ) icount ON icount.${dbRef.insurance_titles.i_number} = c.${
+        dbRef.clients.c_number
+      }
   
         WHERE 
           c.${dbRef.clients.id} IS NOT NULL
-          ${param.c_name}
-          ${param.c_number}
-          ${param.c_city}
-          ${param.c_contact}
-          ${param.c_email}
-          ${param.c_fax}
-          ${param.c_phone}
-          ${param.c_status}
-          ${param.c_state}
-          ${param.c_statement_addressee}
-          ${param.c_zip}
+          ${c_name ? andEquals("c", dbRef.clients.c_name, "1") : ""}
+          ${c_number ? andEquals("c", dbRef.clients.c_number, "2") : ""}
+          ${c_city ? andEquals("c", dbRef.clients.c_city, "3") : ""}
+          ${c_contact ? andEquals("c", dbRef.clients.c_contact, "4") : ""}
+          ${c_email ? andEquals("c", dbRef.clients.c_email, "5") : ""}
+          ${c_fax ? andEquals("c", dbRef.clients.c_fax, "6") : ""}
+          ${c_phone ? andEquals("c", dbRef.clients.c_phone, "7") : ""}
+          ${c_status ? andEquals("c", dbRef.clients.c_status, "8") : ""}
+          ${c_state ? andEquals("c", dbRef.clients.c_state, "9") : ""}
+          ${
+            c_statement_addressee
+              ? andEquals("c", dbRef.clients.c_statement_addressee, "10")
+              : ""
+          }
+          ${c_zip ? andEquals("c", dbRef.clients.c_zip, "11") : ""}
         ORDER BY 
           c.${dbRef.clients.c_name}
         OFFSET ${pageOffset} 
@@ -149,10 +110,13 @@ export async function getServerSideProps(context: any) {
       JSON.stringify((await conn.query(clientsQuery)).rows)
     );
 
+    const totalRecords =
+      clientsResults.length === 0 ? 0 : Number(clientsResults[0].total_count);
+
     return {
       props: {
         clients: clientsResults,
-        totalRecords: Number(clientsResults[0].total_count),
+        totalRecords,
         pageSize,
         currentPage: Number(page),
       },
@@ -210,7 +174,7 @@ const Clients: React.FC<OwnProps> = ({
 
   return (
     <>
-      {tableData ? (
+      {tableData && (
         <div className="all-records-view-page">
           <header>
             <h1>
@@ -238,10 +202,6 @@ const Clients: React.FC<OwnProps> = ({
               currentPage={currentPage}
             />
           )}
-        </div>
-      ) : (
-        <div className="page-spinner">
-          <Spinner />
         </div>
       )}
 

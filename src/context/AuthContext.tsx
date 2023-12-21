@@ -83,7 +83,7 @@ export const useAuth = () => {
 
 export const useUser = () => {
   const auth = React.useContext(AuthContext);
-  return auth.user;
+  return auth.user ?? null;
 };
 
 export const useIsAdmin = () => {

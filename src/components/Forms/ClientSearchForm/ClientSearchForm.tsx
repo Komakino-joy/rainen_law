@@ -1,7 +1,7 @@
 import { Controller, useForm } from "react-hook-form";
 import { useRouter } from "next/router";
 import FormInput from "../Common/FormInput/FormInput";
-import { useClientsContext } from "@/context/Clients";
+import { useClientsContext } from "@/context/ClientsContext";
 import Button from "@/components/Button/Button";
 import { useState } from "react";
 import dbRef from "@/constants/dbRefs";

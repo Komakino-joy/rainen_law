@@ -3,8 +3,8 @@
 import React, { useState } from "react";
 import EditPropertyForm from "@/components/Forms/PropertyEditForm/EditPropertyForm";
 import Modal from "@/components/Modal/Modal";
-import { useClientsContext } from "@/context/Clients";
-import { usePropertiesContext } from "@/context/Properties";
+import { useClientsContext } from "@/context/ClientsContext";
+import { usePropertiesContext } from "@/context/PropertiesContext";
 import Spinner from "@/components/Spinner/Spinner";
 
 const AddNewPropertyPage = () => {

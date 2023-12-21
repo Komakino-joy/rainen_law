@@ -16,7 +16,7 @@ import PrintPropertyMultiple from "@/components/PrintPropertyMultiple/PrintPrope
 
 import styles from "./PropertiesTable.module.scss";
 import dbRef from "@/constants/dbRefs";
-import { AuthContext } from "@/context/AuthContext";
+import { useIsAdmin } from "@/context/AuthContext";
 import { httpPostDeleteProperty } from "@/services/http";
 import { confirmAlert } from "react-confirm-alert";
 import toast from "react-hot-toast";
@@ -46,10 +46,8 @@ const PropertiesTable: React.FC<OwnProps> = ({
       <InfoCard line1="No Records Found" customStyles={{ width: "80vw" }} />
     );
   }
-
-  const { user } = useContext(AuthContext);
+  const isAdmin = useIsAdmin();
   const [labelsToPrint, setLabelsToPrint] = useState<Property[]>([]);
-
   const data = useMemo(() => tableData, [tableData]);
 
   const handleDelete = (e: React.SyntheticEvent, id: string) => {
@@ -162,7 +160,7 @@ const PropertiesTable: React.FC<OwnProps> = ({
         Header: "Delete",
         accessor: (d: any) => d.id,
         Cell: ({ value }: { value: any }) =>
-          user.isAdmin ? (
+          isAdmin ? (
             <span
               title={`Delete Property: ${value}`}
               onClick={(e) => handleDelete(e, value)}

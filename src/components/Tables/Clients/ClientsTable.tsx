@@ -1,7 +1,7 @@
 /* eslint react/jsx-key: 0 */
 import { Client, ModalType } from "@/types/common";
 
-import { useContext, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useTable, useFilters, useSortBy } from "react-table";
 
 import {
@@ -17,7 +17,8 @@ import dbRef from "@/constants/dbRefs";
 import { httpPostDeleteClient } from "@/services/http";
 import { confirmAlert } from "react-confirm-alert";
 import toast from "react-hot-toast";
-import { AuthContext } from "@/context/AuthContext";
+import { useIsAdmin } from "@/context/AuthContext";
+import InfoCard from "@/components/InfoCard/InfoCard";
 
 interface OwnProps {
   tableData: any;
@@ -38,7 +39,12 @@ const ClientsTable: React.FC<OwnProps> = ({
   setTableData,
   tableData,
 }) => {
-  const { user } = useContext(AuthContext);
+  if (tableData.length === 0) {
+    return (
+      <InfoCard line1="No Records Found" customStyles={{ width: "80vw" }} />
+    );
+  }
+  const isAdmin = useIsAdmin();
   const [labelsToPrint, setLabelsToPrint] = useState<Client[]>([]);
 
   const handleDelete = (e: React.SyntheticEvent, id: string) => {
@@ -176,7 +182,7 @@ const ClientsTable: React.FC<OwnProps> = ({
         Header: "Delete",
         accessor: (d: any) => d.id,
         Cell: ({ value }: { value: any }) =>
-          user.isAdmin ? (
+          isAdmin ? (
             <span
               title={`Delete Client: ${value}`}
               onClick={(e) => handleDelete(e, value)}

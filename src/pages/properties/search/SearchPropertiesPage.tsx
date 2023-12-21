@@ -2,8 +2,8 @@
 import React from "react";
 import Spinner from "@/components/Spinner/Spinner";
 import PropertySearchForm from "@/components/Forms/PropertySearchForm/PropertySearchForm";
-import { useClientsContext } from "@/context/Clients";
-import { usePropertiesContext } from "@/context/Properties";
+import { useClientsContext } from "@/context/ClientsContext";
+import { usePropertiesContext } from "@/context/PropertiesContext";
 
 const SearchPropertiesPage = () => {
   const { isLoadingClientsContext } = useClientsContext();

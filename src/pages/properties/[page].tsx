@@ -12,6 +12,7 @@ import { timestampToDate } from "@/utils";
 import pgPromise from "pg-promise";
 import Link from "next/link";
 import { andEquals, andLike, andBetweenDate } from "@/constants/dbClauses";
+import parseJSONCookie from "@/utils/parseJSONcookie";
 
 export async function getServerSideProps(context: any) {
   try {
@@ -23,15 +24,6 @@ export async function getServerSideProps(context: any) {
       properties: P_tableRef,
       table_names: tablesNames,
     } = dbRef;
-
-    const encodedData = context.req.headers.cookie
-      ?.split(";")
-      .find((cookie: string) =>
-        cookie.trim().startsWith("last-properties-search-filters=")
-      )
-      ?.split("=")[1];
-
-    const decodeData = JSON.parse(decodeURIComponent(encodedData));
 
     let {
       p_city = "",
@@ -48,7 +40,10 @@ export async function getServerSideProps(context: any) {
       inputEndDate,
       requestStartDate = "",
       requestEndDate = "",
-    } = decodeData;
+    } = parseJSONCookie({
+      cookies: context.req.headers.cookie,
+      targetCookie: "last-properties-search-filters",
+    });
 
     if (inputStartDate !== "" && inputEndDate === "") {
       inputEndDate = timestampToDate(Date(), "yyyyMMdd").date;
