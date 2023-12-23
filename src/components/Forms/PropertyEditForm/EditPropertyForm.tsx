@@ -22,7 +22,11 @@ import { useUser } from "@/context/AuthContext";
 import { useClientsContext } from "@/context/ClientsContext";
 import { useExaminersContext } from "@/context/ExaminersContext";
 import { useSelectDropDownsContext } from "@/context/SelectDropDownsContext";
-import { timestampToDate, abbreviatedStatesLabelValuePair } from "@/utils";
+import {
+  timestampToDate,
+  abbreviatedStatesLabelValuePair,
+  updateAddressSuffix,
+} from "@/utils";
 import styles from "./EditPropertyForm.module.scss";
 
 interface OwnProps {
@@ -84,6 +88,9 @@ const EditPropertyForm: React.FC<OwnProps> = ({
     control,
     formState: { errors, dirtyFields },
     reset,
+    watch,
+    getValues,
+    setValue,
   } = useForm({
     defaultValues: async () => {
       if (propertyId) {
@@ -223,6 +230,10 @@ const EditPropertyForm: React.FC<OwnProps> = ({
 
   const isDirtyAlt = !!Object.keys(dirtyFields).length === false;
 
+  const handleStreetBlur = (inputValue: string) => {
+    setValue(dbRef.properties.p_street, updateAddressSuffix(`${inputValue}`));
+  };
+
   const onSubmit = async (data: any) => {
     if (isDirtyAlt) return;
 
@@ -269,6 +280,13 @@ const EditPropertyForm: React.FC<OwnProps> = ({
     }
   };
 
+  const onSubmitError = (data: any) => {
+    if (errors)
+      toast.error("All required fields must be filled out.", {
+        id: "property-form-error",
+      });
+  };
+
   return (
     <div className="form-wrapper edit-form">
       <header>
@@ -280,7 +298,7 @@ const EditPropertyForm: React.FC<OwnProps> = ({
       {isLoading ? (
         <Spinner />
       ) : (
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
           <section className={`flex-x ${styles["top-section"]}`}>
             <div className={`flex-y ${styles["column-1"]}`}>
               <div className={`flex-x ${styles["city-state-section"]}`}>
@@ -375,6 +393,9 @@ const EditPropertyForm: React.FC<OwnProps> = ({
                   isRequired={true}
                   register={register}
                   errors={errors}
+                  onBlur={() =>
+                    handleStreetBlur(watch(dbRef.properties.p_street))
+                  }
                 />
               </div>
 
@@ -388,6 +409,7 @@ const EditPropertyForm: React.FC<OwnProps> = ({
                   isRequired={true}
                   register={register}
                   errors={errors}
+                  tooltipText="When entering multiple lot numbers, please seperate them with a comma e.g.(45A, 48A, 99A). If you are entering a range, please use hyphens e.g.(45-50)"
                 />
 
                 <FormInput
@@ -471,7 +493,7 @@ const EditPropertyForm: React.FC<OwnProps> = ({
           </section>
 
           <section className={`flex-y ${styles["mid-section"]}`}>
-            <div className={`flex-x ${styles["status-type-assigned-section"]}`}>
+            <div className={`flex-x ${styles["status-type-section"]}`}>
               {propertyStatusDropDownOptions &&
                 propertyStatusDropDownOptions.length > 0 && (
                   <Controller
@@ -685,6 +707,7 @@ const EditPropertyForm: React.FC<OwnProps> = ({
                 labelKey={dbRef.properties.p_requester}
                 labelText="Requester"
                 type="text"
+                customClass={styles.requester}
                 isRequired={false}
                 register={register}
                 errors={errors}

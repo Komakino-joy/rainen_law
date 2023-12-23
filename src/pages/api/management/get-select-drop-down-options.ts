@@ -16,18 +16,22 @@ export default async function handler(
       const clientStatusQuery = `SELECT * FROM client_status;`;
       const clientStatusResult = await conn.query(clientStatusQuery);
 
-      const citiesQuery = `SELECT DISTINCT(city) FROM cities;`;
-      const citiesResult = await conn.query(citiesQuery);
+      const allCitiesQuery = `SELECT * FROM cities;`;
+      const allCitiesResult = await conn.query(allCitiesQuery);
 
-      const countiesQuery = `SELECT DISTINCT(county) FROM cities;`;
-      const countiesResult = await conn.query(countiesQuery);
+      const distinctCitiesQuery = `SELECT DISTINCT(city) FROM cities;`;
+      const distinctCitiesResult = await conn.query(distinctCitiesQuery);
+
+      const distinctCountiesQuery = `SELECT DISTINCT(county) FROM cities;`;
+      const distinctCountiesResult = await conn.query(distinctCountiesQuery);
 
       res.status(200).json({
         propertyTypeList: propertyTypesResult.rows,
         propertyStatusList: propertyStatusResult.rows,
         clientStatusList: clientStatusResult.rows,
-        cityList: citiesResult.rows,
-        countyList: countiesResult.rows,
+        allCitiesList: allCitiesResult.rows,
+        distinctCitiesList: distinctCitiesResult.rows,
+        distinctCountiesList: distinctCountiesResult.rows,
       });
     } catch (error) {
       console.log(error);

@@ -32,7 +32,7 @@ const ManageSelectionFieldsCard = () => {
     clientStatusList,
     propertyStatusList,
     propertyTypeList,
-    cityList,
+    allCitiesList,
   } = useSelectDropDownsContext();
 
   const isLoading =
@@ -75,7 +75,7 @@ const ManageSelectionFieldsCard = () => {
         break;
       case "cities":
         setSelectionType("cities");
-        setTableData(cityList);
+        setTableData(allCitiesList);
         break;
       case "pType":
         setSelectionType("pType");

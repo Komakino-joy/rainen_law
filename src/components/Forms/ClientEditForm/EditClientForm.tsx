@@ -22,7 +22,7 @@ import styles from "./EditClientForm.module.scss";
 import Spinner from "@/components/Spinner/Spinner";
 import PrintClientLabel from "@/components/PrintClientLabel/PrintClientLabel";
 import { useSelectDropDownsContext } from "@/context/SelectDropDownsContext";
-import { useAuth } from "@/context/AuthContext";
+import { useUser } from "@/context/AuthContext";
 import dbRef from "@/constants/dbRefs";
 import { confirmAlert } from "react-confirm-alert";
 import toast from "react-hot-toast";
@@ -38,7 +38,7 @@ const ClientForm: React.FC<OwnProps> = ({
   queryType,
   handleAfterSubmit = () => {},
 }) => {
-  const { user } = useAuth();
+  const user = useUser();
   const { clientStatusDropDownOptions } = useSelectDropDownsContext();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [titlescount, settitlescount] = useState(null);
@@ -135,8 +135,9 @@ const ClientForm: React.FC<OwnProps> = ({
     },
   });
 
+  if (!user) return null;
+
   const onSubmit = async (data: any) => {
-    console.log({ isValid, errors });
     if (queryType === "insert") {
       const newClientId = await httpPostInsertClient({
         data,

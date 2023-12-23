@@ -15,7 +15,7 @@
 .city-state-section,
 .zip-street-section,
 .lot-condo-unit-section,
-.status-type-assigned-section,
+.status-type-section,
 .comp-ref-file-num-section,
 .client-id-file-section,
 .requester-req-date-close-date-section {
@@ -23,11 +23,15 @@
   width: 100%;
   align-items: center;
 
+  .assigned,
+  .requester {
+    width: 310px;
+  }
+
   .city,
   .street,
   .county,
-  .clientName,
-  .assigned {
+  .clientName {
     flex: 1;
   }
 
@@ -44,7 +48,7 @@
   }
 }
 
-.status-type-assigned-section,
+.status-type-section,
 .instructions-section {
   margin-top: 5px;
 }

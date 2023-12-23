@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-// @ts-ignore
-import styled from "styled-components";
-import styles from './Modal.module.scss'
+import styles from "./Modal.module.scss";
 
 interface ModalProps {
   show: boolean;
@@ -11,18 +9,37 @@ interface ModalProps {
   title: string;
 }
 
-const Modal:React.FC<ModalProps> = ({ 
-  show, 
-  onClose, 
-  children, 
-  title
-}) => {
-
+const Modal: React.FC<ModalProps> = ({ show, onClose, children, title }) => {
   const [isBrowser, setIsBrowser] = useState(false);
 
   useEffect(() => {
     setIsBrowser(true);
-  }, []);
+
+    // Add event listener to handle escape key press
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    // Remove event listener on component cleanup
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [onClose]);
+
+  useEffect(() => {
+    // Add or remove class to body based on modal visibility
+    if (isBrowser) {
+      const bodyElement = document.body;
+
+      if (bodyElement) {
+        bodyElement.classList.toggle("modal-open", show);
+      }
+    }
+  }, [show, isBrowser]);
 
   const handleCloseClick = (e: any) => {
     e.preventDefault();
@@ -33,7 +50,11 @@ const Modal:React.FC<ModalProps> = ({
     <div className={styles["modal-overlay"]}>
       <div className={styles["modal-content"]}>
         <div className={styles["modal-header"]}>
-          <a className={styles["close-icon"]} href="#" onClick={handleCloseClick}>
+          <a
+            className={styles["close-icon"]}
+            href="#"
+            onClick={handleCloseClick}
+          >
             x
           </a>
         </div>
@@ -44,11 +65,8 @@ const Modal:React.FC<ModalProps> = ({
   ) : null;
 
   if (isBrowser) {
-    return ReactDOM.createPortal(
-      modalContent,
-      // @ts-ignore
-      document.getElementById('modal-root')
-    );
+    const modalRoot = document.getElementById("modal-root");
+    return modalRoot ? ReactDOM.createPortal(modalContent, modalRoot) : null;
   } else {
     return null;
   }

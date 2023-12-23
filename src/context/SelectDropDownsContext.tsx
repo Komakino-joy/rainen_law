@@ -11,29 +11,31 @@ import {
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 
 interface OwnProps {
-  isLoadingSelectDropDownsContext: boolean;
-  clientStatusList: ClientStatus[];
-  propertyStatusList: PropertyStatus[];
-  propertyTypeList: PropertyType[];
-  cityList: City[];
-  clientStatusDropDownOptions: LabelValuePair[];
-  propertyStatusDropDownOptions: LabelValuePair[];
-  propertyTypeDropDownOptions: LabelValuePair[];
+  allCitiesList: City[];
   cityDropDownOptions: LabelValuePair[];
+  clientStatusDropDownOptions: LabelValuePair[];
+  clientStatusList: ClientStatus[];
   countyDropDownOptions: LabelValuePair[];
+  distinctCitiesList: Partial<City>[];
+  isLoadingSelectDropDownsContext: boolean;
+  propertyStatusDropDownOptions: LabelValuePair[];
+  propertyStatusList: PropertyStatus[];
+  propertyTypeDropDownOptions: LabelValuePair[];
+  propertyTypeList: PropertyType[];
 }
 
 const SelectDropDownsContext = createContext<OwnProps>({
-  isLoadingSelectDropDownsContext: false,
-  clientStatusList: [],
-  propertyStatusList: [],
-  propertyTypeList: [],
-  cityList: [],
-  clientStatusDropDownOptions: [],
-  propertyStatusDropDownOptions: [],
-  propertyTypeDropDownOptions: [],
+  allCitiesList: [],
   cityDropDownOptions: [],
+  clientStatusDropDownOptions: [],
+  clientStatusList: [],
   countyDropDownOptions: [],
+  distinctCitiesList: [],
+  isLoadingSelectDropDownsContext: false,
+  propertyStatusDropDownOptions: [],
+  propertyStatusList: [],
+  propertyTypeDropDownOptions: [],
+  propertyTypeList: [],
 });
 
 export const SelectDropDownsContextProvider = ({
@@ -46,7 +48,8 @@ export const SelectDropDownsContextProvider = ({
   const [clientStatusList, setClientStatusList] = useState([]);
   const [propertyStatusList, setPropertyStatusList] = useState([]);
   const [propertyTypeList, setPropertyTypeList] = useState([]);
-  const [cityList, setCityList] = useState([]);
+  const [allCitiesList, setAllCitiesList] = useState([]);
+  const [distinctCitiesList, setDistinctCitiesList] = useState([]);
 
   const [clientStatusDropDownOptions, setClientStatusDropDownOptions] =
     useState([]);
@@ -66,17 +69,19 @@ export const SelectDropDownsContextProvider = ({
         setIsLoading(true);
         const selectDropDownOptions = await httpGetSelectDropDownOptions();
         const {
+          allCitiesList,
           clientStatusList,
           propertyStatusList,
           propertyTypeList,
-          cityList,
-          countyList,
+          distinctCitiesList,
+          distinctCountiesList,
         } = selectDropDownOptions;
 
         setClientStatusList(clientStatusList);
         setPropertyStatusList(propertyStatusList);
         setPropertyTypeList(propertyTypeList);
-        setCityList(cityList);
+        setAllCitiesList(allCitiesList);
+        setDistinctCitiesList(distinctCitiesList);
 
         setClientStatusDropDownOptions(
           clientStatusList.map((row: ClientStatus) => ({
@@ -97,13 +102,13 @@ export const SelectDropDownsContextProvider = ({
           }))
         );
         setCityDropDownOptions(
-          cityList.map((row: Partial<City>) => ({
+          distinctCitiesList.map((row: Partial<City>) => ({
             label: row.city,
             value: row.city,
           }))
         );
         setCountyDropDownOptions(
-          countyList.map((row: Partial<City>) => ({
+          distinctCountiesList.map((row: Partial<City>) => ({
             label: row.county,
             value: row.county,
           }))
@@ -125,16 +130,17 @@ export const SelectDropDownsContextProvider = ({
   return (
     <SelectDropDownsContext.Provider
       value={{
-        isLoadingSelectDropDownsContext,
-        clientStatusList,
-        propertyStatusList,
-        propertyTypeList,
-        cityList,
-        clientStatusDropDownOptions,
-        propertyStatusDropDownOptions,
-        propertyTypeDropDownOptions,
+        allCitiesList,
         cityDropDownOptions,
+        clientStatusDropDownOptions,
+        clientStatusList,
         countyDropDownOptions,
+        distinctCitiesList,
+        isLoadingSelectDropDownsContext,
+        propertyStatusDropDownOptions,
+        propertyStatusList,
+        propertyTypeDropDownOptions,
+        propertyTypeList,
       }}
     >
       {children}

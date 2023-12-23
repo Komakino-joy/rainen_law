@@ -31,7 +31,6 @@ export const AuthContext = createContext<ContextType>(defaultContext);
 // create the auth provider component
 export const AuthProvider = ({ children }: { children: any }) => {
   const [user, setUser] = useState<User>(null);
-  console.log({ user });
   const [isLoadingAuthContext, setIsLoading] = useState(true);
   const router = useRouter();
 

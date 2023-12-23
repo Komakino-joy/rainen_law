@@ -25,7 +25,6 @@ const CitiesTable: React.FC<OwnProps> = ({
   handleModalOpen,
 }) => {
   const data = useMemo(() => tableData, [tableData]);
-
   const columns = useMemo(
     () => [
       {

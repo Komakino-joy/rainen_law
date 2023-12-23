@@ -11,7 +11,6 @@ const customStyles = {
     ...provided,
     background: "#fff",
     border: "none",
-    // borderColor: "#9e9e9e",
     minHeight: "30px",
     height: "30px",
     boxShadow: state.isFocused ? null : null,
@@ -28,9 +27,11 @@ const customStyles = {
     ...provided,
     margin: "0px",
   }),
+
   indicatorSeparator: (state: any) => ({
     display: "none",
   }),
+
   indicatorsContainer: (provided: any, state: any) => ({
     display: "flex",
     flexDirection: "column",
@@ -78,9 +79,9 @@ const CustomSelect = ({
       <Select
         defaultInputValue={defaultValue}
         className={`${styles["select-container"]} ${isError && "border-red"}`}
-        classNamePrefix="select"
+        // classNamePrefix="select"
         // @ts-ignore
-        styles={{ ...customStyles }}
+        styles={customStyles}
         isClearable={true}
         isSearchable={true}
         options={[{ label: "", value: "" }, ...options]}
