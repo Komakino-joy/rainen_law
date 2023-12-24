@@ -1,4 +1,6 @@
-import { InfoIcon } from "@/components/Icons/Icons";
+import "react-datepicker/dist/react-datepicker.css";
+import "../../../../../src/styles/home.module.scss";
+import { CalendarIcon, InfoIcon } from "@/components/Icons/Icons";
 import Select from "@/components/Select/Select";
 import Tooltip from "@/components/Tooltip/Tooltip";
 import React from "react";
@@ -9,8 +11,7 @@ import {
   ControllerRenderProps,
 } from "react-hook-form";
 import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import "../../../../../src/styles/home.module.scss";
+import style from "./FormInput.module.scss";
 
 interface FormInput {
   customClass?: string;
@@ -74,10 +75,16 @@ const FormInput: React.FC<FormInput> = (
         )}
       </label>
       {type === "date" && field ? (
-        <DatePicker
-          selected={field.value}
-          onChange={(date) => field.onChange(date)}
-        />
+        <div className={style.date_field}>
+          <DatePicker
+            selected={field.value}
+            onChange={(date) => field.onChange(date)}
+            showIcon
+            icon={<CalendarIcon />}
+            //@ts-ignore
+            toggleCalendarOnIconClick
+          />
+        </div>
       ) : type === "select" && options ? (
         <Select
           onChange={selectOnChange}

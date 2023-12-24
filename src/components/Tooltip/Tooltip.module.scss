@@ -2,6 +2,7 @@
   position: relative;
   display: inline-block;
   z-index: 999;
+  height: fit-content;
 }
 
 .tooltip-text {
@@ -19,12 +20,12 @@
 .tooltip-container:hover .tooltip-text {
   font-size: 14px;
   width: 300px;
-  white-space: wrap;
+  white-space: normal;
   display: block;
   line-height: 20px;
   letter-spacing: 0.2px;
 }
 
 .icon {
-  cursor: pointer; /* Make the icon cursor change on hover */
+  cursor: pointer !important; /* Make the icon cursor change on hover */
 }
