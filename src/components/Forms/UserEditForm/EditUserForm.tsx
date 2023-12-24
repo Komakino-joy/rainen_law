@@ -78,12 +78,22 @@ const EditUserForm: React.FC<OwnProps> = ({
     }
   };
 
+  const onSubmitError = (data: any) => {
+    if (errors)
+      toast.error("All required fields must be filled out.", {
+        id: "user-form-error",
+      });
+  };
+
   return (
     <div className="form-wrapper edit-form">
       {isLoading ? (
         <Spinner />
       ) : (
-        <form className="flex-y" onSubmit={handleSubmit(onSubmit)}>
+        <form
+          className="flex-y"
+          onSubmit={handleSubmit(onSubmit, onSubmitError)}
+        >
           <FormInput
             name={dbRef.users.username}
             labelKey={dbRef.users.username}

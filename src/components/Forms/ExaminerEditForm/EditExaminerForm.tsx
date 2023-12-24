@@ -12,6 +12,7 @@ import {
   httpPostUpdateExaminer,
 } from "@/services/http";
 import dbRef from "@/constants/dbRefs";
+import toast from "react-hot-toast";
 
 interface EditEditExaminerFormProps {
   tableData: any[];
@@ -90,12 +91,22 @@ const EditExaminerForm: React.FC<EditEditExaminerFormProps> = ({
     }
   };
 
+  const onSubmitError = (data: any) => {
+    if (errors)
+      toast.error("All required fields must be filled out.", {
+        id: "examiner-form-error",
+      });
+  };
+
   return (
     <div className="form-wrapper edit-form">
       {isLoading ? (
         <Spinner />
       ) : (
-        <form className="flex-y" onSubmit={handleSubmit(onSubmit)}>
+        <form
+          className="flex-y"
+          onSubmit={handleSubmit(onSubmit, onSubmitError)}
+        >
           <FormInput
             name={dbRef.examiners.name}
             labelKey={dbRef.examiners.name}

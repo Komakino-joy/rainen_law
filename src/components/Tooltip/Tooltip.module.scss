@@ -1,6 +1,7 @@
 .tooltip-container {
   position: relative;
   display: inline-block;
+  z-index: 999;
 }
 
 .tooltip-text {
@@ -13,7 +14,6 @@
   padding: 8px;
   border-radius: 4px;
   display: none;
-  z-index: 10;
 }
 
 .tooltip-container:hover .tooltip-text {

@@ -26,6 +26,7 @@ import {
   timestampToDate,
   abbreviatedStatesLabelValuePair,
   updateAddressSuffix,
+  dateToString,
 } from "@/utils";
 import styles from "./EditPropertyForm.module.scss";
 
@@ -89,7 +90,6 @@ const EditPropertyForm: React.FC<OwnProps> = ({
     formState: { errors, dirtyFields },
     reset,
     watch,
-    getValues,
     setValue,
   } = useForm({
     defaultValues: async () => {
@@ -205,12 +205,8 @@ const EditPropertyForm: React.FC<OwnProps> = ({
           p_file,
           c_file,
           p_requester,
-          p_request_date: p_request_date
-            ? timestampToDate(p_request_date, "yyyyMMdd").date
-            : "",
-          p_closed_date: p_closed_date
-            ? timestampToDate(p_closed_date, "yyyyMMdd").date
-            : "",
+          p_request_date: p_request_date ? dateToString(p_request_date) : null,
+          p_closed_date: p_closed_date ? dateToString(p_closed_date) : null,
           p_instructions,
           buyer_1,
           buyer_2,
@@ -713,24 +709,44 @@ const EditPropertyForm: React.FC<OwnProps> = ({
                 errors={errors}
               />
 
-              <FormInput
+              <Controller
                 name={dbRef.properties.p_request_date}
-                labelKey={dbRef.properties.p_request_date}
-                labelText="Request Date"
-                type="date"
-                isRequired={false}
-                register={register}
-                errors={errors}
+                control={control}
+                render={({ field }) => {
+                  return (
+                    <FormInput
+                      field={field}
+                      name={dbRef.properties.p_request_date}
+                      labelKey={dbRef.properties.p_request_date}
+                      labelText="Request Date"
+                      type="date"
+                      defaultValue={defaultSelectValues.assigned}
+                      isRequired={false}
+                      register={register}
+                      errors={errors}
+                    />
+                  );
+                }}
               />
 
-              <FormInput
+              <Controller
                 name={dbRef.properties.p_closed_date}
-                labelKey={dbRef.properties.p_closed_date}
-                labelText="Closed Date"
-                type="date"
-                isRequired={false}
-                register={register}
-                errors={errors}
+                control={control}
+                render={({ field }) => {
+                  return (
+                    <FormInput
+                      field={field}
+                      name={dbRef.properties.p_closed_date}
+                      labelKey={dbRef.properties.p_closed_date}
+                      labelText="Closed Date"
+                      type="date"
+                      defaultValue={defaultSelectValues.assigned}
+                      isRequired={false}
+                      register={register}
+                      errors={errors}
+                    />
+                  );
+                }}
               />
             </div>
           </section>

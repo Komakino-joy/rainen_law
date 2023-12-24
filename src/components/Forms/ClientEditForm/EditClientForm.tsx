@@ -180,6 +180,13 @@ const ClientForm: React.FC<OwnProps> = ({
     }
   };
 
+  const onSubmitError = (data: any) => {
+    if (errors)
+      toast.error("All required fields must be filled out.", {
+        id: "client-form-error",
+      });
+  };
+
   type ClientInfoKeys = keyof typeof clientInfoSnippet;
 
   return (
@@ -197,7 +204,10 @@ const ClientForm: React.FC<OwnProps> = ({
       {isLoading ? (
         <Spinner />
       ) : (
-        <form className="flex-y" onSubmit={handleSubmit(onSubmit)}>
+        <form
+          className="flex-y"
+          onSubmit={handleSubmit(onSubmit, onSubmitError)}
+        >
           <section className={`flex-x ${styles["client-status-section"]}`}>
             <FormInput
               name={dbRef.clients.c_name}

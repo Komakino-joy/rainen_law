@@ -2,8 +2,14 @@ import { InfoIcon } from "@/components/Icons/Icons";
 import Select from "@/components/Select/Select";
 import Tooltip from "@/components/Tooltip/Tooltip";
 import React from "react";
-import { UseFormRegister, FieldValues, FieldErrors } from "react-hook-form";
-
+import {
+  UseFormRegister,
+  FieldValues,
+  FieldErrors,
+  ControllerRenderProps,
+} from "react-hook-form";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import "../../../../../src/styles/home.module.scss";
 
 interface FormInput {
@@ -27,6 +33,7 @@ interface FormInput {
   register: UseFormRegister<FieldValues>;
   errors: FieldErrors<FieldValues>;
   onBlur?: () => void;
+  field?: ControllerRenderProps<FieldValues, string>;
 }
 
 const Required: React.FC = () => <span className="required">*</span>;
@@ -52,6 +59,7 @@ const FormInput: React.FC<FormInput> = (
     checked,
     tooltipText = "",
     onBlur,
+    field,
   },
   props
 ) => {
@@ -65,7 +73,12 @@ const FormInput: React.FC<FormInput> = (
           <Tooltip text={tooltipText} icon={<InfoIcon />} />
         )}
       </label>
-      {type === "select" && options ? (
+      {type === "date" && field ? (
+        <DatePicker
+          selected={field.value}
+          onChange={(date) => field.onChange(date)}
+        />
+      ) : type === "select" && options ? (
         <Select
           onChange={selectOnChange}
           options={options}

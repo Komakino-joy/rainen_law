@@ -7,10 +7,12 @@ import timestampToDate from "./timestampToDate";
 import formatAddress from "./formatAddress";
 import hasValue from "./hasValue";
 import uniqueLabelValuePairs from "./uniqueLabelValuePairs";
+import { dateToString } from "./dateToString";
 
 export {
   abbreviatedStates,
   abbreviatedStatesLabelValuePair,
+  dateToString,
   formatAddress,
   hasValue,
   timestampToDate,
