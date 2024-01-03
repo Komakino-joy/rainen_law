@@ -47,13 +47,21 @@
       position: relative;
       padding-top: 15px;
       margin: 5px 0px 0px 0px;
-      
+
       label {
         position: absolute;
         font-size: 11px;
         font-weight: 500;
         top: 0px;
         white-space: nowrap;
+
+        .tooltip {
+          position: absolute;
+          top: -4px;
+          svg {
+            height: 18px;
+          }
+        }
       }
 
       .required {
@@ -85,7 +93,6 @@
       }
     }
   }
-
 }
 
 .search-form {
@@ -138,9 +145,8 @@
 
   form {
     position: relative;
-
   }
-  
+
   .form-footer {
     position: absolute;
     bottom: 35px;
@@ -160,4 +166,3 @@
     outline: 0 none !important;
   }
 }
-

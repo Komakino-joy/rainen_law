@@ -1,6 +1,6 @@
-import React from 'react';
-import VirtualList from 'react-tiny-virtual-list';
-import styles from './Select.module.scss'
+import React from "react";
+import VirtualList from "react-tiny-virtual-list";
+import styles from "./Select.module.scss";
 
 const DefaultItemHeight = 40;
 
@@ -22,16 +22,18 @@ export default class CustomMenuList extends React.Component {
         {children.props.children}
       </li>
     );
-  }
+  };
 
   render() {
     const { options, children, maxHeight, getValue } = this.props;
 
-    const [value]         = getValue();
-    const initialOffset   = options.indexOf(value) * DefaultItemHeight;
+    const [value] = getValue();
+    const initialOffset = options.indexOf(value) * DefaultItemHeight;
     const childrenOptions = React.Children.toArray(children);
-    const wrapperHeight   = maxHeight < childrenOptions.length * DefaultItemHeight ?
-                              maxHeight : childrenOptions.length * DefaultItemHeight;
+    const wrapperHeight =
+      maxHeight < childrenOptions.length * DefaultItemHeight
+        ? maxHeight
+        : childrenOptions.length * DefaultItemHeight;
 
     return (
       <span className={styles["react-virtualized-list-wrapper"]}>

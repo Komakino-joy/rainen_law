@@ -1,5 +1,12 @@
-export type ModalType = 'property' | 'client' 
-export type TableRefs = 'counties' | 'pType' | 'pStat' | 'PAssign' | 'clientStat' | 'examiners' |'users';
+export type ModalType = "property" | "client";
+export type TableRefs =
+  | "cities"
+  | "pType"
+  | "pStat"
+  | "PAssign"
+  | "clientStat"
+  | "examiners"
+  | "users";
 export interface Property {
   p_input_date: string;
   c_name: string;
@@ -61,7 +68,7 @@ export interface ReportProperty {
   p_comp_ref: number;
   p_number: number;
   c_name: string;
-  p_type: 'FT' | 'RD' | 'FC' | 'H';
+  p_type: "FT" | "RD" | "FC" | "H";
   p_assign: string;
   p_assign2: string;
 }
@@ -89,12 +96,12 @@ export interface Client {
 }
 
 export interface DateTime {
-  date:string, 
-  time:string
+  date: string;
+  time: string;
 }
 
 export interface ClientInfoSnippet {
-  [dbRef.clients.id]:string;
+  [dbRef.clients.id]: string;
   [dbRef.clients.c_number]: number | null;
   [dbRef.clients.c_name]: string | null;
   [dbRef.clients.last_updated]: DateTime | null;
@@ -103,8 +110,8 @@ export interface ClientInfoSnippet {
 export interface INSTitle {
   id: string;
   tticoname: string;
-  INMBR: string; 
-  ISTAT: string; 
+  INMBR: string;
+  ISTAT: string;
   IREMIT: string;
   TITLECO: string;
   IPOLDATE: string;
@@ -112,10 +119,10 @@ export interface INSTitle {
   ISTRET: string;
   ICITY: string;
   PREMDUE: number;
-  LPOLICYAMT: number
+  LPOLICYAMT: number;
   LPOLICYNUM: string;
   OPOLICYAMT: number;
-  OPOLICYNUM: string
+  OPOLICYNUM: string;
   c_name: string;
   IFILE: string;
   AGENTFEE: string;
@@ -128,7 +135,7 @@ export interface LabelValuePair {
 
 export interface Policy {
   id: string;
-  tticoname: string,
+  tticoname: string;
   IPOLDATE: string;
   IFILE: string;
   ICITY: string;
@@ -185,18 +192,25 @@ export interface PropertyType {
 export interface County {
   id: number;
   code: string;
-  county:string;
+  county: string;
 }
 
 export interface Examiner {
   id: string;
-  name:string;
-  code:string;
-  type:string;
-  compensate:string;
-  last_updated:string;
-  created_at:string;
+  name: string;
+  code: string;
+  type: string;
+  compensate: string;
+  last_updated: string;
+  created_at: string;
   is_active: boolean;
+}
+
+export interface City {
+  id: string;
+  city: string;
+  county: string;
+  state_abbrv: string;
 }
 
 export interface User {

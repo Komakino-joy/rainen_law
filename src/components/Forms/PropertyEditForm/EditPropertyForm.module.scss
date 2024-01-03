@@ -9,12 +9,13 @@
 
 .column-2,
 .column-3 {
-  flex: .25;
+  flex: 0.25;
 }
 
-.city-state-zip-section,
+.city-state-section,
+.zip-street-section,
 .lot-condo-unit-section,
-.status-type-assigned-section,
+.status-type-section,
 .comp-ref-file-num-section,
 .client-id-file-section,
 .requester-req-date-close-date-section {
@@ -22,24 +23,32 @@
   width: 100%;
   align-items: center;
 
+  .assigned,
+  .requester {
+    width: 310px;
+  }
+
   .city,
-  .clientName,
-  .assigned  {
+  .street,
+  .county,
+  .clientName {
     flex: 1;
   }
 
+  .state,
   .zip {
-    flex: .4;
+    flex: 0.25;
+    min-width: 82px;
   }
 
   .compRef,
   .fileNumber,
   .clientFileNumber {
-    flex: .5;
+    flex: 0.5;
   }
 }
 
-.status-type-assigned-section,
+.status-type-section,
 .instructions-section {
   margin-top: 5px;
 }

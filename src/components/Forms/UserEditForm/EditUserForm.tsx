@@ -1,166 +1,184 @@
 import { useState } from "react";
-import {  useForm } from "react-hook-form";
-import toast from 'react-hot-toast'
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 
 import { FORM_BUTTON_TEXT } from "@/constants";
 import Button from "@/components/Button/Button";
 import Spinner from "@/components/Spinner/Spinner";
 import FormInput from "../Common/FormInput/FormInput";
-import { httpPostInsertUser, httpPostSelectedUser, httpPostUpdateUser } from "@/services/http";
+import {
+  httpPostInsertUser,
+  httpPostSelectedUser,
+  httpPostUpdateUser,
+} from "@/services/http";
+import dbRef from "@/constants/dbRefs";
 
-interface EditEditUserFormProps {
+interface OwnProps {
   tableData: any[];
   setTableData: any;
   selectedId: string | null;
-  queryType: 'update' | 'insert';
+  queryType: "update" | "insert";
 }
 
-const EditUserForm:React.FC<EditEditUserFormProps> = ({
-  tableData, 
+const EditUserForm: React.FC<OwnProps> = ({
+  tableData,
   setTableData,
   selectedId,
-  queryType
+  queryType,
 }) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [userId, setUserId] = useState<string>("");
 
-  const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [userId, setUserId] = useState<string>('')
-
-  const { 
-    register, 
-    handleSubmit, 
+  const {
+    register,
+    handleSubmit,
     reset,
     watch,
-    formState: { errors, isDirty } 
+    formState: { errors, isDirty },
   } = useForm({
     defaultValues: async () => {
       if (selectedId) {
-
-        setIsLoading(true)
-        
-        const userInfo = await httpPostSelectedUser({ id: selectedId })
-        
-        const {
-          id='', 
-          username='', 
-          l_name='', 
-          f_name=''
-        } = userInfo
-
-        setUserId(id)
-        setIsLoading(false)
+        setIsLoading(true);
+        const userInfo = await httpPostSelectedUser({ id: selectedId });
+        setIsLoading(false);
+        setUserId(userInfo.id);
 
         return {
-          username,
-          l_name ,
-          f_name
+          username: userInfo.username,
+          l_name: userInfo.l_name,
+          f_name: userInfo.f_name,
+          is_admin: userInfo.is_admin,
         };
       }
-    }
+    },
   });
 
-  const onSubmit = async(data:any) => {
-    if(!isDirty) return 
-    
-    if(queryType === 'insert') {
-      const newRecord = await httpPostInsertUser({data})
-      reset()
-      setTableData([...tableData, newRecord])
+  const onSubmit = async (data: any) => {
+    if (!isDirty) return;
+
+    if (queryType === "insert") {
+      const newRecord = await httpPostInsertUser({ data });
+      reset();
+      setTableData([...tableData, newRecord]);
     }
 
-    if(queryType === 'update') {
-      const updatedRecord = await httpPostUpdateUser({id: userId, data})
+    if (queryType === "update") {
+      const updatedRecord = await httpPostUpdateUser({ id: userId, data });
 
-      reset(updatedRecord)
+      reset(updatedRecord);
 
-      const updatedData = tableData.map(record => {
-        if(record.id === updatedRecord.id) {
-          record = updatedRecord
+      const updatedData = tableData.map((record) => {
+        if (record.id === updatedRecord.id) {
+          record = updatedRecord;
         }
-        return record
-      })
+        return record;
+      });
 
-      setTableData(updatedData)
+      setTableData(updatedData);
     }
   };
 
+  const onSubmitError = (data: any) => {
+    if (errors)
+      toast.error("All required fields must be filled out.", {
+        id: "user-form-error",
+      });
+  };
+
   return (
-    <div className='form-wrapper edit-form'>
-      { isLoading ? <Spinner />
-        : <form className="flex-y" onSubmit={handleSubmit(onSubmit)}>
-            <FormInput 
-              name="username"
-              labelKey="username"
-              labelText="UserName"
+    <div className="form-wrapper edit-form">
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <form
+          className="flex-y"
+          onSubmit={handleSubmit(onSubmit, onSubmitError)}
+        >
+          <FormInput
+            name={dbRef.users.username}
+            labelKey={dbRef.users.username}
+            labelText="UserName"
+            type="text"
+            isRequired={true}
+            register={register}
+            errors={errors}
+            autoComplete="off"
+          />
+
+          <section className="flex-x gap-sm">
+            <FormInput
+              name={dbRef.users.f_name}
+              labelKey={dbRef.users.f_name}
+              labelText="First Name"
               type="text"
               isRequired={true}
-              register={register} 
+              register={register}
               errors={errors}
-              autoComplete='off'
+              autoComplete="off"
             />
 
-            <section className='flex-x gap-sm'>
-                <FormInput 
-                  name="f_name"
-                  labelKey="f_name"
-                  labelText="First Name"
-                  type="text"
-                  isRequired={true}
-                  register={register} 
-                  errors={errors}
-                  autoComplete='off'
-                />
+            <FormInput
+              name={dbRef.users.l_name}
+              labelKey={dbRef.users.l_name}
+              labelText="Last Name"
+              type="text"
+              isRequired={true}
+              register={register}
+              errors={errors}
+              autoComplete="off"
+            />
+            <FormInput
+              name={dbRef.users.is_admin}
+              labelKey={dbRef.users.is_admin}
+              labelText="Is Admin"
+              type="checkbox"
+              customClass="checkbox"
+              isRequired={false}
+              register={register}
+              errors={errors}
+            />
+          </section>
 
-                <FormInput 
-                  name="l_name"
-                  labelKey="l_name"
-                  labelText="Last Name"
-                  type="text"
-                  isRequired={true}
-                  register={register} 
-                  errors={errors}
-                  autoComplete='off'
-                />
-            </section>
+          <FormInput
+            name={dbRef.users.password}
+            labelKey={dbRef.users.password}
+            labelText="Password"
+            type="password"
+            isRequired={false}
+            register={register}
+            errors={errors}
+            defaultValue={null}
+            autoComplete="new-password"
+          />
 
-              <FormInput 
-                name="password"
-                labelKey="password"
-                labelText="New Password"
-                type="password" 
-                isRequired={true}
-                register={register} 
-                errors={errors}
-                defaultValue={null}
-                autoComplete='new-password'
-              />
+          <FormInput
+            name="confirmPassword"
+            labelKey="confirmPassword"
+            labelText="Confirm Password"
+            type="password"
+            defaultValue=""
+            isRequired={watch("password")?.length > 0}
+            register={register}
+            errors={errors}
+            autoComplete="new-password"
+            validate={(val: string) => {
+              if (watch("password") != val) {
+                return toast.error("Your passwords do no match", {
+                  id: "passwords-do-not-match",
+                });
+              }
+            }}
+          />
 
-              
-              <FormInput 
-                name="confirmPassword"
-                labelKey="confirmPassword"
-                labelText="Confirm New Password"
-                type="password" 
-                defaultValue=''
-                isRequired={true}
-                register={register} 
-                errors={errors}
-                autoComplete='new-password'
-                validate={(val: string) => {
-                  if (watch('password') != val) {
-                    return toast.error('Your passwords do no match', {id: 'passwords-do-not-match'})
-                  }
-                }}
-              />
-              
-            <section className="submit-button-section">
-              <Button type="submit" isDisabled={!isDirty}>
-                {FORM_BUTTON_TEXT[queryType]} 
-              </Button>
-            </section>
-          </form>
-      }
+          <section className="submit-button-section">
+            <Button type="submit" isDisabled={!isDirty}>
+              {FORM_BUTTON_TEXT[queryType]}
+            </Button>
+          </section>
+        </form>
+      )}
     </div>
   );
-}
+};
 
-export default EditUserForm
+export default EditUserForm;

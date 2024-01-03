@@ -1,21 +1,18 @@
-import dbRef from '@/constants/dbRefs'
-import type { NextApiRequest, NextApiResponse } from 'next'
-import pgPromise from 'pg-promise'
-import conn from '../../../lib/db'
+import dbRef from "@/constants/dbRefs";
+import type { NextApiRequest, NextApiResponse } from "next";
+import pgPromise from "pg-promise";
+import conn from "../../../lib/db";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse,
+  res: NextApiResponse
 ) {
-    if (req.method === "POST") { 
+  if (req.method === "POST") {
+    const { startDate, endDate } = req.body;
 
-      const { 
-        startDate, 
-        endDate 
-      } = req.body
-
-      try {
-        const propertiesReportQuery = pgPromise.as.format(`
+    try {
+      const propertiesReportQuery = pgPromise.as.format(
+        `
             SELECT 
               p.${dbRef.properties.p_input_date}, 
               p.${dbRef.properties.p_lot}, 
@@ -36,15 +33,15 @@ export default async function handler(
               LEFT JOIN ${dbRef.table_names.counties} cnt ON cnt.${dbRef.counties.code} = city.${dbRef.city.county}
             WHERE p.${dbRef.properties.p_input_date} BETWEEN DATE($1) AND DATE($2)
             AND LOWER(p.${dbRef.properties.p_status}) != 'closed';
-        `,[startDate, endDate]
-        )
-        
-        const propertiesReportResults = (await conn.query(propertiesReportQuery)).rows    
-        res.status(200).json(propertiesReportResults)
+        `,
+        [startDate, endDate]
+      );
 
-      } catch ( error ) {
-          console.log( error );
-      }
+      const propertiesReportResults = (await conn.query(propertiesReportQuery))
+        .rows;
+      res.status(200).json(propertiesReportResults);
+    } catch (error) {
+      console.log(error);
     }
+  }
 }
-

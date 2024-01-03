@@ -1,14 +1,21 @@
+import {
+  abbreviatedStates,
+  abbreviatedStatesLabelValuePair,
+} from "./UnitedStates";
+import updateAddressSuffix from "./updateAddressSuffix";
 import timestampToDate from "./timestampToDate";
-import { abbreviatedStates, abbreviatedStatesLabelValuePair } from "./UnitedStates";
 import formatAddress from "./formatAddress";
 import hasValue from "./hasValue";
 import uniqueLabelValuePairs from "./uniqueLabelValuePairs";
+import { dateToString } from "./dateToString";
 
 export {
-  timestampToDate,
   abbreviatedStates,
+  abbreviatedStatesLabelValuePair,
+  dateToString,
   formatAddress,
   hasValue,
+  timestampToDate,
   uniqueLabelValuePairs,
-  abbreviatedStatesLabelValuePair
-}
+  updateAddressSuffix,
+};

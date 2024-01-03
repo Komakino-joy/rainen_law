@@ -1,27 +1,22 @@
 import NavBar from "./NavBar/NavBar";
-import { PropertiesContextProvider } from "@/context/Properties";
-import { ClientsContextProvider } from "@/context/Clients";
-import { SelectDropDownsContextProvider } from "@/context/SelectDropDowns";
-import { CountiesContextProvider } from "@/context/Counties";
-import { ExaminersContextProvider } from "@/context/Examiners";
-import { UsersContextProvider } from "@/context/Users";
-import { useAuth } from '../context/AuthContext'
+import { PropertiesContextProvider } from "@/context/PropertiesContext";
+import { ClientsContextProvider } from "@/context/ClientsContext";
+import { SelectDropDownsContextProvider } from "@/context/SelectDropDownsContext";
+import { CitiesProvider } from "@/context/CitiesContext";
+import { ExaminersContextProvider } from "@/context/ExaminersContext";
+import { UsersContextProvider } from "@/context/UsersContext";
+import { useAuth } from "../context/AuthContext";
 import AuthPage from "@/pages/auth";
 
 export default function Layout({ children }) {
+  const { user, isLoadingAuthContext } = useAuth();
 
-  const { user, isLoadingAuthContext } = useAuth()
-
-  if(isLoadingAuthContext) {
-    return <div></div>
+  if (isLoadingAuthContext) {
+    return <div></div>;
   }
 
   if (!user) {
-    return (
-      <>
-        <AuthPage />
-      </>
-    )
+    return <AuthPage />;
   }
   if (user) {
     return (
@@ -30,18 +25,17 @@ export default function Layout({ children }) {
         <UsersContextProvider>
           <ExaminersContextProvider>
             <SelectDropDownsContextProvider>
-              <CountiesContextProvider>
+              <CitiesProvider>
                 <ClientsContextProvider>
                   <PropertiesContextProvider>
                     <main>{children}</main>
                   </PropertiesContextProvider>
                 </ClientsContextProvider>
-              </CountiesContextProvider>
+              </CitiesProvider>
             </SelectDropDownsContextProvider>
           </ExaminersContextProvider>
         </UsersContextProvider>
       </div>
-    )
+    );
   }
-
 }

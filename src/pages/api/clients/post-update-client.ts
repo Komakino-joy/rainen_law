@@ -1,37 +1,36 @@
-import dbRefs from '@/constants/dbRefs'
-import type { NextApiRequest, NextApiResponse } from 'next'
-import pgPromise from 'pg-promise'
-import conn from '../../../lib/db'
+import dbRefs from "@/constants/dbRefs";
+import type { NextApiRequest, NextApiResponse } from "next";
+import pgPromise from "pg-promise";
+import conn from "../../../lib/db";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse,
+  res: NextApiResponse
 ) {
-    if (req.method === "POST") { 
+  if (req.method === "POST") {
+    const {
+      c_name,
+      c_address_1,
+      c_address_2,
+      c_city,
+      c_state,
+      c_zip,
+      c_phone,
+      c_fax,
+      c_contact,
+      c_status,
+      c_statement_addresseee,
+      c_email,
+      c_notes,
+      last_updated_by,
+      c_id,
+    } = req.body;
 
-      const {
-        c_name,
-        c_address_1, 
-        c_address_2, 
-        c_city,
-        c_state,
-        c_zip,
-        c_phone,
-        c_fax,
-        c_contact,
-        c_status, 
-        c_statement_addresseee,
-        c_email,
-        c_notes,
-        last_updated_by,
-        c_id
-      } = req.body
+    try {
+      await conn.query("BEGIN");
 
-      try {
-
-        await conn.query('BEGIN')
-
-        const addNewPropertyQuery = pgPromise.as.format(`
+      const addNewPropertyQuery = pgPromise.as.format(
+        `
           UPDATE ${dbRefs.table_names.clients} c
           SET
             c.${dbRefs.clients.c_name} = $1,
@@ -53,43 +52,42 @@ export default async function handler(
           WHERE c.${dbRefs.clients.id} = $16
           RETURNING *;
 
-        `,[
-            c_name,
-            c_address_1, 
-            c_address_2, 
-            c_city,
-            c_state,
-            c_zip,
-            c_phone,
-            c_fax,
-            c_contact,
-            c_status, 
-            c_statement_addresseee,
-            c_email,
-            c_notes,
-            last_updated_by,
-            new Date(),
-            c_id,
-          ]
-        )
+        `,
+        [
+          c_name,
+          c_address_1,
+          c_address_2,
+          c_city,
+          c_state,
+          c_zip,
+          c_phone,
+          c_fax,
+          c_contact,
+          c_status,
+          c_statement_addresseee,
+          c_email,
+          c_notes,
+          last_updated_by,
+          new Date(),
+          c_id,
+        ]
+      );
 
-        const updatedRecord = await conn.query(addNewPropertyQuery)
-        await conn.query('COMMIT')
-        
-        res.status(200).json({
-          updatedRecord: updatedRecord.rows[0],
-          message: 'Record updated',
-          status: 'success'
-        })
-        
-      } catch ( error ) {
-        await conn.query('ROLLBACK')
-        console.log( error );
-        res.status(400).json({
-          message: 'Failed to update record',
-          status: 'error'
-        })
-      } 
+      const updatedRecord = await conn.query(addNewPropertyQuery);
+      await conn.query("COMMIT");
+
+      res.status(200).json({
+        updatedRecord: updatedRecord.rows[0],
+        message: "Record updated",
+        status: "success",
+      });
+    } catch (error) {
+      await conn.query("ROLLBACK");
+      console.log(error);
+      res.status(400).json({
+        message: "Failed to update record",
+        status: "error",
+      });
     }
+  }
 }
-
