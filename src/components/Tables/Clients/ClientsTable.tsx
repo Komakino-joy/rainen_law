@@ -187,7 +187,7 @@ const ClientsTable: React.FC<OwnProps> = ({
           ) : null,
       },
     ],
-    [handleDelete, handleModalOpen]
+    [handleDelete, handleModalOpen, isAdmin]
   );
 
   // Define a default UI for filtering
