@@ -181,7 +181,7 @@ const SelectOptionsTable: React.FC<DynamicTable> = ({
         ),
       },
     ],
-    [handleDelete, handleModalOpen, selectionType]
+    [handleModalOpen, selectionType]
   );
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
