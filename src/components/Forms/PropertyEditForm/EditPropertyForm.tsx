@@ -42,7 +42,6 @@ const EditPropertyForm: React.FC<OwnProps> = ({
   handleAfterSubmit = () => {},
 }) => {
   const user = useUser();
-  if (!user) return null;
 
   const { examinersDropDownOptions } = useExaminersContext();
   const { clientSelectOptions } = useClientsContext();
@@ -236,7 +235,7 @@ const EditPropertyForm: React.FC<OwnProps> = ({
     if (queryType === "insert") {
       const response = await httpPostInsertProperty({
         data,
-        username: user.username,
+        username: user ? user.username : "N/A",
       });
 
       reset();
@@ -255,7 +254,7 @@ const EditPropertyForm: React.FC<OwnProps> = ({
               const response = await httpPostUpdateProperty({
                 data,
                 id: propertyInfoSnippet.id, // Passing id to update correct record
-                username: user.username,
+                username: user ? user.username : "N/A",
               });
               handleAfterSubmit(propertyInfoSnippet.id);
               reset(response.updatedRecord);
