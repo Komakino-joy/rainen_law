@@ -41,11 +41,6 @@ const PropertiesTable: React.FC<OwnProps> = ({
   setTableData,
   tableData,
 }) => {
-  if (tableData.length === 0) {
-    return (
-      <InfoCard line1="No Records Found" customStyles={{ width: "80vw" }} />
-    );
-  }
   const isAdmin = useIsAdmin();
   const [labelsToPrint, setLabelsToPrint] = useState<Property[]>([]);
   const data = useMemo(() => tableData, [tableData]);
@@ -203,6 +198,12 @@ const PropertiesTable: React.FC<OwnProps> = ({
   const buttonContainerClassName = isHomePreviewTable
     ? styles["home-preview-button-container"]
     : styles["button-container"];
+
+  if (tableData.length === 0) {
+    return (
+      <InfoCard line1="No Records Found" customStyles={{ width: "80vw" }} />
+    );
+  }
 
   return (
     <div className={styles.container}>

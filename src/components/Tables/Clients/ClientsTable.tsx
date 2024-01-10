@@ -39,11 +39,6 @@ const ClientsTable: React.FC<OwnProps> = ({
   setTableData,
   tableData,
 }) => {
-  if (tableData.length === 0) {
-    return (
-      <InfoCard line1="No Records Found" customStyles={{ width: "80vw" }} />
-    );
-  }
   const isAdmin = useIsAdmin();
   const [labelsToPrint, setLabelsToPrint] = useState<Client[]>([]);
 
@@ -225,6 +220,12 @@ const ClientsTable: React.FC<OwnProps> = ({
   const buttonContainerClassName = isHomePreviewTable
     ? styles["home-preview-button-container"]
     : styles["button-container"];
+
+  if (tableData.length === 0) {
+    return (
+      <InfoCard line1="No Records Found" customStyles={{ width: "80vw" }} />
+    );
+  }
 
   return (
     <div className={styles.container}>

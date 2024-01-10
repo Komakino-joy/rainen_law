@@ -113,7 +113,7 @@ const UsersTable: React.FC<OwnProps> = ({
         ),
       },
     ],
-    [handleModalOpen, selectionType]
+    [handleDelete, handleModalOpen, selectionType]
   );
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
