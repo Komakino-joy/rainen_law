@@ -101,12 +101,14 @@ export default function PropertyReport() {
               render={({ field }) => {
                 return (
                   <FormInput
+                    // @ts-ignore
                     field={field}
                     name="startDate"
                     labelKey="startDate"
                     labelText="Start Date"
                     type="date"
                     isRequired={false}
+                    // @ts-ignore
                     register={register}
                     errors={errors}
                   />
@@ -120,12 +122,14 @@ export default function PropertyReport() {
               render={({ field }) => {
                 return (
                   <FormInput
+                    // @ts-ignore
                     field={field}
                     name="endDate"
                     labelKey="endDate"
                     labelText="End Date"
                     type="date"
                     isRequired={false}
+                    // @ts-ignore
                     register={register}
                     errors={errors}
                   />
