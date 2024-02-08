@@ -165,7 +165,7 @@ const PropertiesTable: React.FC<OwnProps> = ({
           ) : null,
       },
     ],
-    [handleDelete, handleModalOpen, isAdmin]
+    [handleModalOpen, isAdmin]
   );
 
   // Define a default UI for filtering
